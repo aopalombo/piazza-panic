@@ -129,8 +129,24 @@ public class Chef extends Sprite {
         nextOrderAppearTime = 3;
         completedStation = null;
     }
-
-
+    /**
+     * Moves the chef around
+     * @param left if true the chef moves to the left
+     * @param right if true the chef moves to the right
+     * @param down if true the chef moves to the down
+     * @param up if true the chef moves to the up
+     * @param multiplier speed multiplier for the chef (default is 1)
+     */
+    public void move(boolean left, boolean right, boolean down, boolean up, float multiplier) {
+        float xVelocity = 0;
+        float yVelocity = 0;
+        if(left) xVelocity -= 0.5f*multiplier;
+        if(right) xVelocity += 0.5f*multiplier;
+        if(down) yVelocity -= 0.5f*multiplier;
+        if(up) yVelocity += 0.5f*multiplier;
+        b2body.setLinearVelocity(xVelocity, yVelocity);
+        //System.out.println(b2body.getPosition());
+    }
     /**
      * Update the position and region of the chef and set the notification position based on the chef's current state.
      *

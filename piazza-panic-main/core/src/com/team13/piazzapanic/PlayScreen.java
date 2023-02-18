@@ -53,7 +53,7 @@ public class PlayScreen implements Screen {
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer renderer;
 
-    private final World world;
+    private final World world= new World(new Vector2(0,0), true);
     private final Chef chef1;
     private final Chef chef2;
 
@@ -97,7 +97,6 @@ public class PlayScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1 / MainGame.PPM);
         gamecam.position.set(gameport.getWorldWidth() / 2, gameport.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0,0), true);
         new B2WorldCreator(world, map, this);
 
         chef1 = new Chef(this.world, 31.5F,65);
@@ -158,25 +157,10 @@ public class PlayScreen implements Screen {
             }
         }
         if (controlledChef.getUserControlChef()) {
-                float xVelocity = 0;
-                float yVelocity = 0;
-
-                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                    yVelocity += 0.5f;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    xVelocity -= 0.5f;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    yVelocity -= 0.5f;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    xVelocity += 0.5f;
-                }
-                controlledChef.b2body.setLinearVelocity(xVelocity, yVelocity);
-            }
-            else {
-                controlledChef.b2body.setLinearVelocity(0, 0);
+            //move chef using wasd
+            controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),
+                                Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),
+                                1);
             }
         if (controlledChef.b2body.getLinearVelocity().x > 0){
             controlledChef.notificationSetBounds("Right");
