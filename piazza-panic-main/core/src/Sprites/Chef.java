@@ -57,7 +57,7 @@ public class Chef extends Sprite {
     public State currentState;
     private TextureRegion currentSkin;
 
-    public Texture skinNeeded;
+    private Texture skinNeeded;
 
     private Fixture whatTouching;
 

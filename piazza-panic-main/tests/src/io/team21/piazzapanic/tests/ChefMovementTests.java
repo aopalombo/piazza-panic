@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 import Sprites.Chef;
+import Tools.WorldContactListener;
 
 @RunWith(GdxTestRunner.class)
 public class ChefMovementTests {
@@ -15,6 +16,7 @@ public class ChefMovementTests {
     @Test
     public void moveUp(){
         World world = new World(new Vector2(0, 0),true);
+        world.setContactListener(new WorldContactListener());
         int x = 20;
         int y = 20;
         Chef chefTest = new Chef(world, x, y);
@@ -42,7 +44,6 @@ public class ChefMovementTests {
         Chef chefTest = new Chef(world, x, y);
         float initialVelocity = chefTest.b2body.getLinearVelocity().x;
         chefTest.move(false,true,false,false,1);
-        //assertTrue("wow", true);
         assertTrue("This test only passes if the chef moves right",chefTest.b2body.getLinearVelocity().x>initialVelocity);
     }
 
@@ -54,7 +55,6 @@ public class ChefMovementTests {
         Chef chefTest = new Chef(world, x, y);
         float initialVelocity = chefTest.b2body.getLinearVelocity().x;
         chefTest.move(true,false,false,false,1);
-        //assertTrue("wow", true);
         assertTrue("This test only passes if the chef moves left",chefTest.b2body.getLinearVelocity().x<initialVelocity);
     }
 }

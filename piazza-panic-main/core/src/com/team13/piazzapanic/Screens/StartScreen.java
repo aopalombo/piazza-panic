@@ -1,12 +1,14 @@
-package com.team13.piazzapanic;
+package com.team13.piazzapanic.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.*;
+import com.team13.piazzapanic.MainGame;
 
 /**
  * This class implements the `Screen` interface and represents the start screen of the game.
@@ -17,13 +19,14 @@ public class StartScreen implements Screen {
     private final Sprite backgroundSprite;
     private final OrthographicCamera camera;
     private final Viewport viewport;
+    private PlayScreen pausedScreen;
 
     /**
      * Constructor for StartScreen.
      *
      * @param game the game object.
      */
-    public StartScreen(MainGame game) {
+    public StartScreen(MainGame game, PlayScreen pausedPlayScreen) {
         this.game = game;
         backgroundImage = new Texture("startImage.png");
         backgroundSprite = new Sprite(backgroundImage);
@@ -58,6 +61,7 @@ public class StartScreen implements Screen {
         game.batch.begin();
         backgroundSprite.draw(game.batch);
         game.batch.end();
+        if(Gdx.input.isKeyPressed(Input.Keys.TAB)){game.setScreen(pausedScreen);}
     }
 
     /**

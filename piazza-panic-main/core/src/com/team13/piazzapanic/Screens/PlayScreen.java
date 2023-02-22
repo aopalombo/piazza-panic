@@ -1,4 +1,4 @@
-package com.team13.piazzapanic;
+package com.team13.piazzapanic.Screens;
 
 import Ingredients.Ingredient;
 import Recipe.Recipe;
@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team13.piazzapanic.HUD;
+import com.team13.piazzapanic.MainGame;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -73,6 +75,8 @@ public class PlayScreen implements Screen {
     private float timeSeconds = 0f;
 
     private float timeSecondsCount = 0f;
+
+    private float multiplier = 1f;
 
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
@@ -157,10 +161,10 @@ public class PlayScreen implements Screen {
             }
         }
         if (controlledChef.getUserControlChef()) {
-            //move chef using wasd
+            //move chef using WASD
             controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),
                                 Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),
-                                1);
+                                multiplier);
             }
         if (controlledChef.b2body.getLinearVelocity().x > 0){
             controlledChef.notificationSetBounds("Right");
@@ -390,6 +394,9 @@ public class PlayScreen implements Screen {
             chef2.displayIngDynamic(game.batch);
         }
         game.batch.end();
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){multiplier = 2f;}
+        if(Gdx.input.isKeyPressed(Input.Keys.M)){multiplier = 1f;}
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
     }
 
     @Override
