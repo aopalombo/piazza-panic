@@ -110,7 +110,6 @@ public class PlayScreen implements Screen {
         controlledChef.notificationSetBounds("Down");
 
         ordersArray = new ArrayList<Order>();
-
     }
 
     @Override
@@ -280,6 +279,10 @@ public class PlayScreen implements Screen {
         chef2.update(dt);
         world.step(1/60f, 6, 2);
 
+        if(hud.repPoints == 0){
+            scenarioComplete = true;
+        }
+
     }
 
     /**
@@ -293,10 +296,10 @@ public class PlayScreen implements Screen {
 
         for(int i = 0; i<5; i++){
             if(randomNum==1) {
-                order = new Order(PlateStation.burgerRecipe, burger_recipe);
+                order = new Order(PlateStation.burgerRecipe, burger_recipe, (6 - ordersArray.size()) * 35);
             }
             else {
-                order = new Order(PlateStation.saladRecipe, salad_recipe);
+                order = new Order(PlateStation.saladRecipe, salad_recipe, (6 - ordersArray.size()) * 35);
             }
             ordersArray.add(order);
             randomNum = ThreadLocalRandom.current().nextInt(1, 2 + 1);
@@ -314,7 +317,7 @@ public class PlayScreen implements Screen {
             return;
         }
         if(ordersArray.size() != 0) {
-            if (ordersArray.get(0).orderComplete) {
+            if ((ordersArray.get(0).orderComplete) || (ordersArray.get(0).orderTime == 0)) {
                 hud.updateScore(Boolean.FALSE, (6 - ordersArray.size()) * 35);
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, 6 - ordersArray.size());
@@ -349,7 +352,9 @@ public class PlayScreen implements Screen {
         float period = 1f;
         if(timeSeconds > period) {
             timeSeconds -= period;
-            hud.updateTime(scenarioComplete);
+            if(ordersArray.size()>0){
+                hud.updateTime(scenarioComplete,ordersArray.get(0));
+            } else {hud.updateTime(scenarioComplete,null);}
         }
 
         Gdx.gl.glClear(1);

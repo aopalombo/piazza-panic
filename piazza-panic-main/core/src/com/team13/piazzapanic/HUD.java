@@ -1,5 +1,7 @@
 package com.team13.piazzapanic;
 
+import java.util.Objects;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import Recipe.Order;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 
@@ -27,6 +32,13 @@ public class HUD implements Disposable {
 
     Label timeLabelT;
     Label timeLabel;
+
+    Label reputationLabel;
+    Label reputationLabelT;
+    public Integer repPoints = 3;
+
+    Label orderTimeLabel;
+    Label orderTimeLabelT;
 
     Label scoreLabel;
     Label scoreLabelT;
@@ -55,6 +67,12 @@ public class HUD implements Disposable {
         timeLabelT = new Label("TIME", new Label.LabelStyle(font, Color.BLACK));
         orderNumLT = new Label("ORDER", new Label.LabelStyle(font, Color.BLACK));
         orderNumL = new Label(String.format("%d", 0), new Label.LabelStyle(font, Color.WHITE));
+        
+        orderTimeLabel = new Label("Order still didnt arrive", new Label.LabelStyle(font, Color.WHITE));
+        orderTimeLabelT = new Label("COUNTER", new Label.LabelStyle(font, Color.BLACK));
+
+        reputationLabel = new Label(String.format("%d", repPoints), new Label.LabelStyle(font, Color.WHITE));
+        reputationLabelT = new Label("REP", new Label.LabelStyle(font, Color.BLACK));
 
         scoreLabel = new Label(String.format("%d", score), new Label.LabelStyle(font, Color.WHITE));
         scoreLabelT = new Label("MONEY", new Label.LabelStyle(font, Color.BLACK));
@@ -67,6 +85,12 @@ public class HUD implements Disposable {
         table.add(timeLabel).padTop(2).padLeft(2);
         table.add(scoreLabel).padTop(2).padLeft(2);
         table.add(orderNumL).padTop(2).padLeft(2);
+        table.row();
+        table.add(reputationLabelT).padTop(2).padLeft(2);
+        table.add(orderTimeLabelT).padTop(2).padLeft(2);
+        table.row();
+        table.add(reputationLabel).padTop(2).padLeft(2);
+        table.add(orderTimeLabel).padTop(2).padLeft(2);
 
         table.left().top();
         stage.addActor(table);
@@ -77,12 +101,27 @@ public class HUD implements Disposable {
      *
      * @param scenarioComplete Whether the game scenario has been completed.
      */
-    public void updateTime(Boolean scenarioComplete){
+    public void updateTime(Boolean scenarioComplete, Order currentOrder){
+        if(!Objects.isNull(currentOrder)){
+            currentOrder.orderTime--;
+            orderTimeLabel.setText(Integer.toString(currentOrder.orderTime));
+            if(currentOrder.orderTime==0){
+                if(!scenarioComplete){
+                    repPoints--;
+                    reputationLabel.setText(Integer.toString(repPoints));
+                }
+            }
+        }
         if(scenarioComplete){
             timeLabel.setColor(Color.GREEN);
             timeStr = String.format("%d", worldTimerM) + ":" + String.format("%d", worldTimerS);
             timeLabel.setText(String.format("TIME: " + timeStr + " MONEY: %d", score));
             timeLabelT.setText("SCENARIO COMPLETE");
+            reputationLabelT.setColor(Color.GREEN);
+            reputationLabel.setColor(Color.GREEN);
+            reputationLabelT.setText("Finished with " + Integer.toString(repPoints) + " Reputation points");
+            reputationLabel.setText("");
+            reputationLabel.remove();
             table.center().top();
             stage.addActor(table);
             return;
@@ -138,6 +177,10 @@ public class HUD implements Disposable {
             scoreLabelT.setText("");
             scoreLabelT.remove();
             scoreLabel.remove();
+            orderTimeLabel.setText("");
+            orderTimeLabelT.setText("");
+            orderTimeLabel.remove();
+            orderTimeLabelT.remove();
             table.center().top();
             stage.addActor(table);
             this.scenarioComplete = Boolean.TRUE;

@@ -16,6 +16,8 @@ public class Order extends Sprite {
     public Boolean orderComplete;
     /** The image representing this order. */
     public Texture orderImg;
+    /** Time for order to be completed*/
+    public Integer orderTime;
 
     /**
      * Constructor for the `Order` class.
@@ -23,10 +25,11 @@ public class Order extends Sprite {
      * @param recipe The `Recipe` object associated with this order.
      * @param orderImg The image representing this order.
      */
-    public Order(Recipe recipe, Texture orderImg) {
+    public Order(Recipe recipe, Texture orderImg, Integer time) {
         this.recipe = recipe;
         this.orderImg = orderImg;
         this.orderComplete = false;
+        this.orderTime = time;
     }
 
     /**
