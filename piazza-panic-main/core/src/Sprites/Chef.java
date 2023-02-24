@@ -5,12 +5,15 @@ import Recipe.BurgerRecipe;
 import Recipe.Recipe;
 import Recipe.SaladRecipe;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.team13.piazzapanic.MainGame;
 
 import java.util.Objects;
@@ -37,27 +40,15 @@ public class Chef extends Sprite {
 
     private float putDownWaitTimer;
     public boolean chefOnChefCollision;
-    private final Texture normalChef;
-    private final Texture bunsChef;
-    private final Texture bunsToastedChef;
-    private final Texture burgerChef;
-    private final Texture lettuceChef;
-    private final Texture onionChef;
-    private final Texture tomatoChef;
-    private final Texture choppedLettuceChef;
-    private final Texture choppedOnionChef;
-    private final Texture choppedTomatoChef;
-    private final Texture pattyChef;
-    private final Texture completedBurgerChef;
-    private final Texture meatChef;
-    private Texture saladChef;
+    private final Skin skin;
+
 
     public enum State {UP, DOWN, LEFT, RIGHT}
 
     public State currentState;
     private TextureRegion currentSkin;
 
-    private Texture skinNeeded;
+    private TextureRegion skinNeeded;
 
     private Fixture whatTouching;
 
@@ -89,24 +80,13 @@ public class Chef extends Sprite {
         initialX = startX / MainGame.PPM;
         initialY = startY / MainGame.PPM;
 
-        normalChef = new Texture("Chef/Chef_normal.png");
-        bunsChef = new Texture("Chef/Chef_holding_buns.png");
-        bunsToastedChef = new Texture("Chef/Chef_holding_buns_toasted.png");
-        burgerChef = new Texture("Chef/Chef_holding_burger.png");
-        lettuceChef = new Texture("Chef/Chef_holding_lettuce.png");
-        onionChef = new Texture("Chef/Chef_holding_onion.png");
-        tomatoChef = new Texture("Chef/Chef_holding_tomato.png");
-        choppedLettuceChef = new Texture("Chef/Chef_holding_chopped_lettuce.png");
-        choppedOnionChef = new Texture("Chef/Chef_holding_chopped_onion.png");
-        choppedTomatoChef = new Texture("Chef/Chef_holding_chopped_tomato.png");
-        pattyChef = new Texture("Chef/Chef_holding_patty.png");
-        completedBurgerChef = new Texture("Chef/Chef_holding_front.png");
-        meatChef = new Texture("Chef/Chef_holding_meat.png");
-        saladChef = new Texture("Chef/Chef_holding_salad.png");
-        saladChef = new Texture("Chef/Chef_holding_salad.png");
+        TextureAtlas chefAtlas = new TextureAtlas("Chef/chefNew.txt");
+        System.out.println(chefAtlas.getRegions());
+        skin = new Skin();
+        skin.addRegions(chefAtlas);
 
 
-        skinNeeded = normalChef;
+        skinNeeded = skin.getRegion("Chef_normal");
 
         this.world = world;
         currentState = State.DOWN;
@@ -369,43 +349,43 @@ public class Chef extends Sprite {
 
     public void setChefSkin(Object item) {
         if (item == null) {
-            skinNeeded = normalChef;
+            skinNeeded = skin.getRegion("Chef_normal");;
         } else if (item instanceof Lettuce) {
             if (inHandsIng.isPrepared()) {
-                skinNeeded = choppedLettuceChef;
+                skinNeeded = skin.getRegion("Chef_holding_chopped_lettuce");;
             } else {
-                skinNeeded = lettuceChef;
+                skinNeeded = skin.getRegion("Chef_holding_lettuce");;
             }
         } else if (item instanceof Steak) {
             if (inHandsIng.isPrepared() && inHandsIng.isCooked()) {
-                skinNeeded = burgerChef;
+                skinNeeded = skin.getRegion("Chef_holding_burger");
             } else if (inHandsIng.isPrepared()) {
-                skinNeeded = pattyChef;
+                skinNeeded = skin.getRegion("Chef_holding_patty");
             } else {
-                skinNeeded = meatChef;
+                skinNeeded = skin.getRegion("Chef_holding_meat");
             }
         } else if (item instanceof Onion) {
             if (inHandsIng.isPrepared()) {
-                skinNeeded = choppedOnionChef;
+                skinNeeded = skin.getRegion("Chef_holding_chopped_onion");
             } else {
-                skinNeeded = onionChef;
+                skinNeeded = skin.getRegion("Chef_holding_onion");
             }
         } else if (item instanceof Tomato) {
             if (inHandsIng.isPrepared()) {
-                skinNeeded = choppedTomatoChef;
+                skinNeeded = skin.getRegion("Chef_holding_chopped_tomato");
             } else {
-                skinNeeded = tomatoChef;
+                skinNeeded = skin.getRegion("Chef_holding_tomato");
             }
         } else if (item instanceof Bun) {
             if (inHandsIng.isCooked()) {
-                skinNeeded = bunsToastedChef;
+                skinNeeded = skin.getRegion("Chef_holding_buns_toasted");
             } else {
-                skinNeeded = bunsChef;
+                skinNeeded = skin.getRegion("Chef_holding_buns");
             }
         } else if (item instanceof BurgerRecipe) {
-            skinNeeded = completedBurgerChef;
+            skinNeeded = skin.getRegion("Chef_holding_complete_burger");
         } else if (item instanceof SaladRecipe) {
-            skinNeeded = saladChef;
+            skinNeeded = skin.getRegion("Chef_holding_salad");
         }
     }
 
