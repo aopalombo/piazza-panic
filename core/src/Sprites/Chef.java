@@ -88,6 +88,7 @@ public class Chef extends Sprite {
     public Chef(World world, float startX, float startY) {
         initialX = startX / MainGame.PPM;
         initialY = startY / MainGame.PPM;
+<<<<<<< Updated upstream:core/src/Sprites/Chef.java
 
         normalChef = new Texture("Chef/Chef_normal.png");
         bunsChef = new Texture("Chef/Chef_holding_buns.png");
@@ -104,6 +105,12 @@ public class Chef extends Sprite {
         meatChef = new Texture("Chef/Chef_holding_meat.png");
         saladChef = new Texture("Chef/Chef_holding_salad.png");
         saladChef = new Texture("Chef/Chef_holding_salad.png");
+=======
+        // changed by Oscar, we now read the textures from a single png which is referenced by chefNew.txt
+        TextureAtlas chefAtlas = new TextureAtlas("Chef/chefNew.txt");
+        skin = new Skin();
+        skin.addRegions(chefAtlas);
+>>>>>>> Stashed changes:piazza-panic-main/core/src/Sprites/Chef.java
 
 
         skinNeeded = normalChef;
