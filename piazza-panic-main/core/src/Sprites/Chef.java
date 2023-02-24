@@ -81,10 +81,8 @@ public class Chef extends Sprite {
         initialY = startY / MainGame.PPM;
 
         TextureAtlas chefAtlas = new TextureAtlas("Chef/chefNew.txt");
-        System.out.println(chefAtlas.getRegions());
         skin = new Skin();
         skin.addRegions(chefAtlas);
-        System.out.println("Hello!");
 
 
         skinNeeded = skin.getRegion("Chef_normal");
