@@ -79,7 +79,7 @@ public class Chef extends Sprite {
     public Chef(World world, float startX, float startY) {
         initialX = startX / MainGame.PPM;
         initialY = startY / MainGame.PPM;
-
+        // changed by Oscar, we now read the textures from a single png which is referenced by chefNew.txt
         TextureAtlas chefAtlas = new TextureAtlas("Chef/chefNew.txt");
         System.out.println(chefAtlas.getRegions());
         skin = new Skin();
@@ -347,7 +347,9 @@ public class Chef extends Sprite {
      * - if item is a SaladRecipe, then the skin is set to saladChef
      */
 
+    // changed by Oscar to use the texture atlas and skin variable to change the skins
     public void setChefSkin(Object item) {
+        // check what item is being held and change skin to reflect
         if (item == null) {
             skinNeeded = skin.getRegion("Chef_normal");;
         } else if (item instanceof Lettuce) {
