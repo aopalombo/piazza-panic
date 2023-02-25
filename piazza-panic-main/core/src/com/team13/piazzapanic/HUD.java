@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,20 +31,22 @@ public class HUD implements Disposable {
 
     public Table table;
 
-    Label timeLabelT;
-    Label timeLabel;
+    private Label timeLabelT;
+    private Label timeLabel;
 
-    Label reputationLabel;
-    Label reputationLabelT;
+    private Label reputationLabel;
+    private Label reputationLabelT;
     public Integer repPoints = 3;
 
-    Label orderTimeLabel;
-    Label orderTimeLabelT;
+    private Label orderTimeLabel;
+    private Label orderTimeLabelT;
 
-    Label scoreLabel;
-    Label scoreLabelT;
-    Label orderNumL;
-    Label orderNumLT;
+    private Label scoreLabel;
+    private Label scoreLabelT;
+    private Label orderNumL;
+    private Label orderNumLT;
+
+    private BitmapFont font = new BitmapFont();
 
     public HUD(SpriteBatch sb){
         this.scenarioComplete = Boolean.FALSE;
@@ -54,7 +57,7 @@ public class HUD implements Disposable {
         float fontX = 0.5F;
         float fontY = 0.3F;
 
-        BitmapFont font = new BitmapFont();
+        
         font.getData().setScale(fontX, fontY);
         Viewport viewport = new FitViewport(MainGame.V_WIDTH, MainGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
@@ -68,8 +71,9 @@ public class HUD implements Disposable {
         orderNumLT = new Label("ORDER", new Label.LabelStyle(font, Color.BLACK));
         orderNumL = new Label(String.format("%d", 0), new Label.LabelStyle(font, Color.WHITE));
         
-        orderTimeLabel = new Label("Order still didnt arrive", new Label.LabelStyle(font, Color.WHITE));
-        orderTimeLabelT = new Label("COUNTER", new Label.LabelStyle(font, Color.BLACK));
+
+        orderTimeLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        orderTimeLabelT = new Label("TIMER", new Label.LabelStyle(font, Color.BLACK));
 
         reputationLabel = new Label(String.format("%d", repPoints), new Label.LabelStyle(font, Color.WHITE));
         reputationLabelT = new Label("REP", new Label.LabelStyle(font, Color.BLACK));
@@ -117,8 +121,7 @@ public class HUD implements Disposable {
             timeStr = String.format("%d", worldTimerM) + ":" + String.format("%d", worldTimerS);
             timeLabel.setText(String.format("TIME: " + timeStr + " MONEY: %d", score));
             timeLabelT.setText("SCENARIO COMPLETE");
-            reputationLabelT.setColor(Color.GREEN);
-            reputationLabel.setColor(Color.GREEN);
+            reputationLabelT.setStyle(new LabelStyle(font, Color.GREEN));
             reputationLabelT.setText("Finished with " + Integer.toString(repPoints) + " Reputation points");
             reputationLabel.setText("");
             reputationLabel.remove();
@@ -175,12 +178,12 @@ public class HUD implements Disposable {
             scoreLabel.setColor(Color.GREEN);
             scoreLabel.setText("");
             scoreLabelT.setText("");
-            scoreLabelT.remove();
-            scoreLabel.remove();
             orderTimeLabel.setText("");
             orderTimeLabelT.setText("");
             orderTimeLabel.remove();
             orderTimeLabelT.remove();
+            scoreLabelT.remove();
+            scoreLabel.remove();
             table.center().top();
             stage.addActor(table);
             this.scenarioComplete = Boolean.TRUE;

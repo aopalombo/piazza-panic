@@ -11,19 +11,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
-
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,12 +62,12 @@ public class PlayScreen implements Screen {
     private final OrthogonalTiledMapRenderer renderer;
 
     private final World world= new World(new Vector2(0,0), true);
-    private final Chef chef1;
-    private final Chef chef2;
+    private final Chef chef1 = new Chef(this.world, 31.5F,65);
+    private final Chef chef2 = new Chef(this.world, 128,65);
 
     private Chef controlledChef;
 
-    public ArrayList<Order> ordersArray;
+    public ArrayList<Order> ordersArray = new ArrayList<Order>();
 
     public PlateStation plateStation;
 
@@ -78,6 +84,7 @@ public class PlayScreen implements Screen {
 
     private float multiplier = 1f;
 
+    private ArrayList<ProgressBar> bars = new ArrayList<ProgressBar>();
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
      * creates and initializes game camera and viewport,
@@ -103,13 +110,10 @@ public class PlayScreen implements Screen {
 
         new B2WorldCreator(world, map, this);
 
-        chef1 = new Chef(this.world, 31.5F,65);
-        chef2 = new Chef(this.world, 128,65);
         controlledChef = chef1;
         world.setContactListener(new WorldContactListener());
         controlledChef.notificationSetBounds("Down");
-
-        ordersArray = new ArrayList<Order>();
+        //createProgressBar(controlledChef);
     }
 
     @Override
@@ -228,6 +232,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.ChoppingBoard":
                                 if(controlledChef.getInHandsIng() != null){
                                     if(controlledChef.getInHandsIng().prepareTime > 0){
+                                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -241,6 +246,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.Pan":
                                 if(controlledChef.getInHandsIng() != null) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -366,6 +372,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         updateOrder();
+        updateProgressBars();
         chef1.draw(game.batch);
         chef2.draw(game.batch);
         controlledChef.drawNotification(game.batch);
@@ -430,5 +437,40 @@ public class PlayScreen implements Screen {
         renderer.dispose();
         world.dispose();
         hud.dispose();
+    }
+    
+    private void createProgressBar(float x, float y, Chef chef, Integer duration) {
+        ProgressBarStyle style = new ProgressBarStyle();
+        style.background = getColoredDrawable(20, 5, Color.GREEN);
+        style.knob = getColoredDrawable(0, 5, Color.WHITE);
+        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
+        ProgressBar bar = new ProgressBar(0, duration, 0.005f, false, style);
+        bar.setWidth(30);
+        bar.setHeight(5);
+        bar.setValue(15f);
+        bar.setX(x);
+        bar.setY(y);
+        hud.stage.addActor(bar);
+        bars.add(bar);
+    }
+
+    private void updateProgressBars() {
+        if (!bars.isEmpty()) {
+            for (ProgressBar bar : bars) {
+                bar.setValue(bar.getValue() - 0.05f);
+                if (bar.getValue() <= 0) {
+                    hud.stage.getActors().removeValue(bar, false);
+                    //bars.remove(bar);
+                }
+            }
+        }
+    }
+    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+        pixmap.dispose();
+        return drawable;
     }
 }

@@ -124,7 +124,6 @@ public class Chef extends Sprite {
         if(down) yVelocity -= 0.5f*multiplier;
         if(up) yVelocity += 0.5f*multiplier;
         b2body.setLinearVelocity(xVelocity, yVelocity);
-        //System.out.println(b2body.getPosition());
     }
     /**
      * Update the position and region of the chef and set the notification position based on the chef's current state.
