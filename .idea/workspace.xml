@@ -5,8 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef New/chefNew.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef New/chefNew.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_buns.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_buns_toasted.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_burger.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_lettuce.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_onion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_tomato.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_front.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_lettuce.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_meat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_onion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_patty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_salad.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_tomato.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/chefNew.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/chefNew.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,9 +39,31 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/desktop">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="tests" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="tests" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -37,22 +77,11 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2M93AMj4xs2BStz53De6sZgohcf" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/andrew/Downloads/untitled folder/piazza-panic/build.gradle",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
   <component name="RunManager">
     <configuration name="AssetTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
