@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/piazza-panic.iml" filepath="$PROJECT_DIR$/.idea/piazza-panic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/piazza-panic.iml" filepath="$PROJECT_DIR$/.idea/modules/piazza-panic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/piazza-panic.core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.iml" filepath="$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.main.iml" filepath="$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.test.iml" filepath="$PROJECT_DIR$/.idea/modules/desktop/piazza-panic.desktop.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.test.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/piazza-panic.tests.test.iml" />
     </modules>
   </component>
 </project>
