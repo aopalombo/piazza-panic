@@ -4,12 +4,60 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="" />
+=======
+    <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef New/chefNew.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef New/chefNew.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_buns.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_buns_toasted.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_burger.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_lettuce.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_onion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_chopped_tomato.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_front.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_lettuce.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_meat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_onion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_patty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_salad.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_tomato.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
+    </list>
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< Updated upstream
+=======
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+>>>>>>> Stashed changes
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -26,7 +74,39 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
+<<<<<<< Updated upstream
     <property name="last_opened_file_path" value="$PROJECT_DIR$/piazza-panic-main/build.gradle" />
+=======
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
+  </component>
+  <component name="RunManager">
+    <configuration name="piazza-panic:desktop [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/desktop" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.piazza-panic:desktop [run]" />
+      </list>
+    </recent_temporary>
+>>>>>>> Stashed changes
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
