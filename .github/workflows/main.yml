@@ -24,8 +24,21 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: build
+          arguments: build jacocoTestReport
 #          build-root-directory: piazza-panic
+
+      - name: Upload JaCoCo coverage report as workflow artefact
+        uses: actions/upload-artifact@V3.1.1
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Upload library JAR
+        uses: actions/upload-artifact@V3.1.1
+        with:
+          name: lib.jar
+          path: build/libs/lib.jar
