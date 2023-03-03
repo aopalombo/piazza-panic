@@ -25,6 +25,11 @@
       <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_salad.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_holding_tomato.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/Chef/Chef_normal.png" beforeDir="false" />
+<<<<<<< Updated upstream
+=======
+      <change beforePath="$PROJECT_DIR$/assets/Chef/chefNew.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/chefNew.txt" beforeDir="false" />
+>>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
     </list>
 >>>>>>> Stashed changes
@@ -43,6 +48,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/desktop">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -50,6 +61,27 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="piazza-panic" type="f1a62948:ProjectNode" />
               </path>
+<<<<<<< Updated upstream
+=======
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="desktop" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="desktop" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="desktop" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+>>>>>>> Stashed changes
             </expand>
             <select />
           </tree_state>
@@ -75,8 +107,11 @@
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <property name="last_opened_file_path" value="$PROJECT_DIR$/piazza-panic-main/build.gradle" />
 =======
+=======
+>>>>>>> Stashed changes
     <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
   </component>
   <component name="RunManager">
@@ -106,6 +141,9 @@
         <item itemvalue="Gradle.piazza-panic:desktop [run]" />
       </list>
     </recent_temporary>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

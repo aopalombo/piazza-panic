@@ -80,8 +80,11 @@ public class Chef extends Sprite {
         initialY = startY / MainGame.PPM;
 
 <<<<<<< Updated upstream:piazza-panic-main/core/src/Sprites/Chef.java
+<<<<<<< Updated upstream:piazza-panic-main/core/src/Sprites/Chef.java
         TextureAtlas chefAtlas = new TextureAtlas("Chef/chefNew.txt");
 =======
+=======
+>>>>>>> Stashed changes:core/src/Sprites/Chef.java
         TextureAtlas chefAtlas = new TextureAtlas("Chef/chef.txt");
         System.out.println(chefAtlas.getRegions());
 >>>>>>> Stashed changes:core/src/Sprites/Chef.java

@@ -1,5 +1,5 @@
 
-chefSprites.png
+chefNew.png
 size: 256, 1024
 format: RGBA8888
 filter: Nearest, Nearest
