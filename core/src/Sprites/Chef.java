@@ -83,7 +83,7 @@ public class Chef extends Sprite {
         System.out.println(chefAtlas.getRegions());
         skin = new Skin();
         skin.addRegions(chefAtlas);
-
+        // test comment for dummy commit
 
         skinNeeded = skin.getRegion("Chef_normal");
 
