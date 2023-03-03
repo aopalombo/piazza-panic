@@ -32,13 +32,13 @@ jobs:
 #          build-root-directory: piazza-panic
 
       - name: Upload JaCoCo coverage report as workflow artefact
-        uses: actions/upload-artifact@V3.1.1
+        uses: actions/upload-artifact@v3.1.1
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
       - name: Upload library JAR
-        uses: actions/upload-artifact@V3.1.1
+        uses: actions/upload-artifact@v3.1.1
         with:
           name: lib.jar
           path: build/libs/lib.jar
