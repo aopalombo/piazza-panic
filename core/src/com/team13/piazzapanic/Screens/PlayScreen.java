@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -84,7 +85,12 @@ public class PlayScreen implements Screen {
 
     private float multiplier = 1f;
 
-    private ArrayList<ProgressBar> bars = new ArrayList<ProgressBar>();
+    private int orderCount;
+
+    private int timeMultiplier;
+
+    private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
+
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
      * creates and initializes game camera and viewport,
@@ -93,7 +99,7 @@ public class PlayScreen implements Screen {
      * @param game The MainGame instance that the PlayScreen will be a part of.
      */
 
-    public PlayScreen(MainGame game){
+    public PlayScreen(MainGame game, String difficulty){
         this.game = game;
         scenarioComplete = Boolean.FALSE;
         createdOrder = Boolean.FALSE;
@@ -113,7 +119,16 @@ public class PlayScreen implements Screen {
         controlledChef = chef1;
         world.setContactListener(new WorldContactListener());
         controlledChef.notificationSetBounds("Down");
-        //createProgressBar(controlledChef);
+        if(difficulty == "easy"){
+            orderCount = 5;
+            timeMultiplier = 35;
+        } else if(difficulty == "normal"){
+            orderCount = 8;
+            timeMultiplier = 35;
+        } else if(difficulty == "hard"){
+            orderCount = 11;
+            timeMultiplier = 35;
+        }
     }
 
     @Override
@@ -194,6 +209,21 @@ public class PlayScreen implements Screen {
                                 controlledChef.setInHandsIng(tomatoTile.getIngredient());
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
+                            case "Sprites.PotatoStation":
+                                PotatoStation potatoTile = (PotatoStation) tile;
+                                controlledChef.setInHandsIng(potatoTile.getIngredient());
+                                controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                                break;
+                            case "Sprites.PizzaDoughStation":
+                                PizzaDoughStation pizzaDoughTile = (PizzaDoughStation) tile;
+                                controlledChef.setInHandsIng(pizzaDoughTile.getIngredient());
+                                controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                                break;
+                            case "Sprites.CheeseStation":
+                                CheeseStation cheeseStation = (CheeseStation) tile;
+                                controlledChef.setInHandsIng(cheeseStation.getIngredient());
+                                controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                                break;
                             case "Sprites.BunsStation":
                                 BunsStation bunTile = (BunsStation) tile;
                                 controlledChef.setInHandsIng(bunTile.getIngredient());
@@ -247,6 +277,10 @@ public class PlayScreen implements Screen {
                                 if(controlledChef.getInHandsIng() != null) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
                                         createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
+                                        /*
+                                        Pan pan = new Pan(world, map, null, null);
+                                        controlledChef.setTouchingTile(pan.fixture);
+                                        */
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -300,12 +334,12 @@ public class PlayScreen implements Screen {
         Texture salad_recipe = new Texture("Food/salad_recipe.png");
         Order order;
 
-        for(int i = 0; i<5; i++){
+        for(int i = 0; i<orderCount; i++){
             if(randomNum==1) {
-                order = new Order(PlateStation.burgerRecipe, burger_recipe, (6 - ordersArray.size()) * 35);
+                order = new Order(PlateStation.burgerRecipe, burger_recipe, (6 - ordersArray.size()) * timeMultiplier);
             }
             else {
-                order = new Order(PlateStation.saladRecipe, salad_recipe, (6 - ordersArray.size()) * 35);
+                order = new Order(PlateStation.saladRecipe, salad_recipe, (6 - ordersArray.size()) * timeMultiplier);
             }
             ordersArray.add(order);
             randomNum = ThreadLocalRandom.current().nextInt(1, 2 + 1);
@@ -318,15 +352,15 @@ public class PlayScreen implements Screen {
      */
     public void updateOrder(){
         if(scenarioComplete==Boolean.TRUE) {
-            hud.updateScore(Boolean.TRUE, (6 - ordersArray.size()) * 35);
+            hud.updateScore(Boolean.TRUE, ((orderCount+1) - ordersArray.size()) * timeMultiplier);
             hud.updateOrder(Boolean.TRUE, 0);
             return;
         }
         if(ordersArray.size() != 0) {
             if ((ordersArray.get(0).orderComplete) || (ordersArray.get(0).orderTime == 0)) {
-                hud.updateScore(Boolean.FALSE, (6 - ordersArray.size()) * 35);
+                hud.updateScore(Boolean.FALSE, ((orderCount+1) - ordersArray.size()) * timeMultiplier);
                 ordersArray.remove(0);
-                hud.updateOrder(Boolean.FALSE, 6 - ordersArray.size());
+                hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
                 return;
             }
             ordersArray.get(0).create(trayX, trayY, game.batch);
@@ -409,6 +443,7 @@ public class PlayScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){multiplier = 2f;}
         if(Gdx.input.isKeyPressed(Input.Keys.M)){multiplier = 1f;}
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){controlledChef.getInHandsIng().cookTime = 0;}
     }
 
     @Override
@@ -440,27 +475,37 @@ public class PlayScreen implements Screen {
     }
     
     private void createProgressBar(float x, float y, Chef chef, Integer duration) {
-        ProgressBarStyle style = new ProgressBarStyle();
-        style.background = getColoredDrawable(20, 5, Color.GREEN);
-        style.knob = getColoredDrawable(0, 5, Color.WHITE);
-        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-        ProgressBar bar = new ProgressBar(0, duration, 0.005f, false, style);
-        bar.setWidth(30);
-        bar.setHeight(5);
-        bar.setValue(15f);
-        bar.setX(x);
-        bar.setY(y);
-        hud.stage.addActor(bar);
-        bars.add(bar);
+        if(chef.userControlChef){
+            ProgressBarStyle style = new ProgressBarStyle();
+            style.background = getColoredDrawable(20, 5, Color.GREEN);
+            style.knob = getColoredDrawable(0, 5, Color.WHITE);
+            style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
+            ProgressBar bar = new ProgressBar(0, duration, 0.05f, false, style);
+            bar.setWidth(30);
+            bar.setHeight(5);
+            bar.setValue(15f);
+            bar.setX(x);
+            bar.setY(y);
+            hud.stage.addActor(bar);
+            bars.put(bar,chef);
+            System.out.println("progress bar created");
+        }
     }
 
     private void updateProgressBars() {
         if (!bars.isEmpty()) {
-            for (ProgressBar bar : bars) {
+            for (ProgressBar bar : bars.keySet()) {
+                //bar.act(0.05f);
                 bar.setValue(bar.getValue() - 0.05f);
                 if (bar.getValue() <= 0) {
                     hud.stage.getActors().removeValue(bar, false);
                     //bars.remove(bar);
+                    /*
+                    InteractiveTileObject tile = (InteractiveTileObject) bars.get(bar).getTouchingTile().getUserData();
+                    if (tile instanceof Pan){
+                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
+                    }
+                     */
                 }
             }
         }
