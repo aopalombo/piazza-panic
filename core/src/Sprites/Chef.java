@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.sun.tools.javac.comp.Todo;
 import com.team13.piazzapanic.MainGame;
 
 import java.util.Objects;
@@ -380,31 +381,31 @@ public class Chef extends Sprite {
             } else {
                 skinNeeded = skin.getRegion("Chef_holding_buns");
             }
+        } else if (item instanceof Potato) {
+            if (inHandsIng.isCooked()) {
+                skinNeeded = skin.getRegion("Chef_holding_baked_potato");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_potato");
+            }
+        } else if (item instanceof PizzaDough) {
+            if (inHandsIng.isCooked()) {
+                // TODO make actual texture for prepared pizza dough
+                skinNeeded = skin.getRegion("Chef_holding_pizzadough");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_pizzadough");
+            }
+        } else if (item instanceof Cheese) {
+            if (inHandsIng.isCooked()) {
+                skinNeeded = skin.getRegion("Chef_holding_chopped_cheese");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_cheese");
+            }
         } else if (item instanceof BurgerRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_complete_burger");
         } else if (item instanceof SaladRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_salad");
-        } else if (item instanceof Potato) {
-            if (inHandsIng.isCooked()) {
-                skinNeeded = skin.getRegion("Chef_holding_buns_toasted");
-            } else {
-                skinNeeded = skin.getRegion("Chef_holding_buns");
-            }
-        } else if (item instanceof PizzaDough) {
-            if (inHandsIng.isCooked()) {
-                skinNeeded = skin.getRegion("Chef_holding_buns_toasted");
-            } else {
-                skinNeeded = skin.getRegion("Chef_holding_buns");
-            }
-        } else if (item instanceof Cheese) {
-            if (inHandsIng.isCooked()) {
-                skinNeeded = skin.getRegion("Chef_holding_buns_toasted");
-            } else {
-                skinNeeded = skin.getRegion("Chef_holding_buns");
             }
         }
-    }
-
     /**
      * Method to display the ingredient on the specific interactive tile objects (ChoppingBoard/Pan)
      * @param batch the SpriteBatch used to render the texture.

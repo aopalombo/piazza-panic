@@ -5,7 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
+      <change afterPath="$PROJECT_DIR$/assets/Chef/AtlasProject.tpproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_buns.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_buns_toasted.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_burger.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_lettuce.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_onion.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_tomato.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_front.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_lettuce.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_meat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_onion.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_patty.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_salad.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_tomato.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_normal.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_baked_potato.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_cheese.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_chopped_cheese.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_pizzadough.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_potato.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Chef/chefAtlas.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/ChefAtlas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Chef/ChefAtlas.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Chef/ChefSprites.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +61,13 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="piazza-panic" type="f1a62948:ProjectNode" />
-                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -59,20 +90,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/andrew/Downloads/untitled folder 2/piazza-panic/build.gradle",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
-  <component name="RunManager" selected="Gradle.ChefMovementTests">
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
+  </component>
+  <component name="RunManager" selected="Gradle.piazza-panic [run]">
     <configuration name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -134,16 +159,50 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="piazza-panic [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.DesktopLauncher" />
       <item itemvalue="Gradle.ChefMovementTests" />
       <item itemvalue="Gradle.AssetTests" />
+      <item itemvalue="Gradle.piazza-panic [run]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.piazza-panic [run]" />
+        <item itemvalue="Application.DesktopLauncher" />
         <item itemvalue="Gradle.ChefMovementTests" />
         <item itemvalue="Gradle.AssetTests" />
-        <item itemvalue="Application.DesktopLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -179,6 +238,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
