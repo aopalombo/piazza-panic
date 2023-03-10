@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
-      <change afterPath="$PROJECT_DIR$/assets/Chef/AtlasProject.tpproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_buns.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_buns_toasted.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_burger.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_lettuce.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_onion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_chopped_tomato.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_front.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_lettuce.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_meat.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_onion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_patty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_salad.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_holding_tomato.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/Chef_normal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_baked_potato.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_cheese.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_chopped_cheese.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_pizzadough.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/OldImages/chef_holding_potato.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Chef/chefAtlas.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/Chef/ChefAtlas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Chef/ChefAtlas.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/Chef/ChefSprites.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,13 +36,7 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="piazza-panic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="piazza-panic" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="other" type="c8890929:TasksNode$1" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -90,13 +59,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
-    <property name="cidr.known.project.marker" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/andrew/Downloads/untitled3/piazza-panic/build.gradle",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RunManager" selected="Gradle.piazza-panic [run]">
     <configuration name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
@@ -180,17 +149,6 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Application.DesktopLauncher" />
       <item itemvalue="Gradle.ChefMovementTests" />
@@ -218,6 +176,7 @@
       <workItem from="1677790865131" duration="595000" />
       <workItem from="1677791683298" duration="4111000" />
       <workItem from="1677946989933" duration="1302000" />
+      <workItem from="1678444688346" duration="3889000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1677792164543</created>
