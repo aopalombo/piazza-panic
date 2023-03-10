@@ -443,7 +443,7 @@ public class PlayScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){multiplier = 2f;}
         if(Gdx.input.isKeyPressed(Input.Keys.M)){multiplier = 1f;}
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
-        if(Gdx.input.isKeyPressed(Input.Keys.I)){controlledChef.getInHandsIng().cookTime = 0;}
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
     }
 
     @Override

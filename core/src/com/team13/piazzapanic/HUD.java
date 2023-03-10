@@ -1,5 +1,6 @@
 package com.team13.piazzapanic;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import com.badlogic.gdx.graphics.Color;
@@ -43,8 +44,17 @@ public class HUD implements Disposable {
 
     private Label scoreLabel;
     private Label scoreLabelT;
+
+    private Label powerUpLabel;
+    private Label powerUpLabelT;
+
     private Label orderNumL;
     private Label orderNumLT;
+
+    private Integer powerUpTime = 21;
+    private Boolean powerUp = false;
+    private ArrayList<String> powerUps = new ArrayList<String>();
+    private String currentPowerUp;
 
     private BitmapFont font = new BitmapFont();
 
@@ -81,6 +91,9 @@ public class HUD implements Disposable {
         scoreLabel = new Label(String.format("%d", score), new Label.LabelStyle(font, Color.WHITE));
         scoreLabelT = new Label("MONEY", new Label.LabelStyle(font, Color.BLACK));
 
+        powerUpLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        powerUpLabelT = new Label("", new Label.LabelStyle(font, Color.BLACK));
+
 
         table.add(timeLabelT).padTop(2).padLeft(2);
         table.add(scoreLabelT).padTop(2).padLeft(2);
@@ -92,12 +105,18 @@ public class HUD implements Disposable {
         table.row();
         table.add(reputationLabelT).padTop(2).padLeft(2);
         table.add(orderTimeLabelT).padTop(2).padLeft(2);
+        table.add(powerUpLabelT).padTop(2).padLeft(2);
+        table.add(powerUpLabelT).padTop(2).padLeft(2);
         table.row();
         table.add(reputationLabel).padTop(2).padLeft(2);
         table.add(orderTimeLabel).padTop(2).padLeft(2);
+        table.add(powerUpLabel).padTop(2).padLeft(2);
+        table.add(powerUpLabel).padTop(2).padLeft(2);
 
         table.left().top();
         stage.addActor(table);
+
+        powerUps.add("2x Speed");
     }
 
     /**
@@ -147,6 +166,17 @@ public class HUD implements Disposable {
         timeLabel.setText(timeStr);
         stage.addActor(table);
 
+        if(powerUp){
+            powerUpTime--;
+            powerUpLabel.setText(Integer.toString(powerUpTime));
+            if(powerUpTime == 0){
+                powerUpLabel.setText("");
+                powerUpLabelT.setText("");
+                powerUp = false;
+                powerUpTime = 21;
+                currentPowerUp = "";
+            }
+        }
     }
 
     /**
@@ -180,6 +210,10 @@ public class HUD implements Disposable {
             scoreLabelT.setText("");
             orderTimeLabel.setText("");
             orderTimeLabelT.setText("");
+            powerUpLabel.setText("");
+            powerUpLabelT.setText("");
+            powerUpLabel.remove();
+            powerUpLabelT.remove();
             orderTimeLabel.remove();
             orderTimeLabelT.remove();
             scoreLabelT.remove();
@@ -215,6 +249,16 @@ public class HUD implements Disposable {
         orderNumLT.setText("ORDER");
         stage.addActor(table);
 
+    }
+
+    /**
+     * Generates a random power up from the 5 selections: 2x speed, 2x money, 2x cooking speed, no burning food, freeze order time
+     */
+
+    public void generatePowerUp(){
+        currentPowerUp = powerUps.get((int) Math.random()*powerUps.size());
+        powerUp = true;
+        powerUpLabelT.setText(currentPowerUp);
     }
 
     @Override
