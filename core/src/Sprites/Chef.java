@@ -400,7 +400,7 @@ public class Chef extends Sprite {
                 skinNeeded = skin.getRegion("Chef_holding_cheese");
             }
         } else if (item instanceof BurgerRecipe) {
-            skinNeeded = skin.getRegion("Chef_holding_front");
+            skinNeeded = skin.getRegion("Chef_holding_complete_burger");
         } else if (item instanceof SaladRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_salad");
             }

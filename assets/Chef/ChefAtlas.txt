@@ -46,7 +46,7 @@ Chef_holding_chopped_tomato
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_front
+Chef_holding_complete_burger
   rotate: false
   xy: 806, 50
   size: 132, 46
