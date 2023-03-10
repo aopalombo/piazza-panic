@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: jacoco-report
-          path: ./*
+          path: ./tests/build/reports/jacoco/test/html/*
 #          path: ./home/runner/work/piazza-panic/piazza-panic/build/reports/jacoco/test.html
 #       file:///home/runner/work/piazza-panic/piazza-panic/tests/build/reports/tests/test/index.html:
 
