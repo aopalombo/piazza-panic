@@ -52,6 +52,12 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         
     }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'src.com.team13.piazzapanic.DesktopLauncher'
+        }
+    }
 }
 
 project(":core") {
