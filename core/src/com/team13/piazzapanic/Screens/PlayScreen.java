@@ -269,10 +269,6 @@ public class PlayScreen implements Screen {
                                 if(controlledChef.getInHandsIng() != null) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
                                         hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
-                                        /*
-                                        Pan pan = new Pan(world, map, null, null);
-                                        controlledChef.setTouchingTile(pan.fixture);
-                                        */
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -439,7 +435,7 @@ public class PlayScreen implements Screen {
         }
         game.batch.end();
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
-        //if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
     }
 
     private void activatePowerUp() {
