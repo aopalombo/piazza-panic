@@ -57,12 +57,14 @@ public class HUD implements Disposable {
 
     private Label orderNumL;
     private Label orderNumLT;
+    private Integer numOrders;
 
     private Integer powerUpTime = 31;
     private Boolean powerUp = false;
     private ArrayList<String> powerUps = new ArrayList<String>();
     private String currentPowerUp;
     private Random randomizer = new Random();
+    private Boolean freezeTime = false;
 
     private BitmapFont font = new BitmapFont();
 
@@ -129,6 +131,8 @@ public class HUD implements Disposable {
 
         powerUps.add("2X SPEED");
         powerUps.add("2X MONEY");
+        powerUps.add("FREEZE TIME");
+        powerUps.add("SPEEDY");
     }
 
     /**
@@ -138,7 +142,9 @@ public class HUD implements Disposable {
      */
     public void updateTime(Boolean scenarioComplete, Order currentOrder){
         if(!Objects.isNull(currentOrder)){
-            currentOrder.orderTime--;
+            if(!freezeTime){
+                currentOrder.orderTime--;
+            }
             orderTimeLabel.setText(Integer.toString(currentOrder.orderTime));
             if(currentOrder.orderTime==0){
                 if(!scenarioComplete){
@@ -197,20 +203,23 @@ public class HUD implements Disposable {
      * @param scenarioComplete Whether the game scenario has been completed.
      * @param expectedTime The expected time an order should be completed in.
      */
-    public void updateScore(Boolean scenarioComplete, Integer expectedTime, Integer multiplier){
-        int addScore;
+    public void updateScore(Boolean scenarioComplete, Integer expectedTime, Integer multiplier, Order currentOrder){
+        int addScore = 0;
         int currentTime;
 
         if(this.scenarioComplete == Boolean.FALSE){
-            currentTime = (worldTimerM * 60) + worldTimerS;
+            currentTime = ((worldTimerM * 60) + worldTimerS)/numOrders;
             if (currentTime <= expectedTime) {
                 addScore = 100*multiplier;
             }
             else{
-                addScore = 100*multiplier - (5 * (currentTime -expectedTime));
+                addScore = 100*multiplier - (currentTime -expectedTime);
                 if(addScore < 0){
                     addScore = 0;
                 }
+            }
+            if(currentOrder.orderTime==0){
+                addScore = 0;
             }
             score += addScore;
         }
@@ -273,8 +282,33 @@ public class HUD implements Disposable {
         powerUpLabelT.setText(currentPowerUp);
     }
 
+    /**
+     * returns current power up
+     * @return currentPowerUp
+     */
+
     public String getPowerUp(){
         return currentPowerUp;
+    }
+
+    /**
+     * freezes the time of the current order
+     */
+
+    public void freezeTime(){
+        freezeTime = true;
+    }
+
+    /**
+     * unfreezes the time of the current order
+     */
+
+    public void unfreezeTime(){
+        freezeTime = false;
+    }
+
+    public void setNumOrders(Integer num){
+        this.numOrders = num;
     }
 
     @Override
@@ -289,7 +323,7 @@ public class HUD implements Disposable {
      * @param duration the duration of the bar
      */
 
-    public void createProgressBar(float x, float y, Chef chef, Integer duration) {
+    public void createProgressBar(float x, float y, Chef chef, float duration) {
         ProgressBarStyle style = new ProgressBarStyle();
         style.background = getColoredDrawable(20, 5, Color.GREEN);
         style.knob = getColoredDrawable(0, 5, Color.WHITE);

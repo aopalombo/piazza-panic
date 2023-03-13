@@ -28,6 +28,6 @@ public class CheeseStation extends InteractiveTileObject{
      * @return A new Cheese object.
      */
     public Ingredient getIngredient() {
-        return new Cheese(0, 3);
+        return new Cheese(2, 0);
     }
 }

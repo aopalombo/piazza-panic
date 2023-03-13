@@ -1,12 +1,11 @@
 package com.team13.piazzapanic.Screens;
 
-import Ingredients.Ingredient;
+import Ingredients.*;
 import Recipe.Recipe;
 import Sprites.*;
 import Recipe.Order;
 import Tools.B2WorldCreator;
 import Tools.WorldContactListener;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -77,11 +76,13 @@ public class PlayScreen implements Screen {
 
     private int orderCount;
 
+    private int orderTime = 41;
+
     private float chefSpeedMultiplier = 1f;
 
-    private int timeMultiplier;
-
     private int moneyMultiplier = 1;
+
+    private float cookSpeedMultiplier = 1f;
 
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
@@ -113,14 +114,12 @@ public class PlayScreen implements Screen {
         controlledChef.notificationSetBounds("Down");
         if(difficulty == "easy"){
             orderCount = 5;
-            timeMultiplier = 35;
         } else if(difficulty == "normal"){
             orderCount = 8;
-            timeMultiplier = 35;
         } else if(difficulty == "hard"){
             orderCount = 11;
-            timeMultiplier = 35;
         }
+        hud.setNumOrders(orderCount);
     }
 
     @Override
@@ -197,43 +196,35 @@ public class PlayScreen implements Screen {
                     if (controlledChef.getInHandsIng() == null && controlledChef.getInHandsRecipe() == null) {
                         switch (tileName) {
                             case "Sprites.TomatoStation":
-                                TomatoStation tomatoTile = (TomatoStation) tile;
-                                controlledChef.setInHandsIng(tomatoTile.getIngredient());
+                                controlledChef.setInHandsIng(new Tomato(2*cookSpeedMultiplier, 3));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PotatoStation":
-                                PotatoStation potatoTile = (PotatoStation) tile;
-                                controlledChef.setInHandsIng(potatoTile.getIngredient());
+                                controlledChef.setInHandsIng(new Potato(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PizzaDoughStation":
-                                PizzaDoughStation pizzaDoughTile = (PizzaDoughStation) tile;
-                                controlledChef.setInHandsIng(pizzaDoughTile.getIngredient());
+                                controlledChef.setInHandsIng(new PizzaDough(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.CheeseStation":
-                                CheeseStation cheeseStation = (CheeseStation) tile;
-                                controlledChef.setInHandsIng(cheeseStation.getIngredient());
+                                controlledChef.setInHandsIng(new Cheese(2*cookSpeedMultiplier,0));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.BunsStation":
-                                BunsStation bunTile = (BunsStation) tile;
-                                controlledChef.setInHandsIng(bunTile.getIngredient());
+                                controlledChef.setInHandsIng(new Bun(0,3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.OnionStation":
-                                OnionStation onionTile = (OnionStation) tile;
-                                controlledChef.setInHandsIng(onionTile.getIngredient());
+                                controlledChef.setInHandsIng(new Onion(2*cookSpeedMultiplier,0));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.SteakStation":
-                                SteakStation steakTile = (SteakStation) tile;
-                                controlledChef.setInHandsIng(steakTile.getIngredient());
+                                controlledChef.setInHandsIng(new Steak(2*cookSpeedMultiplier,3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.LettuceStation":
-                                LettuceStation lettuceTile = (LettuceStation) tile;
-                                controlledChef.setInHandsIng(lettuceTile.getIngredient());
+                                controlledChef.setInHandsIng(new Lettuce(2*cookSpeedMultiplier, 0));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PlateStation":
@@ -254,7 +245,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.ChoppingBoard":
                                 if(controlledChef.getInHandsIng() != null){
                                     if(controlledChef.getInHandsIng().prepareTime > 0){
-                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6);
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -268,11 +259,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.Pan":
                                 if(controlledChef.getInHandsIng() != null) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
-                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
-                                        /*
-                                        Pan pan = new Pan(world, map, null, null);
-                                        controlledChef.setTouchingTile(pan.fixture);
-                                        */
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -333,10 +320,10 @@ public class PlayScreen implements Screen {
 
         for(int i = 0; i<orderCount; i++){
             if(randomNum==1) {
-                order = new Order(PlateStation.burgerRecipe, burger_recipe, (6 - ordersArray.size()) * timeMultiplier);
+                order = new Order(PlateStation.burgerRecipe, burger_recipe, orderTime);
             }
             else {
-                order = new Order(PlateStation.saladRecipe, salad_recipe, (6 - ordersArray.size()) * timeMultiplier);
+                order = new Order(PlateStation.saladRecipe, salad_recipe, orderTime);
             }
             ordersArray.add(order);
             randomNum = ThreadLocalRandom.current().nextInt(1, 2 + 1);
@@ -349,13 +336,13 @@ public class PlayScreen implements Screen {
      */
     public void updateOrder(){
         if(scenarioComplete==Boolean.TRUE) {
-            hud.updateScore(Boolean.TRUE, ((orderCount+1) - ordersArray.size()) * timeMultiplier, moneyMultiplier);
+            hud.updateScore(Boolean.TRUE, orderTime, moneyMultiplier,ordersArray.get(0));
             hud.updateOrder(Boolean.TRUE, 0);
             return;
         }
         if(ordersArray.size() != 0) {
             if ((ordersArray.get(0).orderComplete) || (ordersArray.get(0).orderTime == 0)) {
-                hud.updateScore(Boolean.FALSE, ((orderCount+1) - ordersArray.size()) * timeMultiplier, moneyMultiplier);
+                hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
                 return;
@@ -439,7 +426,7 @@ public class PlayScreen implements Screen {
         }
         game.batch.end();
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
-        //if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
     }
 
     private void activatePowerUp() {
@@ -447,6 +434,10 @@ public class PlayScreen implements Screen {
             chefSpeedMultiplier = 1.75f;
         } else if (hud.getPowerUp() ==  "2X MONEY"){
             moneyMultiplier = 2;
+        } else if(hud.getPowerUp() ==  "FREEZE TIME"){
+            hud.freezeTime();
+        }else if(hud.getPowerUp() ==  "SPEEDY"){
+            cookSpeedMultiplier = 0.5f;
         }
     }
 
@@ -454,6 +445,8 @@ public class PlayScreen implements Screen {
         if(hud.getPowerUp() == ""){
             chefSpeedMultiplier = 1f;
             moneyMultiplier = 1;
+            hud.unfreezeTime();
+            cookSpeedMultiplier = 1f;
         }
     }
 
