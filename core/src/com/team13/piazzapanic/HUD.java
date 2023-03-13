@@ -1,22 +1,29 @@
 package com.team13.piazzapanic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.Random;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import Recipe.Order;
-
+import Sprites.Chef;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 
 
 public class HUD implements Disposable {
@@ -51,12 +58,15 @@ public class HUD implements Disposable {
     private Label orderNumL;
     private Label orderNumLT;
 
-    private Integer powerUpTime = 21;
+    private Integer powerUpTime = 31;
     private Boolean powerUp = false;
     private ArrayList<String> powerUps = new ArrayList<String>();
     private String currentPowerUp;
+    private Random randomizer = new Random();
 
     private BitmapFont font = new BitmapFont();
+
+    private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
 
     public HUD(SpriteBatch sb){
         this.scenarioComplete = Boolean.FALSE;
@@ -105,18 +115,20 @@ public class HUD implements Disposable {
         table.row();
         table.add(reputationLabelT).padTop(2).padLeft(2);
         table.add(orderTimeLabelT).padTop(2).padLeft(2);
-        table.add(powerUpLabelT).padTop(2).padLeft(2);
-        table.add(powerUpLabelT).padTop(2).padLeft(2);
         table.row();
         table.add(reputationLabel).padTop(2).padLeft(2);
         table.add(orderTimeLabel).padTop(2).padLeft(2);
-        table.add(powerUpLabel).padTop(2).padLeft(2);
-        table.add(powerUpLabel).padTop(2).padLeft(2);
-
         table.left().top();
         stage.addActor(table);
 
-        powerUps.add("2x Speed");
+        powerUpLabel.setPosition(61, 131);
+        powerUpLabelT.setPosition(48, 139);
+
+        stage.addActor(powerUpLabel);
+        stage.addActor(powerUpLabelT);
+
+        powerUps.add("2X SPEED");
+        powerUps.add("2X MONEY");
     }
 
     /**
@@ -173,7 +185,7 @@ public class HUD implements Disposable {
                 powerUpLabel.setText("");
                 powerUpLabelT.setText("");
                 powerUp = false;
-                powerUpTime = 21;
+                powerUpTime = 31;
                 currentPowerUp = "";
             }
         }
@@ -185,17 +197,17 @@ public class HUD implements Disposable {
      * @param scenarioComplete Whether the game scenario has been completed.
      * @param expectedTime The expected time an order should be completed in.
      */
-    public void updateScore(Boolean scenarioComplete, Integer expectedTime){
+    public void updateScore(Boolean scenarioComplete, Integer expectedTime, Integer multiplier){
         int addScore;
         int currentTime;
 
         if(this.scenarioComplete == Boolean.FALSE){
             currentTime = (worldTimerM * 60) + worldTimerS;
             if (currentTime <= expectedTime) {
-                addScore = 100;
+                addScore = 100*multiplier;
             }
             else{
-                addScore = 100 - (5 * (currentTime -expectedTime));
+                addScore = 100*multiplier - (5 * (currentTime -expectedTime));
                 if(addScore < 0){
                     addScore = 0;
                 }
@@ -256,13 +268,65 @@ public class HUD implements Disposable {
      */
 
     public void generatePowerUp(){
-        currentPowerUp = powerUps.get((int) Math.random()*powerUps.size());
+        currentPowerUp = powerUps.get(randomizer.nextInt(powerUps.size()));
         powerUp = true;
         powerUpLabelT.setText(currentPowerUp);
+    }
+
+    public String getPowerUp(){
+        return currentPowerUp;
     }
 
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    /**
+     * Generates a progress bar at position x, y for a given duration
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param duration the duration of the bar
+     */
+
+    public void createProgressBar(float x, float y, Chef chef, Integer duration) {
+        ProgressBarStyle style = new ProgressBarStyle();
+        style.background = getColoredDrawable(20, 5, Color.GREEN);
+        style.knob = getColoredDrawable(0, 5, Color.WHITE);
+        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
+        ProgressBar bar = new ProgressBar(0, duration, 0.05f, false, style);
+        bar.setWidth(30);
+        bar.setHeight(5);
+        bar.setValue(15f);
+        bar.setX(x);
+        bar.setY(y);
+        stage.addActor(bar);
+        bars.put(bar,chef);
+        System.out.println("progress bar created");
+    }
+
+    /**
+     * Updates the progress bars
+     */
+    public void updateProgressBars() {
+        if (!bars.isEmpty()) {
+            for (ProgressBar bar : bars.keySet()) {
+                bar.setValue(bar.getValue() - 0.05f);
+                if (bar.getValue() <= 0) {
+                    stage.getActors().removeValue(bar, false);
+                }
+            }
+        }
+    }
+    /**
+     * Helper function to create rectangles, used for progress bars
+     */
+    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+        pixmap.dispose();
+        return drawable;
     }
 }

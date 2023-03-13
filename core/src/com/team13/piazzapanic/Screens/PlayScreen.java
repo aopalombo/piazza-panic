@@ -11,27 +11,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -83,13 +75,13 @@ public class PlayScreen implements Screen {
 
     private float timeSecondsCount = 0f;
 
-    private float multiplier = 1f;
-
     private int orderCount;
+
+    private float chefSpeedMultiplier = 1f;
 
     private int timeMultiplier;
 
-    private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
+    private int moneyMultiplier = 1;
 
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
@@ -106,7 +98,7 @@ public class PlayScreen implements Screen {
         gamecam = new OrthographicCamera();
         // FitViewport to maintain aspect ratio whilst scaling to screen size
         gameport = new FitViewport(MainGame.V_WIDTH / MainGame.PPM, MainGame.V_HEIGHT / MainGame.PPM, gamecam);
-        // create HUD for score & time
+        // create HUD
         hud = new HUD(game.batch);
         // create map
         TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
@@ -182,7 +174,7 @@ public class PlayScreen implements Screen {
             //move chef using WASD
             controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),
                                 Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),
-                                multiplier);
+                                chefSpeedMultiplier);
             }
         if (controlledChef.b2body.getLinearVelocity().x > 0){
             controlledChef.notificationSetBounds("Right");
@@ -262,7 +254,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.ChoppingBoard":
                                 if(controlledChef.getInHandsIng() != null){
                                     if(controlledChef.getInHandsIng().prepareTime > 0){
-                                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6);
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
@@ -276,7 +268,7 @@ public class PlayScreen implements Screen {
                             case "Sprites.Pan":
                                 if(controlledChef.getInHandsIng() != null) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
-                                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
                                         /*
                                         Pan pan = new Pan(world, map, null, null);
                                         controlledChef.setTouchingTile(pan.fixture);
@@ -292,6 +284,11 @@ public class PlayScreen implements Screen {
                                         controlledChef.dropItemOn(tile);
                                         ordersArray.get(0).orderComplete = true;
                                         controlledChef.setChefSkin(null);
+                                        if((((orderCount+1) - ordersArray.size())%2) == 0){
+                                            System.out.println("generating powerup");
+                                            hud.generatePowerUp();
+                                            activatePowerUp();
+                                        }
                                         if(ordersArray.size()==1){
                                             scenarioComplete = Boolean.TRUE;
                                         }
@@ -352,13 +349,13 @@ public class PlayScreen implements Screen {
      */
     public void updateOrder(){
         if(scenarioComplete==Boolean.TRUE) {
-            hud.updateScore(Boolean.TRUE, ((orderCount+1) - ordersArray.size()) * timeMultiplier);
+            hud.updateScore(Boolean.TRUE, ((orderCount+1) - ordersArray.size()) * timeMultiplier, moneyMultiplier);
             hud.updateOrder(Boolean.TRUE, 0);
             return;
         }
         if(ordersArray.size() != 0) {
             if ((ordersArray.get(0).orderComplete) || (ordersArray.get(0).orderTime == 0)) {
-                hud.updateScore(Boolean.FALSE, ((orderCount+1) - ordersArray.size()) * timeMultiplier);
+                hud.updateScore(Boolean.FALSE, ((orderCount+1) - ordersArray.size()) * timeMultiplier, moneyMultiplier);
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
                 return;
@@ -406,7 +403,8 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         updateOrder();
-        updateProgressBars();
+        disablePowerUps();
+        hud.updateProgressBars();
         chef1.draw(game.batch);
         chef2.draw(game.batch);
         controlledChef.drawNotification(game.batch);
@@ -440,10 +438,23 @@ public class PlayScreen implements Screen {
             chef2.displayIngDynamic(game.batch);
         }
         game.batch.end();
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){multiplier = 2f;}
-        if(Gdx.input.isKeyPressed(Input.Keys.M)){multiplier = 1f;}
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
-        if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+        //if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+    }
+
+    private void activatePowerUp() {
+        if(hud.getPowerUp() ==  "2X SPEED"){
+            chefSpeedMultiplier = 1.75f;
+        } else if (hud.getPowerUp() ==  "2X MONEY"){
+            moneyMultiplier = 2;
+        }
+    }
+
+    private void disablePowerUps(){
+        if(hud.getPowerUp() == ""){
+            chefSpeedMultiplier = 1f;
+            moneyMultiplier = 1;
+        }
     }
 
     @Override
@@ -472,50 +483,5 @@ public class PlayScreen implements Screen {
         renderer.dispose();
         world.dispose();
         hud.dispose();
-    }
-    
-    private void createProgressBar(float x, float y, Chef chef, Integer duration) {
-        if(chef.userControlChef){
-            ProgressBarStyle style = new ProgressBarStyle();
-            style.background = getColoredDrawable(20, 5, Color.GREEN);
-            style.knob = getColoredDrawable(0, 5, Color.WHITE);
-            style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-            ProgressBar bar = new ProgressBar(0, duration, 0.05f, false, style);
-            bar.setWidth(30);
-            bar.setHeight(5);
-            bar.setValue(15f);
-            bar.setX(x);
-            bar.setY(y);
-            hud.stage.addActor(bar);
-            bars.put(bar,chef);
-            System.out.println("progress bar created");
-        }
-    }
-
-    private void updateProgressBars() {
-        if (!bars.isEmpty()) {
-            for (ProgressBar bar : bars.keySet()) {
-                //bar.act(0.05f);
-                bar.setValue(bar.getValue() - 0.05f);
-                if (bar.getValue() <= 0) {
-                    hud.stage.getActors().removeValue(bar, false);
-                    //bars.remove(bar);
-                    /*
-                    InteractiveTileObject tile = (InteractiveTileObject) bars.get(bar).getTouchingTile().getUserData();
-                    if (tile instanceof Pan){
-                        createProgressBar((controlledChef.b2body.getPosition().x*MainGame.PPM)-14,(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9);
-                    }
-                     */
-                }
-            }
-        }
-    }
-    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
-        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
-        pixmap.setColor(color);
-        pixmap.fill();
-        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-        pixmap.dispose();
-        return drawable;
     }
 }
