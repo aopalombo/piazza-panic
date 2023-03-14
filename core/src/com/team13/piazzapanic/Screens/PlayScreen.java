@@ -3,7 +3,6 @@ package com.team13.piazzapanic.Screens;
 import Ingredients.*;
 import Recipe.Recipe;
 import Sprites.*;
-import Recipe.Dish;
 import Recipe.Order;
 import Tools.B2WorldCreator;
 import Tools.WorldContactListener;
@@ -269,17 +268,14 @@ public class PlayScreen implements Screen {
                                     if(ordersArray.get(0).completeDish(controlledChef.getInHandsRecipe())){
                                         controlledChef.dropItemOn(tile);
                                         controlledChef.setChefSkin(null);
-                                    }
-                                    if(ordersArray.get(0).isComplete()){
-                                        controlledChef.dropItemOn(tile);
-                                        controlledChef.setChefSkin(null);
-                                        if((((orderCount+1) - ordersArray.size())%2) == 0){
-                                            System.out.println("generating powerup");
-                                            hud.generatePowerUp();
-                                            activatePowerUp();
-                                        }
-                                        if(ordersArray.size()==1){
-                                            scenarioComplete = Boolean.TRUE;
+                                        if(ordersArray.get(0).isComplete()){
+                                            if((((orderCount+1) - ordersArray.size())%2) == 0){
+                                                hud.generatePowerUp();
+                                                activatePowerUp();
+                                            }
+                                            if(ordersArray.size()==1){
+                                                scenarioComplete = Boolean.TRUE;
+                                            }
                                         }
                                     }
                                 }
@@ -316,7 +312,7 @@ public class PlayScreen implements Screen {
      */
     public void createOrder() {
         Order order;
-        int dishAmount = 1;
+        int dishAmount = 2;
 
         for(int i = 1; i<orderCount+1; i++){
             order = new Order(dishAmount);
@@ -347,11 +343,6 @@ public class PlayScreen implements Screen {
                 hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
-                for(Dish dish: ordersArray.get(0).dishes){
-                    if(dish.orderComplete){
-                        ordersArray.get(0).dishes.remove(dish);
-                    }
-                }
                 return;
             }
             ordersArray.get(0).create(trayX, trayY, game.batch);
