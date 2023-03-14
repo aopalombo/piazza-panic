@@ -76,8 +76,8 @@ public class HUD implements Disposable {
         worldTimerS = 0;
         score = 0;
         timeStr = String.format("%d", worldTimerM) + " : " + String.format("%d", worldTimerS);
-        float fontX = 0.5F;
-        float fontY = 0.3F;
+        float fontX = 0.4F;
+        float fontY = 0.2F;
 
         
         font.getData().setScale(fontX, fontY);
@@ -117,17 +117,13 @@ public class HUD implements Disposable {
         table.row();
         table.add(reputationLabelT).padTop(2).padLeft(2);
         table.add(orderTimeLabelT).padTop(2).padLeft(2);
+        table.add(powerUpLabelT).padTop(2).padLeft(2);
         table.row();
         table.add(reputationLabel).padTop(2).padLeft(2);
         table.add(orderTimeLabel).padTop(2).padLeft(2);
+        table.add(powerUpLabel).padTop(2).padLeft(2);
         table.left().top();
         stage.addActor(table);
-
-        powerUpLabel.setPosition(61, 131);
-        powerUpLabelT.setPosition(48, 139);
-
-        stage.addActor(powerUpLabel);
-        stage.addActor(powerUpLabelT);
 
         powerUps.add("2X SPEED");
         powerUps.add("2X MONEY");

@@ -3,6 +3,7 @@ package com.team13.piazzapanic.Screens;
 import Ingredients.*;
 import Recipe.Recipe;
 import Sprites.*;
+import Recipe.Dish;
 import Recipe.Order;
 import Tools.B2WorldCreator;
 import Tools.WorldContactListener;
@@ -267,9 +268,12 @@ public class PlayScreen implements Screen {
                                 break;
                             case "Sprites.CompletedDishStation":
                                 if (controlledChef.getInHandsRecipe() != null){
-                                    if(controlledChef.getInHandsRecipe().getClass().equals(ordersArray.get(0).recipe.getClass())){
+                                    if(ordersArray.get(0).completeDish(controlledChef.getInHandsRecipe())){
                                         controlledChef.dropItemOn(tile);
-                                        ordersArray.get(0).orderComplete = true;
+                                        controlledChef.setChefSkin(null);
+                                    }
+                                    if(ordersArray.get(0).isComplete()){
+                                        controlledChef.dropItemOn(tile);
                                         controlledChef.setChefSkin(null);
                                         if((((orderCount+1) - ordersArray.size())%2) == 0){
                                             System.out.println("generating powerup");
@@ -313,20 +317,20 @@ public class PlayScreen implements Screen {
      * Creates the orders randomly and adds to an array, updates the HUD.
      */
     public void createOrder() {
-        int randomNum = ThreadLocalRandom.current().nextInt(1, 2 + 1);
-        Texture burger_recipe = new Texture("Food/burger_recipe.png");
-        Texture salad_recipe = new Texture("Food/salad_recipe.png");
         Order order;
+        int dishAmount = 1;
 
         for(int i = 0; i<orderCount; i++){
-            if(randomNum==1) {
-                order = new Order(PlateStation.burgerRecipe, burger_recipe, orderTime);
-            }
-            else {
-                order = new Order(PlateStation.saladRecipe, salad_recipe, orderTime);
+            order = new Order(dishAmount);
+            //every three orders increase the amount of dishes per order
+            if(i%3 == 0){
+                dishAmount++;
+                //no more than 3 dishes per order
+                if(dishAmount>3){
+                    dishAmount = 3;
+                }
             }
             ordersArray.add(order);
-            randomNum = ThreadLocalRandom.current().nextInt(1, 2 + 1);
         }
         hud.updateOrder(Boolean.FALSE, 1);
     }
@@ -341,7 +345,7 @@ public class PlayScreen implements Screen {
             return;
         }
         if(ordersArray.size() != 0) {
-            if ((ordersArray.get(0).orderComplete) || (ordersArray.get(0).orderTime == 0)) {
+            if ((ordersArray.get(0).isComplete()) || (ordersArray.get(0).orderTime == 0)) {
                 hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
