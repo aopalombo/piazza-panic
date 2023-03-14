@@ -41,7 +41,7 @@ public class Dish extends Sprite {
      */
     public void create(float x, float y, SpriteBatch batch) {
         Sprite sprite = new Sprite(orderImg);
-        float adjustedX = x - (8 / MainGame.PPM);
+        float adjustedX = x - (25 / MainGame.PPM);
         float adjustedY = y + (7 / MainGame.PPM);
         sprite.setBounds(adjustedX, adjustedY, 33 / MainGame.PPM, 28 / MainGame.PPM);
         sprite.draw(batch);

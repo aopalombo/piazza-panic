@@ -13,7 +13,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -24,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The PlayScreen class is responsible for displaying the game to the user and handling the user's interactions.
@@ -77,7 +75,7 @@ public class PlayScreen implements Screen {
 
     private int orderCount;
 
-    private int orderTime = 41;
+    private int orderTime = 40;
 
     private float chefSpeedMultiplier = 1f;
 
@@ -114,11 +112,11 @@ public class PlayScreen implements Screen {
         world.setContactListener(new WorldContactListener());
         controlledChef.notificationSetBounds("Down");
         if(difficulty == "easy"){
-            orderCount = 5;
+            this.orderCount = 5;
         } else if(difficulty == "normal"){
-            orderCount = 8;
+            this.orderCount = 8;
         } else if(difficulty == "hard"){
-            orderCount = 11;
+            this.orderCount = 11;
         }
         hud.setNumOrders(orderCount);
     }
@@ -320,7 +318,7 @@ public class PlayScreen implements Screen {
         Order order;
         int dishAmount = 1;
 
-        for(int i = 0; i<orderCount; i++){
+        for(int i = 1; i<orderCount+1; i++){
             order = new Order(dishAmount);
             //every three orders increase the amount of dishes per order
             if(i%3 == 0){
@@ -349,6 +347,11 @@ public class PlayScreen implements Screen {
                 hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));
                 ordersArray.remove(0);
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
+                for(Dish dish: ordersArray.get(0).dishes){
+                    if(dish.orderComplete){
+                        ordersArray.get(0).dishes.remove(dish);
+                    }
+                }
                 return;
             }
             ordersArray.get(0).create(trayX, trayY, game.batch);

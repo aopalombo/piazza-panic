@@ -49,12 +49,6 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-//        jar {
-//            from sourceSets.main.output
-//            from {
-//                configurations.runtimeClasspath.filter { it.name.endsWith("jar") }.map { zipTree(it) }
-//            }
-//        }
 
     }
 
