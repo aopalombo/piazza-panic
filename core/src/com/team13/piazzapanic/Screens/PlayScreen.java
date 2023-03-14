@@ -312,7 +312,7 @@ public class PlayScreen implements Screen {
      */
     public void createOrder() {
         Order order;
-        int dishAmount = 2;
+        int dishAmount = 1;
 
         for(int i = 1; i<orderCount+1; i++){
             order = new Order(dishAmount);
