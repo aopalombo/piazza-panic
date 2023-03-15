@@ -26,7 +26,7 @@ public class AssetTests {
     }
     @Test
     public void ChefAtlasExists(){
-        assertTrue("This test will only pass if ChefAtlas.txt exists", Gdx.files.internal("chef/ChefAtlas.txt").exists());
+        assertTrue("This test will only pass if ChefAtlas.txt exists", Gdx.files.internal("Chef/chefAtlas.txt").exists());
     }
     @Test
     public void ChefSpritesExists(){
