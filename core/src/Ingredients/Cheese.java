@@ -16,9 +16,7 @@ public class Cheese extends Ingredient{
 
     public Cheese(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
-        super.setPrepared();
         super.tex = new ArrayList<>();
-        super.tex.add(null);
         super.tex.add(new Texture("Food/Cheese.png"));
         super.tex.add(new Texture("Food/Chopped_cheese.png"));
     }

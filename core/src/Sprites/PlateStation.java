@@ -31,6 +31,9 @@ public class PlateStation extends InteractiveTileObject {
     /** Static recipe for a salad */
     public static Recipe saladRecipe;
 
+    /** Static recipe for a jacket potato */
+    public static Recipe jacketPotatoRecipe;
+
     /** Recipe that has been completed on the plate */
     private Recipe recipeDone;
 
@@ -48,6 +51,7 @@ public class PlateStation extends InteractiveTileObject {
         this.plate = new ArrayList<>();
         burgerRecipe = new BurgerRecipe();
         saladRecipe = new SaladRecipe();
+        jacketPotatoRecipe = new JacketPotatoRecipe();
         this.recipeDone = null;
     }
 
@@ -62,7 +66,7 @@ public class PlateStation extends InteractiveTileObject {
     }
 
     /**
-     * Check if the ingredients on the plate match any of the two recipes (burger or salad) then clear the plate
+     * Check if the ingredients on the plate match any of the recipes on the menu then clear the plate
      * if a recipe is found and set the recipeDone
      */
     public void checkRecipeCreated(){
@@ -106,6 +110,27 @@ public class PlateStation extends InteractiveTileObject {
             if (saladSame) {
                 plate.clear();
                 recipeDone = saladRecipe;
+            }
+        }
+        if (plate.size() == jacketPotatoRecipe.getIngredients().size()){
+            boolean jacketPotatoSame = true;
+            boolean jacketPotatoIngFound;
+            for (Ingredient ing : plate) {
+                jacketPotatoIngFound = false;
+                for (int j = 0; j < jacketPotatoRecipe.getIngredients().size(); j++) {
+                    if (ing.getClass().toString().equals(jacketPotatoRecipe.getIngredients().get(j).getClass().toString())) {
+                        if (ing.isPrepared()) {
+                            jacketPotatoIngFound = true;
+                        }
+                    }
+                }
+                if (!jacketPotatoIngFound) {
+                    jacketPotatoSame = false;
+                }
+            }
+            if (jacketPotatoSame) {
+                plate.clear();
+                recipeDone = jacketPotatoRecipe;
             }
         }
     }

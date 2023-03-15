@@ -14,8 +14,9 @@ public class PizzaSauce extends Ingredient{
 
     public PizzaSauce(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
+        super.setPrepared();
         super.tex = new ArrayList<>();
-        tex.add(new Texture("Food/Tomato.png"));
-
+        tex.add(new Texture("Food/PizzaSauce.png"));
+        tex.add(new Texture("Food/PizzaSauce.png"));
     }
 }

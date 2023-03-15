@@ -2,6 +2,7 @@ package Sprites;
 
 import Ingredients.*;
 import Recipe.BurgerRecipe;
+import Recipe.JacketPotatoRecipe;
 import Recipe.Recipe;
 import Recipe.SaladRecipe;
 import com.badlogic.gdx.Gdx;
@@ -396,7 +397,7 @@ public class Chef extends Sprite {
                 skinNeeded = skin.getRegion("Chef_holding_pizzadough");
             }
         } else if (item instanceof Cheese) {
-            if (inHandsIng.isCooked()) {
+            if (inHandsIng.isPrepared()) {
                 skinNeeded = skin.getRegion("Chef_holding_chopped_cheese");
             } else {
                 skinNeeded = skin.getRegion("Chef_holding_cheese");
@@ -405,6 +406,8 @@ public class Chef extends Sprite {
             skinNeeded = skin.getRegion("Chef_holding_complete_burger");
         } else if (item instanceof SaladRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_salad");
+        } else if (item instanceof JacketPotatoRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_baked_potato");
             }
         }
     /**

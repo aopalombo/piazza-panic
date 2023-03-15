@@ -9,8 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import Sprites.PlateStation;
 
 public class Order{
-    private Dish burgerDish;
-    private Dish saladDish;
+    private Dish burgerDish =  new Dish(PlateStation.burgerRecipe, new Texture("Food/burger_recipe.png"), 40);
+    private Dish saladDish = new Dish(PlateStation.saladRecipe, new Texture("Food/salad_recipe.png"), 40);
+    private Dish jacketPotatoDish = new Dish(PlateStation.jacketPotatoRecipe, new Texture("Food/jacketPotato_recipe.png"), 40);;
     private ArrayList<Dish> menu = new ArrayList<Dish>();
     private Random randomizer = new Random();
 
@@ -18,10 +19,9 @@ public class Order{
     public ArrayList<Dish> dishes = new ArrayList<Dish>();
     
     public Order(Integer dishAmount){
-        burgerDish = new Dish(PlateStation.burgerRecipe, new Texture("Food/burger_recipe.png"), 40);
-        saladDish = new Dish(PlateStation.saladRecipe, new Texture("Food/salad_recipe.png"), 40);
         menu.add(burgerDish);
         menu.add(saladDish);
+        menu.add(jacketPotatoDish);
         for(int i = 0; i<dishAmount;i++){
             this.dishes.add(menu.get(randomizer.nextInt(menu.size())));
         }

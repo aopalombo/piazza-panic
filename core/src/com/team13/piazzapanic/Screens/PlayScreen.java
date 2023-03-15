@@ -198,11 +198,11 @@ public class PlayScreen implements Screen {
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PizzaSauceStation":
-                                controlledChef.setInHandsIng(new PizzaSauce(0, 3*cookSpeedMultiplier));
+                                controlledChef.setInHandsIng(new PizzaSauce(0, 0));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PotatoStation":
-                                controlledChef.setInHandsIng(new Potato(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
+                                controlledChef.setInHandsIng(new Potato(0, 3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PizzaDoughStation":
@@ -259,13 +259,20 @@ public class PlayScreen implements Screen {
                             }
                                 break;
                             case "Sprites.Pan":
-                                if(controlledChef.getInHandsIng() != null) {
+                                if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Potato")) {
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
                                         hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
                                         controlledChef.setUserControlChef(false);
                                     }
                                 }
-
+                                break;
+                            case "Sprites.Oven":
+                            if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Steak")) {
+                                    if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                        controlledChef.setUserControlChef(false);
+                                    }
+                                }
                                 break;
                             case "Sprites.CompletedDishStation":
                                 if (controlledChef.getInHandsRecipe() != null){
