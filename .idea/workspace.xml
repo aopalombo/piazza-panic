@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/AssetTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/AssetTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +45,11 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="piazza-panic" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -70,7 +74,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/andrew/Downloads/untitled5/piazza-panic/build.gradle",
+    "last_opened_file_path": "/Users/andrew/Downloads/untitled1/piazza-panic/build.gradle",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -79,21 +83,29 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.piazza-panic [desktop:dist]">
-    <configuration name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="com.team13.piazzapanic.DesktopLauncher" />
-      <module name="piazza-panic.desktop.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.team13.piazzapanic.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+  <component name="RunManager" selected="Gradle.AssetTests">
+    <configuration name="AssetTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":tests:test" />
+            <option value="--tests" />
+            <option value="&quot;io.team21.piazzapanic.tests.AssetTests&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
     <configuration name="piazza-panic [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -191,7 +203,7 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.DesktopLauncher" />
+      <item itemvalue="Gradle.AssetTests" />
       <item itemvalue="Gradle.piazza-panic [build]" />
       <item itemvalue="Gradle.piazza-panic [desktop:dist]" />
       <item itemvalue="Gradle.piazza-panic:desktop [build]" />
@@ -199,11 +211,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.piazza-panic [desktop:dist]" />
+        <item itemvalue="Gradle.AssetTests" />
         <item itemvalue="Gradle.piazza-panic [build]" />
+        <item itemvalue="Gradle.piazza-panic [desktop:dist]" />
         <item itemvalue="Gradle.piazza-panic:desktop [build]" />
         <item itemvalue="Gradle.piazza-panic [run]" />
-        <item itemvalue="Application.DesktopLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -221,6 +233,7 @@
       <workItem from="1677946989933" duration="1302000" />
       <workItem from="1678444688346" duration="3889000" />
       <workItem from="1678810684202" duration="3844000" />
+      <workItem from="1678894588061" duration="112000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1677792164543</created>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="KitchenTileSet" tilewidth="16" tileheight="16" tilecount="27" columns="3">
+<tileset version="1.10" tiledversion="1.10.0" name="KitchenTileSet" tilewidth="16" tileheight="16" tilecount="27" columns="3">
  <image source="TileSet.png" width="48" height="144"/>
  <tile id="0">
   <objectgroup draworder="index" id="2">
@@ -104,6 +104,16 @@
  <tile id="23">
   <objectgroup draworder="index" id="2">
    <object id="1" name="pizza" x="1.06712" y="1.02688" width="13.9245" height="14.005"/>
+  </objectgroup>
+ </tile>
+ <tile id="24">
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="oven" x="1.24911" y="1.03578" width="13.6634" height="14.005"/>
+  </objectgroup>
+ </tile>
+ <tile id="25">
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="pizzaSauce" x="1.16405" y="1.03578" width="13.6634" height="14.005"/>
   </objectgroup>
  </tile>
 </tileset>
