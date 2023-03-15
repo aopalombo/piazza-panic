@@ -49,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: CheckstyleReport
-          path: .tests/build/reports/checkstyle/*
+          path: ./*
