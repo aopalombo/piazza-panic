@@ -95,6 +95,10 @@ public class B2WorldCreator {
                 } else if (mapObject.getName().equals("order_top")) {
                     PlayScreen.trayX = rectangle.x;
                     PlayScreen.trayY = rectangle.y;
+                } else if (mapObject.getName().equals("pizzaSauce")){
+                    new PizzaSauceStation(world, map, bdef, rectangle);
+                } else if (mapObject.getName().equals("oven")){
+                    new Oven(world, map, bdef, rectangle);
                 }
             }
         }

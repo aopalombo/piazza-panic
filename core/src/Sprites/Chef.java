@@ -374,6 +374,8 @@ public class Chef extends Sprite {
             } else {
                 skinNeeded = skin.getRegion("Chef_holding_tomato");
             }
+        }else if (item instanceof PizzaSauce) {
+            skinNeeded = skin.getRegion("Chef_holding_tomato");
         } else if (item instanceof Bun) {
             if (inHandsIng.isCooked()) {
                 skinNeeded = skin.getRegion("Chef_holding_buns_toasted");

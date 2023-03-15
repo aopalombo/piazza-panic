@@ -197,6 +197,10 @@ public class PlayScreen implements Screen {
                                 controlledChef.setInHandsIng(new Tomato(2*cookSpeedMultiplier, 3));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
+                            case "Sprites.PizzaSauceStation":
+                                controlledChef.setInHandsIng(new PizzaSauce(0, 3*cookSpeedMultiplier));
+                                controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                                break;
                             case "Sprites.PotatoStation":
                                 controlledChef.setInHandsIng(new Potato(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
