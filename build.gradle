@@ -16,6 +16,23 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "jacoco"
+    apply plugin: "checkstyle"
+
+    def checkstyleVersion = "10.8.1"
+
+    configurations {
+        checkstyleRules
+    }
+    dependencies {
+        checkstyleRules("com.puppycrawl.tools:checkstyle:${checkstyleVersion}") {
+            transitive = false
+        }
+    }
+
+    checkstyle {
+        toolVersion "${checkstyleVersion}"
+        config = resources.text.fromArchiveEntry(configurations.checkstyleRules, "google_checks.xml")
+    }
 
     version = '1.0'
     ext {

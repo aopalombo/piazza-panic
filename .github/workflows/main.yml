@@ -30,17 +30,23 @@ jobs:
         with:
           arguments: build jacocoTestReport
 
-      - name: Build jar file with gradle wrapper
-        run: ./gradlew desktop:dist
-
       - name: Upload JaCoCo coverage report as workflow artefact
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: jacoco-report
+          name: JacocoReport
           path: ./tests/build/reports/jacoco/test/html/*
+
+      - name: Build jar file with gradle wrapper
+        run: ./gradlew desktop:dist
 
       - name: Upload library JAR
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: lib.jar
+          name: PiazzaPanic.jar
           path: ./desktop/build/libs/desktop-1.0.jar
+
+      - name: Upload Checkstyle report
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: CheckstyleReport
+          path: .tests/build/reports/checkstyle/*
