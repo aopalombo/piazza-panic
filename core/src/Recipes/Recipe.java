@@ -1,4 +1,4 @@
-package Recipe;
+package Recipes;
 
 import Ingredients.Ingredient;
 import com.badlogic.gdx.graphics.Texture;

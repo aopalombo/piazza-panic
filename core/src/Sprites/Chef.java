@@ -1,10 +1,8 @@
 package Sprites;
 
 import Ingredients.*;
-import Recipe.BurgerRecipe;
-import Recipe.JacketPotatoRecipe;
-import Recipe.Recipe;
-import Recipe.SaladRecipe;
+import Recipes.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -402,13 +400,19 @@ public class Chef extends Sprite {
             } else {
                 skinNeeded = skin.getRegion("Chef_holding_cheese");
             }
+        } else if (item instanceof UnbakedPizza) {
+            skinNeeded = skin.getRegion("Chef_holding_burger");
         } else if (item instanceof BurgerRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_complete_burger");
         } else if (item instanceof SaladRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_salad");
         } else if (item instanceof JacketPotatoRecipe) {
             skinNeeded = skin.getRegion("Chef_holding_baked_potato");
-            }
+        } else if (item instanceof UnbakedPizzaRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_burger");
+        } else if (item instanceof PizzaRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_baked_potato");
+        }
         }
     /**
      * Method to display the ingredient on the specific interactive tile objects (ChoppingBoard/Pan)

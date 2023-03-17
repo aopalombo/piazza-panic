@@ -1,9 +1,8 @@
 package com.team13.piazzapanic.Screens;
 
 import Ingredients.*;
-import Recipe.Recipe;
+import Recipes.*;
 import Sprites.*;
-import Recipe.Order;
 import Tools.B2WorldCreator;
 import Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -268,13 +267,17 @@ public class PlayScreen implements Screen {
                                 break;
                             case "Sprites.Oven":
                             if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Steak")) {
-                                    if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
-                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
-                                        controlledChef.setUserControlChef(false);
-                                    }
+                                if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                    controlledChef.setUserControlChef(false);
+                                }
                                 }
                                 break;
                             case "Sprites.CompletedDishStation":
+                                if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng() instanceof UnbakedPizza)&&(controlledChef.getInHandsIng().cookTime <= 0)){
+                                    controlledChef.setInHandsIng(null);
+                                    controlledChef.setInHandsRecipe(new PizzaRecipe());
+                                }
                                 if (controlledChef.getInHandsRecipe() != null){
                                     if(ordersArray.get(0).completeDish(controlledChef.getInHandsRecipe())){
                                         controlledChef.dropItemOn(tile);

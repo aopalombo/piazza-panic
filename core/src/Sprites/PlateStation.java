@@ -1,7 +1,8 @@
 package Sprites;
 
 import Ingredients.*;
-import Recipe.*;
+import Recipes.*;
+
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -34,6 +35,12 @@ public class PlateStation extends InteractiveTileObject {
     /** Static recipe for a jacket potato */
     public static Recipe jacketPotatoRecipe;
 
+    /** Static recipe for a unbacked pizza */
+    public static Recipe unbakedPizzaRecipe;
+
+    /** Static recipe for a pizza */
+    public static Recipe pizzaRecipe;
+
     /** Recipe that has been completed on the plate */
     private Recipe recipeDone;
 
@@ -52,6 +59,8 @@ public class PlateStation extends InteractiveTileObject {
         burgerRecipe = new BurgerRecipe();
         saladRecipe = new SaladRecipe();
         jacketPotatoRecipe = new JacketPotatoRecipe();
+        unbakedPizzaRecipe  = new UnbakedPizzaRecipe();
+        pizzaRecipe = new PizzaRecipe();
         this.recipeDone = null;
     }
 
@@ -131,6 +140,29 @@ public class PlateStation extends InteractiveTileObject {
             if (jacketPotatoSame) {
                 plate.clear();
                 recipeDone = jacketPotatoRecipe;
+            }
+        }
+        if (plate.size() == unbakedPizzaRecipe.getIngredients().size()){
+            boolean unbakedPizzaSame = true;
+            boolean unbakedPizzaIngFound;
+            for (Ingredient ing : plate) {
+                unbakedPizzaIngFound = false;
+                for (int j = 0; j < unbakedPizzaRecipe.getIngredients().size(); j++) {
+                    if (ing.getClass().toString().equals(unbakedPizzaRecipe.getIngredients().get(j).getClass().toString())) {
+                        if (ing.isPrepared()) {
+                            unbakedPizzaIngFound = true;
+                        }
+                    }
+                }
+                if (!unbakedPizzaIngFound) {
+                    unbakedPizzaSame = false;
+                }
+            }
+            if (unbakedPizzaSame) {
+                plate.clear();
+                UnbakedPizza temp = new UnbakedPizza(0, 3);
+                temp.setPrepared();
+                plate.add(temp);
             }
         }
     }

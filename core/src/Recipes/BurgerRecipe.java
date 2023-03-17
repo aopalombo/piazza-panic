@@ -1,7 +1,6 @@
-package Recipe;
+package Recipes;
 
-import Ingredients.Bun;
-import Ingredients.Steak;
+import Ingredients.*;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
