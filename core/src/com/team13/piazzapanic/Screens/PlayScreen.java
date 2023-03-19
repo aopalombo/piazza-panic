@@ -73,13 +73,17 @@ public class PlayScreen implements Screen {
 
     private int orderCount;
 
-    private int orderTime = 40;
+    public static int orderTime = 40;
 
     private float chefSpeedMultiplier = 1f;
 
     private int moneyMultiplier = 1;
 
     private float cookSpeedMultiplier = 1f;
+
+    private boolean endless = false;
+
+    private int dishAmount = 1;
 
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
@@ -115,6 +119,9 @@ public class PlayScreen implements Screen {
             this.orderCount = 8;
         } else if(difficulty == "hard"){
             this.orderCount = 11;
+        } else if(difficulty == "endless"){
+            this.orderCount = 10;
+            this.endless = true;
         }
         hud.setNumOrders(orderCount);
     }
@@ -326,7 +333,6 @@ public class PlayScreen implements Screen {
      */
     public void createOrder() {
         Order order;
-        int dishAmount = 1;
 
         for(int i = 1; i<orderCount+1; i++){
             order = new Order(dishAmount);
@@ -439,6 +445,10 @@ public class PlayScreen implements Screen {
         game.batch.end();
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
         if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+        //if in endless mode and orders are done generate new ones
+        if((ordersArray.size()==1)&&(endless)){
+                createOrder();
+        }
     }
 
     private void activatePowerUp() {

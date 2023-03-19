@@ -5,14 +5,15 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.team13.piazzapanic.Screens.PlayScreen;
 
 import Sprites.PlateStation;
 
 public class Order{
-    private Dish burgerDish =  new Dish(PlateStation.burgerRecipe, new Texture("Food/burger_recipe.png"), 40);
-    private Dish saladDish = new Dish(PlateStation.saladRecipe, new Texture("Food/salad_recipe.png"), 40);
-    private Dish jacketPotatoDish = new Dish(PlateStation.jacketPotatoRecipe, new Texture("Food/jacketPotato_recipe.png"), 40);
-    private Dish pizzaDish = new Dish(PlateStation.pizzaRecipe, new Texture("Food/pizza_recipe.png"), 60);
+    private Dish burgerDish =  new Dish(PlateStation.burgerRecipe, new Texture("Food/burger_recipe.png"), PlayScreen.orderTime);
+    private Dish saladDish = new Dish(PlateStation.saladRecipe, new Texture("Food/salad_recipe.png"), PlayScreen.orderTime);
+    private Dish jacketPotatoDish = new Dish(PlateStation.jacketPotatoRecipe, new Texture("Food/jacketPotato_recipe.png"), PlayScreen.orderTime);
+    private Dish pizzaDish = new Dish(PlateStation.pizzaRecipe, new Texture("Food/pizza_recipe.png"), PlayScreen.orderTime+20);
     private ArrayList<Dish> menu = new ArrayList<Dish>();
     private Random randomizer = new Random();
 
