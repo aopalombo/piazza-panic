@@ -15,7 +15,7 @@ public class Lettuce extends Ingredient{
     public Lettuce(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
         super.tex = new ArrayList<>();
-        super.tex.add(new Texture("Food/Lettuce.png"));
-        super.tex.add(new Texture("Food/Chopped_lettuce.png"));
+        super.tex.add(new Texture("Food/Ingredients/Lettuce.png"));
+        super.tex.add(new Texture("Food/Ingredients/Chopped_lettuce.png"));
     }
 }

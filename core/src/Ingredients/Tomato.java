@@ -15,8 +15,8 @@ public class Tomato extends Ingredient{
     public Tomato(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
         super.tex = new ArrayList<>();
-        tex.add(new Texture("Food/Tomato.png"));
-        tex.add(new Texture("Food/Chopped_tomato.png"));
+        tex.add(new Texture("Food/Ingredients/Tomato.png"));
+        tex.add(new Texture("Food/Ingredients/Chopped_tomato.png"));
 
     }
 }

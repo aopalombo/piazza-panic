@@ -25,6 +25,10 @@ public abstract class Ingredient extends Sprite {
      */
     private boolean amIPrepared;
     /**
+     * A flag to indicate whether the ingredient preparation has failed.
+     */
+    private boolean amIFailed;
+    /**
      * An array of textures representing different states of the ingredient.
      */
     public ArrayList<Texture> tex;
@@ -40,6 +44,7 @@ public abstract class Ingredient extends Sprite {
         this.cookTime = cookTime;
         this.amICooked = false;
         this.amIPrepared = false;
+        this.amIFailed = false;
         this.tex = null;
     }
 
@@ -78,6 +83,19 @@ public abstract class Ingredient extends Sprite {
     }
 
     /**
+     * Sets the flag indicating that the ingredient preparation has failed.
+     *
+     */
+    public void setFailed() { amIFailed= true; }
+
+    /**
+     * Returns the value of the flag indicating whether the ingredient preparation has failed.
+     *
+     * @return A boolean indicating whether the ingredient preparation has failed.
+     */
+    public boolean isFailed() { return amIFailed; }
+
+    /**
      * Creates and draws a new Sprite object representing the ingredient.
      *
      * @param x The x coordinate of the ingredient.
@@ -98,8 +116,10 @@ public abstract class Ingredient extends Sprite {
      * 0 represents the uncooked and unprepared ingredient.
      * 1 represents the prepared but uncooked ingredient.
      * 2 represents the fully cooked and prepared ingredient.
+     * 3 represents the failed ingredient
      *
      * */
+    // TODO add skin for failed ingredients using a 10x10 png file
     private int findCorrectSkin(){
         if (isPrepared() && isCooked()){
             return 2;

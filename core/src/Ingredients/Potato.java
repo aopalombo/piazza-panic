@@ -19,7 +19,7 @@ public class Potato extends Ingredient{
         super.setPrepared();
         super.tex = new ArrayList<>();
         super.tex.add(null);
-        super.tex.add(new Texture("Food/Potato.png"));
-        super.tex.add(new Texture("Food/Baked_potato.png"));
+        super.tex.add(new Texture("Food/Ingredients/Potato.png"));
+        super.tex.add(new Texture("Food/Ingredients/Baked_potato.png"));
     }
 }
