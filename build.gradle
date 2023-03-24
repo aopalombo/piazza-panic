@@ -36,6 +36,16 @@ allprojects {
     checkstyle {
         toolVersion "${checkstyleVersion}"
         config = resources.text.fromArchiveEntry(configurations.checkstyleRules, "google_checks.xml")
+        showViolations = true
+        ignoreFailures = true
+    }
+    checkstyleTest {
+        enabled = false
+    }
+    tasks.withType(Checkstyle) {
+        reports {
+            html.destination rootProject.file("build/reports/checkstyle.html")
+        }
     }
     //endregion
 

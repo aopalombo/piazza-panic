@@ -52,10 +52,13 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: PiazzaPanic.jar
-          path: ./desktop/build/libs/desktop-1.0.jar
+          path: ./desktop/build/libs/Piazza-Panic-0.1.jar
+
+      - name: Run checkstyle report on Core
+        run: ./gradlew core:checkstyleMain
 
       - name: Upload Checkstyle report
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: CheckstyleReport
-          path: ./*
+          name: CheckstyleReportCore
+          path: ./build/reports/checkstyle.html
