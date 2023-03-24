@@ -41,18 +41,18 @@ public class AssetTests {
         assertTrue("This test will only pass if Salad.png exists", Gdx.files.internal("Food/Salad.png").exists());
 
         //Prepped ingredients
-        assertTrue("This test will only pass if Chopped_lettuce.png exists", Gdx.files.internal("Food/Chopped_lettuce.png").exists());
-        assertTrue("This test will only pass if Chopped_tomato.png exists", Gdx.files.internal("Food/Chopped_tomato.png").exists());
-        assertTrue("This test will only pass if Chopped_onione.png exists", Gdx.files.internal("Food/Chopped_onion.png").exists());
-        assertTrue("This test will only pass if Cooked_patty.png exists", Gdx.files.internal("Food/Cooked_patty.png").exists());
-        assertTrue("This test will only pass if Patty.png exists", Gdx.files.internal("Food/Patty.png").exists());
-        assertTrue("This test will only pass if Toasted_burger_buns.png exists", Gdx.files.internal("Food/Toasted_burger_buns.png").exists());
+        assertTrue("This test will only pass if Chopped_lettuce.png exists", Gdx.files.internal("Food/Ingredients/Chopped_lettuce.png").exists());
+        assertTrue("This test will only pass if Chopped_tomato.png exists", Gdx.files.internal("Food/Ingredients/Chopped_tomato.png").exists());
+        assertTrue("This test will only pass if Chopped_onione.png exists", Gdx.files.internal("Food/Ingredients/Chopped_onion.png").exists());
+        assertTrue("This test will only pass if Cooked_patty.png exists", Gdx.files.internal("Food/Ingredients/Cooked_patty.png").exists());
+        assertTrue("This test will only pass if Patty.png exists", Gdx.files.internal("Food/Ingredients/Patty.png").exists());
+        assertTrue("This test will only pass if Toasted_burger_buns.png exists", Gdx.files.internal("Food/Ingredients/Toasted_burger_buns.png").exists());
 
         //Unprepped ingredients
-        assertTrue("This test will only pass if Lettuce.png exists", Gdx.files.internal("Food/Lettuce.png").exists());
-        assertTrue("This test will only pass if Tomato.png exists", Gdx.files.internal("Food/Tomato.png").exists());
-        assertTrue("This test will only pass if Onion.png exists", Gdx.files.internal("Food/Onion.png").exists());
-        assertTrue("This test will only pass if Meat.png exists", Gdx.files.internal("Food/Meat.png").exists());
-        assertTrue("This test will only pass if Burger_buns.png exists", Gdx.files.internal("Food/Burger_buns.png").exists());
+        assertTrue("This test will only pass if Lettuce.png exists", Gdx.files.internal("Food/Ingredients/Lettuce.png").exists());
+        assertTrue("This test will only pass if Tomato.png exists", Gdx.files.internal("Food/Ingredients/Tomato.png").exists());
+        assertTrue("This test will only pass if Onion.png exists", Gdx.files.internal("Food/Ingredients/Onion.png").exists());
+        assertTrue("This test will only pass if Meat.png exists", Gdx.files.internal("Food/Ingredients/Meat.png").exists());
+        assertTrue("This test will only pass if Burger_buns.png exists", Gdx.files.internal("Food/Ingredients/Burger_buns.png").exists());
     }
 }

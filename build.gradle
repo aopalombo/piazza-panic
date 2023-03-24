@@ -14,12 +14,16 @@ buildscript {
 }
 
 allprojects {
+    version = '0.1'
+
     apply plugin: "eclipse"
+    apply plugin: "java"
     apply plugin: "jacoco"
     apply plugin: "checkstyle"
 
+    //region Checkstyle
     def checkstyleVersion = "10.8.1"
-
+    //Setup config containing dependency with google style rules
     configurations {
         checkstyleRules
     }
@@ -28,13 +32,27 @@ allprojects {
             transitive = false
         }
     }
-
+    //Apply google style rules from config to checkstyle
     checkstyle {
         toolVersion "${checkstyleVersion}"
         config = resources.text.fromArchiveEntry(configurations.checkstyleRules, "google_checks.xml")
     }
+    //endregion
 
-    version = '1.0'
+    //region JaCoCo
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            html.enabled true
+            xml.enabled false
+            csv.enabled false
+        }
+    }
+    test {
+        finalizedBy jacocoTestReport
+    }
+    //endregion
+
     ext {
         appName = "PiazzaPanic"
         gdxVersion = '1.11.0'
@@ -59,6 +77,7 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
+    archivesBaseName = "Piazza-Panic"
 
     dependencies {
         implementation project(":core")
@@ -79,7 +98,6 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
@@ -87,6 +105,7 @@ project(":core") {
 
     }
 }
+
 project(":tests") {
     apply plugin: "java"
 
