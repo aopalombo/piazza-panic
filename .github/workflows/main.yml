@@ -67,6 +67,9 @@ jobs:
 
 #      - name: Build project
 #        run: ./gradlew desktop:dist
+      - name: Build with gradle wrapper
+        run: ./gradlew desktop:dist
+
       - name: Create executable
         run: |
           mkdir exegen
