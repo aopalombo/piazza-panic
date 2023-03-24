@@ -65,5 +65,18 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build project
-        run: ./gradlew desktop:dist
+#      - name: Build project
+#        run: ./gradlew desktop:dist
+      - name: Create executable
+        run: |
+          mkdir exegen
+          cd exegen
+          cp ../assets/icon.icns ./
+          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
+          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: PiazzaPanic
+          path: ./exegen/Piazza Panic-1.0.pkg
