@@ -8,6 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/com/team13/piazzapanic/StartOnFirstThreadHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/com/team13/piazzapanic/StartOnFirstThreadHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +72,10 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "configurable.group.build",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -78,7 +84,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.AssetTests">
+  <component name="RunManager" selected="Gradle.piazza-panic:desktop [build]">
     <configuration name="AssetTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -229,7 +235,7 @@
       <workItem from="1678444688346" duration="3889000" />
       <workItem from="1678810684202" duration="3844000" />
       <workItem from="1678894588061" duration="3227000" />
-      <workItem from="1679674801383" duration="3814000" />
+      <workItem from="1679674801383" duration="9082000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1677792164543</created>
@@ -266,5 +272,9 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="test" />
     <option name="LAST_COMMIT_MESSAGE" value="test" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
