@@ -85,6 +85,7 @@ public class PlayScreen implements Screen {
 
     private int dishAmount = 1;
 
+
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
      * creates and initializes game camera and viewport,
@@ -101,7 +102,7 @@ public class PlayScreen implements Screen {
         // FitViewport to maintain aspect ratio whilst scaling to screen size
         gameport = new FitViewport(MainGame.V_WIDTH / MainGame.PPM, MainGame.V_HEIGHT / MainGame.PPM, gamecam);
         // create HUD
-        hud = new HUD(game.batch);
+        hud = new HUD(game.batch, game);
         // create map
         TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
         map = mapLoader.load("Kitchen.tmx");
@@ -124,6 +125,7 @@ public class PlayScreen implements Screen {
             this.endless = true;
         }
         hud.setNumOrders(orderCount);
+        Gdx.input.setInputProcessor(hud.stage);
     }
 
     @Override
@@ -365,7 +367,9 @@ public class PlayScreen implements Screen {
                 hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
                 return;
             }
-            ordersArray.get(0).create(trayX, trayY, game.batch);
+            if(!hud.isPaused()){
+                ordersArray.get(0).create(trayX, trayY, game.batch);
+            }
         }
     }
 
@@ -381,7 +385,9 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta){
-        update(delta);
+        if(!hud.isPaused()){
+            update(delta);
+        }
 
         //Execute handleEvent each 1 second
         timeSeconds +=Gdx.graphics.getDeltaTime();
@@ -403,16 +409,18 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        //game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         updateOrder();
         disablePowerUps();
         hud.updateProgressBars();
-        chef1.draw(game.batch);
-        chef2.draw(game.batch);
-        controlledChef.drawNotification(game.batch);
+        if(!hud.isPaused()){
+            chef1.draw(game.batch);
+            chef2.draw(game.batch);
+            controlledChef.drawNotification(game.batch);
+        }
         if (plateStation.getPlate().size() > 0){
             for(Object ing : plateStation.getPlate()){
                 Ingredient ingNew = (Ingredient) ing;
@@ -443,8 +451,9 @@ public class PlayScreen implements Screen {
             chef2.displayIngDynamic(game.batch);
         }
         game.batch.end();
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){game.setScreen(new MainMenuScreen(game));}
-        if(Gdx.input.isKeyPressed(Input.Keys.I)){hud.generatePowerUp();}
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            hud.unPause();
+        }
         //if in endless mode and orders are done generate new ones
         if((ordersArray.size()==1)&&(endless)){
                 createOrder();

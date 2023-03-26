@@ -3,6 +3,8 @@ package com.team13.piazzapanic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -11,24 +13,29 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import java.util.Random;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team13.piazzapanic.Screens.MainMenuScreen;
 
 import Recipes.Order;
 import Sprites.Chef;
+
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 
 
 public class HUD implements Disposable {
     public Stage stage;
+    private MainGame game;
     private Boolean scenarioComplete;
 
     private Integer worldTimerM;
@@ -71,7 +78,14 @@ public class HUD implements Disposable {
 
     private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
 
-    public HUD(SpriteBatch sb){
+    private Boolean isPaused = false;
+    private ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
+    private ImageButton pauseMenu = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
+    private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
+    private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
+
+    public HUD(SpriteBatch sb, MainGame game){
+        this.game = game;
         this.scenarioComplete = Boolean.FALSE;
         worldTimerM = 0;
         worldTimerS = 0;
@@ -124,12 +138,44 @@ public class HUD implements Disposable {
         table.add(orderTimeLabel).padTop(2).padLeft(2);
         table.add(powerUpLabel).padTop(2).padLeft(2);
         table.left().top();
-        stage.addActor(table);
 
         powerUps.add("2X SPEED");
         powerUps.add("2X MONEY");
         powerUps.add("FREEZE TIME");
         powerUps.add("SPEEDY");
+
+        ClickListener listenerPause = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pause();
+            }
+        };
+
+        ClickListener listenerUnPause = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                unPause();
+            }
+        };
+
+        ClickListener saveAndQuit = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                unPause();
+                saveAndQuit();
+            }
+        };
+
+        pauseBtn.addListener(listenerPause);
+        resumeBtn.addListener(listenerUnPause);
+        quitBtn.addListener(saveAndQuit);
+        pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);
+        pauseMenu.setPosition(10, 10);
+        resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);
+        quitBtn.setPosition((viewport.getWorldWidth()/2)-(quitBtn.getWidth()/2), 25);
+        stage.addActor(pauseBtn);
+        table.setPosition(pauseBtn.getWidth(), table.getY());
+        stage.addActor(table);
     }
 
     /**
@@ -163,7 +209,7 @@ public class HUD implements Disposable {
             stage.addActor(table);
             return;
         }
-        else {
+        if(!isPaused) {
             if (worldTimerS == 59) {
                 worldTimerM += 1;
                 worldTimerS = 0;
@@ -179,9 +225,8 @@ public class HUD implements Disposable {
             timeStr = String.format("%d", worldTimerM) + ":" + String.format("%d", worldTimerS);
         }
         timeLabel.setText(timeStr);
-        stage.addActor(table);
 
-        if(powerUp){
+        if(powerUp&&(!isPaused)){
             powerUpTime--;
             powerUpLabel.setText(Integer.toString(powerUpTime));
             if(powerUpTime == 0){
@@ -342,13 +387,16 @@ public class HUD implements Disposable {
     public void updateProgressBars() {
         if (!bars.isEmpty()) {
             for (ProgressBar bar : bars.keySet()) {
-                bar.setValue(bar.getValue() - 0.05f);
+                if(!isPaused){
+                    bar.setValue(bar.getValue() - 0.05f);
+                }
                 if (bar.getValue() <= 0) {
                     stage.getActors().removeValue(bar, false);
                 }
             }
         }
     }
+
     /**
      * Helper function to create rectangles, used for progress bars
      */
@@ -359,5 +407,39 @@ public class HUD implements Disposable {
         TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
         pixmap.dispose();
         return drawable;
+    }
+
+    public void pause(){
+        isPaused = true;
+        freezeTime = true;
+        stage.getActors().removeValue(pauseBtn, false);
+        if(!stage.getActors().contains(pauseMenu, true)){
+            stage.getActors().add(pauseMenu);
+        }
+        if(!stage.getActors().contains(resumeBtn, true)){
+            stage.getActors().add(resumeBtn);
+        }
+        if(!stage.getActors().contains(quitBtn, true)){
+            stage.getActors().add(quitBtn);
+        }
+    }
+
+    public void unPause(){
+        isPaused = false;
+        freezeTime = false;
+        stage.getActors().removeValue(pauseMenu,false);
+        stage.getActors().removeValue(resumeBtn,false);
+        stage.getActors().removeValue(quitBtn,false);
+        if(!stage.getActors().contains(pauseBtn, true)){
+            stage.getActors().add(pauseBtn);
+        }
+    }
+
+    public boolean isPaused(){
+        return isPaused;
+    }
+
+    private void saveAndQuit(){
+        game.setScreen(new MainMenuScreen(game));
     }
 }

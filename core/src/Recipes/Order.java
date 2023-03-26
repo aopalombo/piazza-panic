@@ -44,7 +44,9 @@ public class Order{
 
     public void create(float x, float y, SpriteBatch batch){
         for(int i = 0; i<dishes.size();i++){
-            dishes.get(i).create(x+(i*0.35f), y, batch);
+            if(!dishes.get(i).orderComplete){
+                dishes.get(i).create(x+(i*0.35f), y, batch);
+            }
         }
     }
 

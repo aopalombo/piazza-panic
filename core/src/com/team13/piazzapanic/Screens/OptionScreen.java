@@ -91,7 +91,10 @@ public class OptionScreen implements Screen{
         game.batch.end();
 
         if(scenarioBtn.isPressed()){game.setScreen(new DifficultySelectionScreen(game));}
-        if(endlessBtn.isPressed()){game.setScreen(new PlayScreen(game, "endless"));}
+        if(endlessBtn.isPressed()){
+            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            game.setScreen(new PlayScreen(game, "endless"));
+        }
         if(exitBtn.isPressed()){game.setScreen(new MainMenuScreen(game));}
         stage.draw();
     }
