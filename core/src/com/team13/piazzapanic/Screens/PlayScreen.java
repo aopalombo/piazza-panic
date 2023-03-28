@@ -102,7 +102,7 @@ public class PlayScreen implements Screen {
         // FitViewport to maintain aspect ratio whilst scaling to screen size
         gameport = new FitViewport(MainGame.V_WIDTH / MainGame.PPM, MainGame.V_HEIGHT / MainGame.PPM, gamecam);
         // create HUD
-        hud = new HUD(game.batch, game);
+        hud = new HUD(game.batch, game, difficulty,true);
         // create map
         TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
         map = mapLoader.load("Kitchen.tmx");
@@ -335,15 +335,14 @@ public class PlayScreen implements Screen {
      */
     public void createOrder() {
         Order order;
-
         for(int i = 1; i<orderCount+1; i++){
             order = new Order(dishAmount);
             //every three orders increase the amount of dishes per order
             if(i%3 == 0){
                 dishAmount++;
                 //no more than 3 dishes per order
-                if(dishAmount>3){
-                    dishAmount = 3;
+                if(dishAmount>1){
+                    dishAmount = 1;
                 }
             }
             ordersArray.add(order);
@@ -465,7 +464,7 @@ public class PlayScreen implements Screen {
             chefSpeedMultiplier = 1.75f;
         } else if (hud.getPowerUp() ==  "2X MONEY"){
             moneyMultiplier = 2;
-        } else if(hud.getPowerUp() ==  "FREEZE TIME"){
+        } else if(hud.getPowerUp() ==  "FREEZE"){
             hud.freezeTime();
         }else if(hud.getPowerUp() ==  "SPEEDY"){
             cookSpeedMultiplier = 0.5f;

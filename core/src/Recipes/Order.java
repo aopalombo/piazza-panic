@@ -46,6 +46,8 @@ public class Order{
         for(int i = 0; i<dishes.size();i++){
             if(!dishes.get(i).orderComplete){
                 dishes.get(i).create(x+(i*0.35f), y, batch);
+            } else {
+                dishes.remove(i);
             }
         }
     }

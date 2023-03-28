@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -56,6 +58,8 @@ public class HUD implements Disposable {
 
     private Label orderTimeLabel;
     private Label orderTimeLabelT;
+    private Order currentOrder;
+    private Integer currentOrderNum;
 
     private Label scoreLabel;
     private Label scoreLabelT;
@@ -84,12 +88,25 @@ public class HUD implements Disposable {
     private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
     private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
 
-    public HUD(SpriteBatch sb, MainGame game){
+    private Preferences saving;
+    private String difficulty;
+
+    public HUD(SpriteBatch sb, MainGame game, String difficulty, Boolean resume){
         this.game = game;
         this.scenarioComplete = Boolean.FALSE;
-        worldTimerM = 0;
-        worldTimerS = 0;
-        score = 0;
+        saving = Gdx.app.getPreferences("userData");
+        this.difficulty = difficulty;
+        if(resume){
+            this.worldTimerM = saving.getInteger("minutes",0);
+            this.worldTimerS = saving.getInteger("seconds", 0);
+            this.repPoints = saving.getInteger("rep",3);
+            this.score = saving.getInteger("money", 0);
+            //this.currentOrderNum = saving.getInteger(difficulty, 0);
+        } else {
+            worldTimerM = 0;
+            worldTimerS = 0;
+            score = 0;
+        }
         timeStr = String.format("%d", worldTimerM) + " : " + String.format("%d", worldTimerS);
         float fontX = 0.4F;
         float fontY = 0.2F;
@@ -141,7 +158,7 @@ public class HUD implements Disposable {
 
         powerUps.add("2X SPEED");
         powerUps.add("2X MONEY");
-        powerUps.add("FREEZE TIME");
+        powerUps.add("FREEZE");
         powerUps.add("SPEEDY");
 
         ClickListener listenerPause = new ClickListener() {
@@ -184,6 +201,7 @@ public class HUD implements Disposable {
      * @param scenarioComplete Whether the game scenario has been completed.
      */
     public void updateTime(Boolean scenarioComplete, Order currentOrder){
+        this.currentOrder = currentOrder;
         if(!Objects.isNull(currentOrder)){
             if(!freezeTime){
                 currentOrder.orderTime--;
@@ -197,6 +215,8 @@ public class HUD implements Disposable {
             }
         }
         if(scenarioComplete){
+            saving.clear();
+            saving.flush();
             timeLabel.setColor(Color.GREEN);
             timeStr = String.format("%d", worldTimerM) + ":" + String.format("%d", worldTimerS);
             timeLabel.setText(String.format("TIME: " + timeStr + " MONEY: %d", score));
@@ -246,6 +266,7 @@ public class HUD implements Disposable {
      * @param expectedTime The expected time an order should be completed in.
      */
     public void updateScore(Boolean scenarioComplete, Integer expectedTime, Integer multiplier, Order currentOrder){
+        this.currentOrder = currentOrder;
         int addScore = 0;
         int currentTime;
 
@@ -300,6 +321,7 @@ public class HUD implements Disposable {
      * @param orderNum The index number of the order.
      */
     public void updateOrder(Boolean scenarioComplete, Integer orderNum){
+        this.currentOrderNum = orderNum;
         if(scenarioComplete==Boolean.TRUE){
             orderNumL.remove();
             orderNumLT.remove();
@@ -308,7 +330,7 @@ public class HUD implements Disposable {
         }
 
         table.left().top();
-        orderNumL.setText(String.format("%d", orderNum));
+        orderNumL.setText(String.format("%d", currentOrderNum));
         orderNumLT.setText("ORDER");
         stage.addActor(table);
 
@@ -408,7 +430,10 @@ public class HUD implements Disposable {
         pixmap.dispose();
         return drawable;
     }
-
+    /*
+     * Activated when the player pauses the game
+     * Pauses the time, stops the movement of the chefs
+     */
     public void pause(){
         isPaused = true;
         freezeTime = true;
@@ -423,7 +448,10 @@ public class HUD implements Disposable {
             stage.getActors().add(quitBtn);
         }
     }
-
+    /*
+     * Activated when the player unpauses the game
+     * Resumes the time and activates the movement of the chefs
+     */
     public void unPause(){
         isPaused = false;
         freezeTime = false;
@@ -435,11 +463,37 @@ public class HUD implements Disposable {
         }
     }
 
+    /*
+     * Returns true if the game is paused, otherwise false
+     */
     public boolean isPaused(){
         return isPaused;
     }
 
+    /*
+     * Saves current game state and returns the user to the main menu
+     */
     private void saveAndQuit(){
+        if(scenarioComplete){
+            saving.clear();
+        } else {
+            String currentDish = "currentOrderDish";
+            saving.putInteger("money", this.score);
+            saving.putInteger("minutes", this.worldTimerM);
+            saving.putInteger("seconds", this.worldTimerS);
+            saving.putInteger("currentOrderNum", this.currentOrderNum);
+            saving.putInteger("currentOrderTimer", this.currentOrder.orderTime);
+            saving.putInteger("rep", this.repPoints);
+            saving.putString("difficulty", this.difficulty);
+            for(int i = 0; i<3;i++){
+                if((i)<currentOrder.dishes.size()){
+                    saving.putString((currentDish+Integer.toString(i+1)), currentOrder.dishes.get(i).recipe.getClass().getName());
+                } else {
+                    saving.putString((currentDish+Integer.toString(i+1)),"none");
+                }
+            }
+        }
+        saving.flush();
         game.setScreen(new MainMenuScreen(game));
     }
 }
