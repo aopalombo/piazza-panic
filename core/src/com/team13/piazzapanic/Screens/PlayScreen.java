@@ -341,8 +341,8 @@ public class PlayScreen implements Screen {
             if(i%3 == 0){
                 dishAmount++;
                 //no more than 3 dishes per order
-                if(dishAmount>1){
-                    dishAmount = 1;
+                if(dishAmount>3){
+                    dishAmount = 3;
                 }
             }
             ordersArray.add(order);
