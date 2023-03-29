@@ -79,14 +79,17 @@ jobs:
         run: |
           echo $MACOS_DEVID_APP_CERT | base64 --decode > app_cert.p12
           echo $MACOS_DEVID_INS_CERT | base64 --decode > ins_cert.p12
-          security import app_cert.p12 -P $MACOS_DEVID_APP_CERT_PWD
-#          stop here
-#          security import ins_cert.p12 -P $MACOS_DEVID_INS_CERT_PWD
-#          mkdir exe_gen
-#          cd exe_gen
-#          cp ../assets/icon.icns ./
-#          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
-#          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
+          security create-keychain -p password build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p password build.keychain
+          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -T /usr/bin/codesign
+          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
+          mkdir exe_gen
+          cd exe_gen
+          cp ../assets/icon.icns ./
+          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
+          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
 
 #      - name: Create executable
 #        run: |
@@ -99,5 +102,5 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: PiazzaPanic
+          name: PiazzaPanicMacOS
           path: ./exegen/Piazza Panic-1.0.pkg
