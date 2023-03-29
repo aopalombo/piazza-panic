@@ -71,12 +71,29 @@ jobs:
         run: ./gradlew desktop:dist
 
       - name: Create executable
+        env:
+          MACOS_DEVID_APP_CERT: ${{ secrets.MACOS_DEVID_APP_CERT }}
+          MACOS_DEVID_APP_CERT_PWD: ${{ secrets.MACOS_DEVID_APP_CERT_PWD }}
+          MACOS_DEVID_INS_CERT: ${{ secrets.MACOS_DEVID_INS_CERT }}
+          MACOS_DEVID_INS_CERT_PWD: ${{ secrets.MACOS_DEVID_INS_CERT_PWD }}
         run: |
-          mkdir exegen
-          cd exegen
+          echo $MACOS_DEVID_APP_CERT | base64 -decode > app_cert.p12
+          echo $MACOS_DEVID_INS_CERT | base64 -decode > ins_cert.p12
+          security import app_cert.p12 -P $MACOS_DEVID_APP_CERT_PWD
+          security import ins_cert.p12 -P $MACOS_DEVID_INS_CERT_PWD
+          mkdir exe_gen
+          cd exe_gen
           cp ../assets/icon.icns ./
           cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
-          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
+          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
+
+#      - name: Create executable
+#        run: |
+#          mkdir exegen
+#          cd exegen
+#          cp ../assets/icon.icns ./
+#          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
+#          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
 
       - name: Upload executable
         uses: actions/upload-artifact@v3.1.1

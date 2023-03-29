@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
       <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +63,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/andrew/Downloads/untitled3/piazza-panic/assets",
+    "last_opened_file_path": "/Users/andrew/Downloads/untitled5/piazza-panic/build.gradle",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -233,6 +234,7 @@
       <workItem from="1678810684202" duration="3844000" />
       <workItem from="1678894588061" duration="3227000" />
       <workItem from="1679674801383" duration="10156000" />
+      <workItem from="1680027827363" duration="1769000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1677792164543</created>
