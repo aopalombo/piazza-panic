@@ -80,6 +80,7 @@ jobs:
           echo $MACOS_DEVID_APP_CERT | base64 --decode > app_cert.p12
           echo $MACOS_DEVID_INS_CERT | base64 --decode > ins_cert.p12
           security import app_cert.p12 -P $MACOS_DEVID_APP_CERT_PWD
+#          stop here
 #          security import ins_cert.p12 -P $MACOS_DEVID_INS_CERT_PWD
 #          mkdir exe_gen
 #          cd exe_gen
