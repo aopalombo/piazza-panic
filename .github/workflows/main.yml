@@ -67,7 +67,7 @@ jobs:
 
       - name: Build with gradle wrapper
         run: ./gradlew desktop:dist
-        
+
       - name: Create executable
         env:
           MACOS_DEVID_APP_CERT: ${{ secrets.MACOS_DEVID_APP_CERT }}
