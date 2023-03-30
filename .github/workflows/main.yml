@@ -116,7 +116,7 @@ jobs:
       - name: Find jpackage
         run: |
           echo helloworld
-          where java | export VAR
+          where java | set VAR
           echo $VAR
 
 #      - name: Build with gradle wrapper
