@@ -118,7 +118,10 @@ jobs:
 
       - name: Find jpackage
         run: |
+          where java
+          pause
           where jpackage
+          pause
           where java
           jpackage
 
