@@ -120,7 +120,7 @@ jobs:
         run: |
           where jpackage
           where java
-          cd \usr\local\bin
+#          cd \usr\local\bin
           ls -a
 
 #      - name: Create executable
