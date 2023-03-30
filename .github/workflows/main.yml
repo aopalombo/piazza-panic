@@ -67,7 +67,7 @@ jobs:
 
       - name: Build with gradle wrapper
         run: ./gradlew desktop:dist
-
+        
       - name: Create executable
         env:
           MACOS_DEVID_APP_CERT: ${{ secrets.MACOS_DEVID_APP_CERT }}
@@ -89,7 +89,7 @@ jobs:
           cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
 #          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
           jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
-      
+
       - name: Upload executable
         uses: actions/upload-artifact@v3.1.1
         with:
