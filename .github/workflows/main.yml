@@ -111,7 +111,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'corretto'
+          distribution: 'microsoft'
 
 #      - name: Build with gradle wrapper
 #        run: ./gradlew desktop:dist
