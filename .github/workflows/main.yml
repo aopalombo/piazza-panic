@@ -80,8 +80,8 @@ jobs:
           security create-keychain -p password build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p password build.keychain
-          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -T /usr/bin/codesign --save-trust-settings
-          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -T /usr/bin/codesign --save-trust-settings
+          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -A
+          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -A
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
           mkdir exe_gen
           cd exe_gen
@@ -122,6 +122,7 @@ jobs:
 #          cd exe_gen
 #          xcopy ..\assets/icon.ico .\
 #          xcopy ..\desktop\build\libs\Piazza-Panic-0.1.jar .\
+#          where java
 #          jpackage --input . --name "Piazza Panic" --main-jar Piazza-Panic-0.1.jar --type exe --icon icon.ico
 #
 #      - name: Upload executable
