@@ -92,6 +92,7 @@ jobs:
       - name: Run jpackage
         run: |
           pwd
+          cd exe_gen
           jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
 
       - name: Upload executable
