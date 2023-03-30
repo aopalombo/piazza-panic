@@ -87,16 +87,9 @@ jobs:
           cd exe_gen
           cp ../assets/icon.icns ./
           cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
-      #          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
-
-      #      - name: Create executable
-      #        run: |
-      #          mkdir exegen
-      #          cd exegen
-      #          cp ../assets/icon.icns ./
-      #          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
-      #          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
-
+#          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
+          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
+      
       - name: Upload executable
         uses: actions/upload-artifact@v3.1.1
         with:
