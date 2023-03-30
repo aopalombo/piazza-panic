@@ -15,12 +15,10 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -83,10 +81,10 @@ public class HUD implements Disposable {
     private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
 
     private Boolean isPaused = false;
-    private ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
+    public ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
     private ImageButton pauseMenu = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
-    private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
-    private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
+    public ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
+    public ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
 
     private Preferences saving;
     private String difficulty;
@@ -101,7 +99,6 @@ public class HUD implements Disposable {
             this.worldTimerS = saving.getInteger("seconds", 0);
             this.repPoints = saving.getInteger("rep",3);
             this.score = saving.getInteger("money", 0);
-            //this.currentOrderNum = saving.getInteger(difficulty, 0);
         } else {
             worldTimerM = 0;
             worldTimerS = 0;
@@ -161,31 +158,6 @@ public class HUD implements Disposable {
         powerUps.add("FREEZE");
         powerUps.add("SPEEDY");
 
-        ClickListener listenerPause = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pause();
-            }
-        };
-
-        ClickListener listenerUnPause = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                unPause();
-            }
-        };
-
-        ClickListener saveAndQuit = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                unPause();
-                saveAndQuit();
-            }
-        };
-
-        pauseBtn.addListener(listenerPause);
-        resumeBtn.addListener(listenerUnPause);
-        quitBtn.addListener(saveAndQuit);
         pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);
         pauseMenu.setPosition(10, 10);
         resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);
@@ -473,7 +445,7 @@ public class HUD implements Disposable {
     /*
      * Saves current game state and returns the user to the main menu
      */
-    private void saveAndQuit(){
+    public void saveAndQuit(){
         if(scenarioComplete){
             saving.clear();
         } else {

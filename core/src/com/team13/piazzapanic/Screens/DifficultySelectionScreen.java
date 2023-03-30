@@ -85,9 +85,9 @@ public class DifficultySelectionScreen implements Screen{
         game.batch.draw(playFrame, ((Width / 2) - (playFrame.getWidth() / 2)), 500);
         game.batch.end();
 
-        if(easyBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "easy"));}
-        if(normalBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "normal"));}
-        if(hardBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "hard"));}
+        if(easyBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "easy",false));}
+        if(normalBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "normal",false));}
+        if(hardBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "hard",false));}
         if(exitBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new MainMenuScreen(game));}
         stage.draw();
     }

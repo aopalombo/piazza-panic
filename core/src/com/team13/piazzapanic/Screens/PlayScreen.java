@@ -7,6 +7,7 @@ import Tools.B2WorldCreator;
 import Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
@@ -85,6 +86,12 @@ public class PlayScreen implements Screen {
 
     private int dishAmount = 1;
 
+    private Preferences saving = Gdx.app.getPreferences("userData");
+
+    private boolean resume;
+
+    private Integer currentOrderNum = 1;
+
 
     /**
      * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
@@ -94,15 +101,16 @@ public class PlayScreen implements Screen {
      * @param game The MainGame instance that the PlayScreen will be a part of.
      */
 
-    public PlayScreen(MainGame game, String difficulty){
+    public PlayScreen(MainGame game, String difficulty, boolean resume){
         this.game = game;
+        this.resume = resume;
         scenarioComplete = Boolean.FALSE;
         createdOrder = Boolean.FALSE;
         gamecam = new OrthographicCamera();
         // FitViewport to maintain aspect ratio whilst scaling to screen size
         gameport = new FitViewport(MainGame.V_WIDTH / MainGame.PPM, MainGame.V_HEIGHT / MainGame.PPM, gamecam);
         // create HUD
-        hud = new HUD(game.batch, game, difficulty,true);
+        hud = new HUD(game.batch, game, difficulty,resume);
         // create map
         TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
         map = mapLoader.load("Kitchen.tmx");
@@ -123,6 +131,10 @@ public class PlayScreen implements Screen {
         } else if(difficulty == "endless"){
             this.orderCount = 10;
             this.endless = true;
+        }
+        if(resume){
+            orderCount -= saving.getInteger("currentOrderNum",1);
+            currentOrderNum = saving.getInteger("currentOrderNum", 1);
         }
         hud.setNumOrders(orderCount);
         Gdx.input.setInputProcessor(hud.stage);
@@ -292,7 +304,7 @@ public class PlayScreen implements Screen {
                                         controlledChef.dropItemOn(tile);
                                         controlledChef.setChefSkin(null);
                                         if(ordersArray.get(0).isComplete()){
-                                            if((((orderCount+1) - ordersArray.size())%2) == 0){
+                                            if(((currentOrderNum)%2) == 0){
                                                 hud.generatePowerUp();
                                                 activatePowerUp();
                                             }
@@ -330,6 +342,11 @@ public class PlayScreen implements Screen {
 
     }
 
+    public void createResumedOrder(){
+        ordersArray.add(new Order(saving.getString("currentOrderDish1", "none"),saving.getString("currentOrderDish2", "none"),saving.getString("currentOrderDish3", "none")));
+        createOrder();
+    }
+
     /**
      * Creates the orders randomly and adds to an array, updates the HUD.
      */
@@ -347,7 +364,7 @@ public class PlayScreen implements Screen {
             }
             ordersArray.add(order);
         }
-        hud.updateOrder(Boolean.FALSE, 1);
+        hud.updateOrder(Boolean.FALSE, currentOrderNum);
     }
 
     /**
@@ -363,7 +380,8 @@ public class PlayScreen implements Screen {
             if ((ordersArray.get(0).isComplete()) || (ordersArray.get(0).orderTime == 0)) {
                 hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));
                 ordersArray.remove(0);
-                hud.updateOrder(Boolean.FALSE, (orderCount+1) - ordersArray.size());
+                currentOrderNum +=1;
+                hud.updateOrder(Boolean.FALSE, currentOrderNum);
                 return;
             }
             if(!hud.isPaused()){
@@ -392,9 +410,13 @@ public class PlayScreen implements Screen {
         timeSeconds +=Gdx.graphics.getDeltaTime();
         timeSecondsCount += Gdx.graphics.getDeltaTime();
 
-        if(Math.round(timeSecondsCount) == 5 && createdOrder == Boolean.FALSE){
-            createdOrder = Boolean.TRUE;
-            createOrder();
+        if(resume && !createdOrder){
+            createResumedOrder();
+        } else if (!createdOrder){
+            if(Math.round(timeSecondsCount) == 5){
+                createdOrder = Boolean.TRUE;
+                createOrder();
+            }
         }
         float period = 1f;
         if(timeSeconds > period) {
@@ -456,6 +478,20 @@ public class PlayScreen implements Screen {
         //if in endless mode and orders are done generate new ones
         if((ordersArray.size()==1)&&(endless)){
                 createOrder();
+        }
+        //pause menu buttons
+        if(hud.pauseBtn.isPressed()){
+            hud.pause();
+        }
+        if(hud.resumeBtn.isPressed()){
+            hud.unPause();
+        }
+        if(hud.quitBtn.isPressed()){
+            if(scenarioComplete){
+                game.setScreen(new MainMenuScreen(game));
+            } else {
+                hud.saveAndQuit();
+            }
         }
     }
 
