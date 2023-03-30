@@ -80,8 +80,8 @@ jobs:
           security create-keychain -p password build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p password build.keychain
-          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -T /usr/bin/codesign
-          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -T /usr/bin/codesign
+          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -T /usr/bin/codesign --save-trust-settings
+          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -T /usr/bin/codesign --save-trust-settings
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
           mkdir exe_gen
           cd exe_gen
@@ -95,13 +95,13 @@ jobs:
           cd exe_gen
           pwd
           ls -a
-          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
+          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
 
       - name: Upload executable
         uses: actions/upload-artifact@v3.1.1
         with:
           name: PiazzaPanicMacOS
-          path: ./*
+          path: ./exe_gen/Piazza Panic-1.0.pkg
 
 #  windows-build:
 #    runs-on: windows-latest
