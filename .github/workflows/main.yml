@@ -120,6 +120,7 @@ jobs:
         run: |
           where jpackage
           where java
+          jpackage
 
 #      - name: Create executable
 #        run: |
