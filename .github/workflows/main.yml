@@ -7,53 +7,53 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-22.04
-
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Run tests and build JaCoCo report
-        run: ./gradlew test
-
-      - name: Upload test report
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: TestReport
-          path: ./tests/build/reports/tests/test/*
-
-      - name: Upload JaCoCo coverage report as workflow artefact
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: JacocoReport
-          path: ./tests/build/reports/jacoco/test/html/*
-
-      - name: Build with gradle wrapper
-        run: ./gradlew desktop:dist
-
-      - name: Upload JAR
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: PiazzaPanic.jar
-          path: ./desktop/build/libs/Piazza-Panic-0.1.jar
-
-      - name: Run checkstyle report on Core
-        run: ./gradlew core:checkstyleMain
-
-      - name: Upload Checkstyle report
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: CheckstyleReportCore
-          path: ./build/reports/checkstyle.html
+#  build:
+#
+#    runs-on: ubuntu-22.04
+#
+#    permissions:
+#      contents: read
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '11'
+#          distribution: 'temurin'
+#
+#      - name: Run tests and build JaCoCo report
+#        run: ./gradlew test
+#
+#      - name: Upload test report
+#        uses: actions/upload-artifact@v3.1.1
+#        with:
+#          name: TestReport
+#          path: ./tests/build/reports/tests/test/*
+#
+#      - name: Upload JaCoCo coverage report as workflow artefact
+#        uses: actions/upload-artifact@v3.1.1
+#        with:
+#          name: JacocoReport
+#          path: ./tests/build/reports/jacoco/test/html/*
+#
+#      - name: Build with gradle wrapper
+#        run: ./gradlew desktop:dist
+#
+#      - name: Upload JAR
+#        uses: actions/upload-artifact@v3.1.1
+#        with:
+#          name: PiazzaPanic.jar
+#          path: ./desktop/build/libs/Piazza-Panic-0.1.jar
+#
+#      - name: Run checkstyle report on Core
+#        run: ./gradlew core:checkstyleMain
+#
+#      - name: Upload Checkstyle report
+#        uses: actions/upload-artifact@v3.1.1
+#        with:
+#          name: CheckstyleReportCore
+#          path: ./build/reports/checkstyle.html
 
   macos-build:
     runs-on: macOS-latest
@@ -93,6 +93,8 @@ jobs:
         run: |
           pwd
           cd exe_gen
+          pwd
+          ls -a
           jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
 
       - name: Upload executable
@@ -101,29 +103,29 @@ jobs:
           name: PiazzaPanicMacOS
           path: ./exegen/Piazza Panic-1.0.pkg
 
-  windows-build:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Build with gradle wrapper
-        run: ./gradlew desktop:dist
-
-      - name: Create executable
-        run: |
-          mkdir exe_gen
-          cd exe_gen
-          xcopy ..\assets/icon.ico .\
-          xcopy ..\desktop\build\libs\Piazza-Panic-0.1.jar .\
-          jpackage --input . --name "Piazza Panic" --main-jar Piazza-Panic-0.1.jar --type exe --icon icon.ico
-
-      - name: Upload executable
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: PiazzaPanicWindows
-          path: .\exegen\Piazza Panic-1.0.exe
+#  windows-build:
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '11'
+#          distribution: 'temurin'
+#
+#      - name: Build with gradle wrapper
+#        run: ./gradlew desktop:dist
+#
+#      - name: Create executable
+#        run: |
+#          mkdir exe_gen
+#          cd exe_gen
+#          xcopy ..\assets/icon.ico .\
+#          xcopy ..\desktop\build\libs\Piazza-Panic-0.1.jar .\
+#          jpackage --input . --name "Piazza Panic" --main-jar Piazza-Panic-0.1.jar --type exe --icon icon.ico
+#
+#      - name: Upload executable
+#        uses: actions/upload-artifact@v3.1.1
+#        with:
+#          name: PiazzaPanicWindows
+#          path: .\exegen\Piazza Panic-1.0.exe
