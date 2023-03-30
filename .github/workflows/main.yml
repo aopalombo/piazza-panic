@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: PiazzaPanicMacOS
-          path: target/
+          path: ./*
 
 #  windows-build:
 #    runs-on: windows-latest
