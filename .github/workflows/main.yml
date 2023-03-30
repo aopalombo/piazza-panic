@@ -87,6 +87,11 @@ jobs:
           cd exe_gen
           cp ../assets/icon.icns ./
           cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
+          
+
+      - name: Run jpackage
+        run: |
+          pwd
           jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread'
 
       - name: Upload executable
