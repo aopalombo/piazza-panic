@@ -55,56 +55,8 @@ jobs:
 #          name: CheckstyleReportCore
 #          path: ./build/reports/checkstyle.html
 
-  macos-build:
-    runs-on: macOS-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Build with gradle wrapper
-        run: ./gradlew desktop:dist
-
-      - name: Create executable
-        env:
-          MACOS_DEVID_APP_CERT: ${{ secrets.MACOS_DEVID_APP_CERT }}
-          MACOS_DEVID_APP_CERT_PWD: ${{ secrets.MACOS_DEVID_APP_CERT_PWD }}
-          MACOS_DEVID_INS_CERT: ${{ secrets.MACOS_DEVID_INS_CERT }}
-          MACOS_DEVID_INS_CERT_PWD: ${{ secrets.MACOS_DEVID_INS_CERT_PWD }}
-        run: |
-          echo $MACOS_DEVID_APP_CERT | base64 --decode > app_cert.p12
-          echo $MACOS_DEVID_INS_CERT | base64 --decode > ins_cert.p12
-          security create-keychain -p password build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p password build.keychain
-          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -A
-          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -A
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
-          mkdir exe_gen
-          cd exe_gen
-          cp ../assets/icon.icns ./
-          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
-          
-
-      - name: Run jpackage
-        run: |
-          pwd
-          cd exe_gen
-          pwd
-          ls -a
-          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
-
-      - name: Upload executable
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: PiazzaPanicMacOS
-          path: ./exe_gen/Piazza Panic-1.0.pkg
-
-#  windows-build:
-#    runs-on: windows-latest
+#  macos-build:
+#    runs-on: macOS-latest
 #    steps:
 #      - uses: actions/checkout@v3
 #      - name: Set up JDK 11
@@ -117,16 +69,69 @@ jobs:
 #        run: ./gradlew desktop:dist
 #
 #      - name: Create executable
+#        env:
+#          MACOS_DEVID_APP_CERT: ${{ secrets.MACOS_DEVID_APP_CERT }}
+#          MACOS_DEVID_APP_CERT_PWD: ${{ secrets.MACOS_DEVID_APP_CERT_PWD }}
+#          MACOS_DEVID_INS_CERT: ${{ secrets.MACOS_DEVID_INS_CERT }}
+#          MACOS_DEVID_INS_CERT_PWD: ${{ secrets.MACOS_DEVID_INS_CERT_PWD }}
 #        run: |
+#          echo $MACOS_DEVID_APP_CERT | base64 --decode > app_cert.p12
+#          echo $MACOS_DEVID_INS_CERT | base64 --decode > ins_cert.p12
+#          security create-keychain -p password build.keychain
+#          security default-keychain -s build.keychain
+#          security unlock-keychain -p password build.keychain
+#          security import app_cert.p12 -k build.keychain -P $MACOS_DEVID_APP_CERT_PWD -A
+#          security import ins_cert.p12 -k build.keychain -P $MACOS_DEVID_INS_CERT_PWD -A
+#          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password build.keychain
 #          mkdir exe_gen
 #          cd exe_gen
-#          xcopy ..\assets/icon.ico .\
-#          xcopy ..\desktop\build\libs\Piazza-Panic-0.1.jar .\
-#          where java
-#          jpackage --input . --name "Piazza Panic" --main-jar Piazza-Panic-0.1.jar --type exe --icon icon.ico
+#          cp ../assets/icon.icns ./
+#          cp ../desktop/build/libs/Piazza-Panic-0.1.jar ./
+#          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
+#
+##      - name: Run jpackage
+##        run: |
+##          pwd
+##          cd exe_gen
+##          pwd
+##          ls -a
+##          jpackage --input ./ --name 'Piazza Panic' --main-jar Piazza-Panic-0.1.jar --type pkg --icon icon.icns --java-options '-XstartOnFirstThread' --mac-sign --mac-signing-key-user-name "Andrew Palombo"
 #
 #      - name: Upload executable
 #        uses: actions/upload-artifact@v3.1.1
 #        with:
-#          name: PiazzaPanicWindows
-#          path: .\exegen\Piazza Panic-1.0.exe
+#          name: PiazzaPanicMacOS
+#          path: ./exe_gen/Piazza Panic-1.0.pkg
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Build with gradle wrapper
+        run: ./gradlew desktop:dist
+
+      - name: Find jpackage
+        run: |
+          where java
+          cd \usr\local\bin
+          ls -a
+
+      - name: Create executable
+        run: |
+          mkdir exe_gen
+          cd exe_gen
+          xcopy ..\assets/icon.ico .\
+          xcopy ..\desktop\build\libs\Piazza-Panic-0.1.jar .\
+          jpackage --input . --name "Piazza Panic" --main-jar Piazza-Panic-0.1.jar --type exe --icon icon.ico
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: PiazzaPanicWindows
+          path: .\exegen\Piazza Panic-1.0.exe
