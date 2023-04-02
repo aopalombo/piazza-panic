@@ -208,6 +208,9 @@ public class HUD implements Disposable {
             } else {
                 worldTimerS += 1;
             }
+            if(worldTimerS%10==0){
+                save();
+            }
         }
         table.left().top();
         if(worldTimerS < 10){
@@ -372,7 +375,6 @@ public class HUD implements Disposable {
         bar.setY(y);
         stage.addActor(bar);
         bars.put(bar,chef);
-        System.out.println("progress bar created");
     }
 
     /**
@@ -443,7 +445,7 @@ public class HUD implements Disposable {
     }
 
     /*
-     * Saves current game state and returns the user to the main menu
+     * Saves current game state and sends the user to the main menu
      */
     public void saveAndQuit(){
         if(scenarioComplete){
@@ -467,5 +469,31 @@ public class HUD implements Disposable {
         }
         saving.flush();
         game.setScreen(new MainMenuScreen(game));
+    }
+
+    /*
+     * Saves current game state
+     */
+    public void save(){
+        if(scenarioComplete){
+            saving.clear();
+        } else {
+            String currentDish = "currentOrderDish";
+            saving.putInteger("money", this.score);
+            saving.putInteger("minutes", this.worldTimerM);
+            saving.putInteger("seconds", this.worldTimerS);
+            saving.putInteger("currentOrderNum", this.currentOrderNum);
+            saving.putInteger("currentOrderTimer", this.currentOrder.orderTime);
+            saving.putInteger("rep", this.repPoints);
+            saving.putString("difficulty", this.difficulty);
+            for(int i = 0; i<3;i++){
+                if((i)<currentOrder.dishes.size()){
+                    saving.putString((currentDish+Integer.toString(i+1)), currentOrder.dishes.get(i).recipe.getClass().getName());
+                } else {
+                    saving.putString((currentDish+Integer.toString(i+1)),"none");
+                }
+            }
+        }
+        saving.flush();
     }
 }
