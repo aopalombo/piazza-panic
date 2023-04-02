@@ -209,7 +209,9 @@ public class HUD implements Disposable {
                 worldTimerS += 1;
             }
             if(worldTimerS%10==0){
-                save();
+                if(!scenarioComplete){
+                    save(false);
+                }
             }
         }
         table.left().top();
@@ -445,9 +447,10 @@ public class HUD implements Disposable {
     }
 
     /*
-     * Saves current game state and sends the user to the main menu
+     * Saves current game state in an XML file in the user profile on the local machine
+     * If quit is true it will send the user to the main menu after saving
      */
-    public void saveAndQuit(){
+    public void save(boolean quit){
         if(scenarioComplete){
             saving.clear();
         } else {
@@ -468,32 +471,8 @@ public class HUD implements Disposable {
             }
         }
         saving.flush();
-        game.setScreen(new MainMenuScreen(game));
-    }
-
-    /*
-     * Saves current game state
-     */
-    public void save(){
-        if(scenarioComplete){
-            saving.clear();
-        } else {
-            String currentDish = "currentOrderDish";
-            saving.putInteger("money", this.score);
-            saving.putInteger("minutes", this.worldTimerM);
-            saving.putInteger("seconds", this.worldTimerS);
-            saving.putInteger("currentOrderNum", this.currentOrderNum);
-            saving.putInteger("currentOrderTimer", this.currentOrder.orderTime);
-            saving.putInteger("rep", this.repPoints);
-            saving.putString("difficulty", this.difficulty);
-            for(int i = 0; i<3;i++){
-                if((i)<currentOrder.dishes.size()){
-                    saving.putString((currentDish+Integer.toString(i+1)), currentOrder.dishes.get(i).recipe.getClass().getName());
-                } else {
-                    saving.putString((currentDish+Integer.toString(i+1)),"none");
-                }
-            }
+        if(quit){
+            game.setScreen(new MainMenuScreen(game));
         }
-        saving.flush();
     }
 }

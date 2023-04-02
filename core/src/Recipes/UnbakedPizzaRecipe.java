@@ -18,7 +18,7 @@ public class UnbakedPizzaRecipe extends Recipe{
 
     public UnbakedPizzaRecipe(){
         super.ingredients = new ArrayList<>();
-        ingredients.add(new PizzaDough(0,3));
+        ingredients.add(new PizzaDough(0,0));
         ingredients.add(new Cheese(0,0));
         ingredients.add(new PizzaSauce(0,0));
         completedImg = new Texture("Food/UnbakedPizza.png");

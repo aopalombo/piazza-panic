@@ -226,7 +226,7 @@ public class PlayScreen implements Screen {
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.PizzaDoughStation":
-                                controlledChef.setInHandsIng(new PizzaDough(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
+                                controlledChef.setInHandsIng(new PizzaDough(0, 0));
                                 controlledChef.setChefSkin(controlledChef.getInHandsIng());
                                 break;
                             case "Sprites.CheeseStation":
@@ -344,6 +344,14 @@ public class PlayScreen implements Screen {
 
     public void createResumedOrder(){
         ordersArray.add(new Order(saving.getString("currentOrderDish1", "none"),saving.getString("currentOrderDish2", "none"),saving.getString("currentOrderDish3", "none")));
+        for(int i = 1;i<(orderCount-currentOrderNum)+1;i++){
+
+        }
+        if(Math.floor(currentOrderNum/3)>=3){
+            this.dishAmount = 3;
+        } else {
+            this.dishAmount+=Math.floor(currentOrderNum/3);
+        }
         createOrder();
     }
 
@@ -412,6 +420,7 @@ public class PlayScreen implements Screen {
 
         if(resume && !createdOrder){
             createResumedOrder();
+            createdOrder = Boolean.TRUE;
         } else if (!createdOrder){
             if(Math.round(timeSecondsCount) == 5){
                 createdOrder = Boolean.TRUE;
@@ -490,7 +499,7 @@ public class PlayScreen implements Screen {
             if(scenarioComplete){
                 game.setScreen(new MainMenuScreen(game));
             } else {
-                hud.saveAndQuit();
+                hud.save(true);
             }
         }
     }
