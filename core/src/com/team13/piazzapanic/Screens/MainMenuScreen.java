@@ -88,7 +88,8 @@ public class MainMenuScreen implements Screen{
         }
         if(resumeBtn.isPressed()){
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            game.setScreen(new PlayScreen(game, save.getString("difficulty"), true));
+            String difficulty = save.getString("difficulty");
+            game.setScreen(new PlayScreen(game, difficulty, true));
         }
         if(exitBtn.isPressed()){
             dispose();

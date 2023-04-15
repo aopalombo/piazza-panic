@@ -89,8 +89,6 @@ public class Chef extends Sprite {
         this.world = world;
         currentState = State.DOWN;
 
-        defineChef();
-
         float chefWidth = 13 / MainGame.PPM;
         float chefHeight = 20 / MainGame.PPM;
         setBounds(0, 0, chefWidth, chefHeight);

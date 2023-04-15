@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.Screens.MainMenuScreen;
+import com.team13.piazzapanic.Screens.PlayScreen;
 
 import Recipes.Order;
 import Sprites.Chef;
@@ -36,6 +37,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 public class HUD implements Disposable {
     public Stage stage;
     private MainGame game;
+    private PlayScreen screen;
     private Boolean scenarioComplete;
 
     private Integer worldTimerM;
@@ -81,16 +83,31 @@ public class HUD implements Disposable {
     private HashMap<ProgressBar,Chef> bars = new HashMap<ProgressBar,Chef>();
 
     private Boolean isPaused = false;
-    public ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
+    private ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
     private ImageButton pauseMenu = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
-    public ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
-    public ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
+    private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
+    private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
+    private ImageButton xBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/xBtn.png"))));
+
+    private ImageButton shopBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopBtn.png"))));
+    private ImageButton shopMenu = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopMenu.png"))));
+
+    private ImageButton buyChefBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/chefBtn.png"))));
+    private Label chefPriceLabel = new Label("$400 (1x)", new Label.LabelStyle(font, Color.GREEN));
+    private Boolean chefAvailable = true;
+    private Label shopWalletLabel = new Label("", new Label.LabelStyle(font, new Color(1, 0.545f, 0.502f, 1)));
+
+    private final static Integer CHEF_PRICE = 400;
+    private final static Integer OVEN_PRICE = 300;
+    private final static Integer BOARD_PRICE = 300;
+    private final static Integer PAN_PRICE = 300;
 
     private Preferences saving;
     private String difficulty;
 
-    public HUD(SpriteBatch sb, MainGame game, String difficulty, Boolean resume){
+    public HUD(SpriteBatch sb, MainGame game, String difficulty, Boolean resume, PlayScreen screen){
         this.game = game;
+        this.screen = screen;
         this.scenarioComplete = Boolean.FALSE;
         saving = Gdx.app.getPreferences("userData");
         this.difficulty = difficulty;
@@ -107,7 +124,6 @@ public class HUD implements Disposable {
         timeStr = String.format("%d", worldTimerM) + " : " + String.format("%d", worldTimerS);
         float fontX = 0.4F;
         float fontY = 0.2F;
-
         
         font.getData().setScale(fontX, fontY);
         Viewport viewport = new FitViewport(MainGame.V_WIDTH, MainGame.V_HEIGHT, new OrthographicCamera());
@@ -159,10 +175,18 @@ public class HUD implements Disposable {
         powerUps.add("SPEEDY");
 
         pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);
+        shopBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-12);
+        buyChefBtn.setPosition(30, 87);
+        chefPriceLabel.setPosition(27, 75);
+        shopWalletLabel.setPosition(65, 112);
+        xBtn.setPosition(10, 143);
         pauseMenu.setPosition(10, 10);
+        shopMenu.setPosition(10, 10);
         resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);
         quitBtn.setPosition((viewport.getWorldWidth()/2)-(quitBtn.getWidth()/2), 25);
+
         stage.addActor(pauseBtn);
+        stage.addActor(shopBtn);
         table.setPosition(pauseBtn.getWidth(), table.getY());
         stage.addActor(table);
     }
@@ -199,6 +223,7 @@ public class HUD implements Disposable {
             reputationLabel.remove();
             table.center().top();
             stage.addActor(table);
+            stage.getActors().removeValue(shopBtn, false);
             return;
         }
         if(!isPaused) {
@@ -325,7 +350,6 @@ public class HUD implements Disposable {
 
     /**
      * returns current power up
-     * @return currentPowerUp
      */
 
     public String getPowerUp(){
@@ -414,6 +438,7 @@ public class HUD implements Disposable {
         isPaused = true;
         freezeTime = true;
         stage.getActors().removeValue(pauseBtn, false);
+        stage.getActors().removeValue(shopBtn, false);
         if(!stage.getActors().contains(pauseMenu, true)){
             stage.getActors().add(pauseMenu);
         }
@@ -422,6 +447,9 @@ public class HUD implements Disposable {
         }
         if(!stage.getActors().contains(quitBtn, true)){
             stage.getActors().add(quitBtn);
+        }
+        if(!stage.getActors().contains(xBtn, true)){
+            stage.getActors().add(xBtn);
         }
     }
     /*
@@ -434,6 +462,63 @@ public class HUD implements Disposable {
         stage.getActors().removeValue(pauseMenu,false);
         stage.getActors().removeValue(resumeBtn,false);
         stage.getActors().removeValue(quitBtn,false);
+        stage.getActors().removeValue(xBtn,false);
+        if(!stage.getActors().contains(pauseBtn, true)){
+            stage.getActors().add(pauseBtn);
+        }
+        if(!stage.getActors().contains(shopBtn, true)){
+            stage.getActors().add(shopBtn);
+        }
+    }
+    /*
+     * Activated when the player presses the shop button
+     * Shows the shop menu. The user can buy new stations and new chefs
+     */
+    public void showShop(){
+        isPaused = true;
+        freezeTime = true;
+        if(chefAvailable){
+            if(score < CHEF_PRICE){
+                chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));
+                shopWalletLabel.setText("WALLET: $"+Integer.toString(score));
+            } else {
+                chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));
+                shopWalletLabel.setText("WALLET: $"+Integer.toString(score));
+            }}
+        stage.getActors().removeValue(shopBtn, false);
+        stage.getActors().removeValue(pauseBtn, false);
+        if(!stage.getActors().contains(shopMenu, true)){
+            stage.getActors().add(shopMenu);
+        }
+        if(!stage.getActors().contains(xBtn, true)){
+            stage.getActors().add(xBtn);
+        }
+        if(!stage.getActors().contains(buyChefBtn, true)){
+            stage.getActors().add(buyChefBtn);
+        }
+        if(!stage.getActors().contains(shopWalletLabel, true)){
+            stage.getActors().add(shopWalletLabel);
+        }
+        if(!stage.getActors().contains(chefPriceLabel, true)){
+            stage.getActors().add(chefPriceLabel);
+        }
+    }
+
+    /*
+     * Activated when the player presses the exit button in the shop button
+     * Shows the shop menu. The user can buy new stations and new chefs
+     */
+    public void hideShop(){
+        isPaused = false;
+        freezeTime = true;
+        stage.getActors().removeValue(shopMenu,false);
+        stage.getActors().removeValue(xBtn,false);
+        stage.getActors().removeValue(buyChefBtn,false);
+        stage.getActors().removeValue(shopWalletLabel,false);
+        stage.getActors().removeValue(chefPriceLabel,false);
+        if(!stage.getActors().contains(shopBtn, true)){
+            stage.getActors().add(shopBtn);
+        }
         if(!stage.getActors().contains(pauseBtn, true)){
             stage.getActors().add(pauseBtn);
         }
@@ -444,6 +529,53 @@ public class HUD implements Disposable {
      */
     public boolean isPaused(){
         return isPaused;
+    }
+
+    /*
+     * Handles all inputs on the buttons in the game
+     */
+    public void handleButtons(){
+        //pause menu buttons
+        if(pauseBtn.isPressed()){
+            pause();
+        }
+        if(resumeBtn.isPressed()){
+            unPause();
+        }
+        if(quitBtn.isPressed()){
+            if(scenarioComplete){
+                game.setScreen(new MainMenuScreen(game));
+            } else {
+                save(true);
+            }
+        }
+        //shop menu buttons
+        if(shopBtn.isPressed()){
+            showShop();
+        }
+        if(buyChefBtn.isPressed()){
+            if(chefAvailable){
+                if(score >= CHEF_PRICE){
+                    if(!screen.chefs.contains(screen.chef3)){
+                        screen.chef3.defineChef();
+                        screen.chefs.add(screen.chef3);
+                        
+                        chefAvailable = false;
+                        chefPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));
+                        chefPriceLabel.setText("unavailable");
+
+                        score -= CHEF_PRICE;
+                        scoreLabel.setText(Integer.toString(score));
+                    }
+                    hideShop();
+                }
+            }
+        }
+        //x button for all menus
+        if(xBtn.isPressed()){
+            hideShop();
+            unPause();
+        }
     }
 
     /*
@@ -460,6 +592,7 @@ public class HUD implements Disposable {
             saving.putInteger("seconds", this.worldTimerS);
             saving.putInteger("currentOrderNum", this.currentOrderNum);
             saving.putInteger("currentOrderTimer", this.currentOrder.orderTime);
+            saving.putInteger("countOrder", this.numOrders);
             saving.putInteger("rep", this.repPoints);
             saving.putString("difficulty", this.difficulty);
             for(int i = 0; i<3;i++){

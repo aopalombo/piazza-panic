@@ -34,7 +34,7 @@ public class OptionScreen implements Screen{
         stage = new Stage(view, game.batch);
         view.getCamera().position.set(Width / 2, Height / 2, 1f);
         this.game = game;
-        font.setColor(Color.PINK);
+        font.setColor(new Color(1, 0.545f, 0.502f, 1));
         font.getData().setScale(2f);
 
         scenarioBtn = createButton("Buttons/scenarioBtn.png");
@@ -87,7 +87,7 @@ public class OptionScreen implements Screen{
         font.draw(game.batch,"In Endless mode there is an infinite horde",700,280);
         font.draw(game.batch,"of customers coming to your restaurant",700,250);
         font.draw(game.batch,"If you lose your reputation points you lose!",700,220);
-        game.batch.draw(playFrame, ((Width / 2) - (playFrame.getWidth() / 2)), 500);
+        game.batch.draw(playFrame, ((Width / 2) - (playFrame.getWidth() / 2)), 475);
         game.batch.end();
 
         if(scenarioBtn.isPressed()){game.setScreen(new DifficultySelectionScreen(game));}

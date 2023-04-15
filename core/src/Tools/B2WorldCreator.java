@@ -15,7 +15,6 @@ import com.team13.piazzapanic.Screens.PlayScreen;
  * B2WorldCreator is a class used to create Box2D World objects from a TiledMap.
  * This class uses the map objects to create various objects like worktop, plates,
  * chopperboard, bin, etc. based on the name assigned to the objects in the TiledMap.
- *
  * The class is instantiated with a World object, TiledMap object and PlayScreen object.
  * It then uses the first layer of the TiledMap to create the objects and assign their
  * positions. The objects are created as BodyDef objects and are passed to different sprite

@@ -82,7 +82,7 @@ public class DifficultySelectionScreen implements Screen{
 
         game.batch.setProjectionMatrix(view.getCamera().combined);
         game.batch.begin();
-        game.batch.draw(playFrame, ((Width / 2) - (playFrame.getWidth() / 2)), 500);
+        game.batch.draw(playFrame, ((Width / 2) - (playFrame.getWidth() / 2)), 475);
         game.batch.end();
 
         if(easyBtn.isPressed()){Gdx.graphics.setSystemCursor(SystemCursor.Arrow);game.setScreen(new PlayScreen(game, "easy",false));}
