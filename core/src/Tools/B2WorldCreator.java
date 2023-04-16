@@ -1,6 +1,9 @@
 package Tools;
 
 import Sprites.*;
+
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -22,7 +25,12 @@ import com.team13.piazzapanic.Screens.PlayScreen;
  *
  */
 public class B2WorldCreator {
-
+    private int choppingBoardCount = 0;
+    private int panCount = 0;
+    private int ovenCount = 0;
+    private int unlockedChoppingBoards;
+    private int unlockedPans;
+    private int unlockedOvens;
 /**
  * Constructor method for B2WorldCreator. It accepts a World, TiledMap and PlayScreen
  * objects. The method then iterates over the cells in the first layer of the TiledMap and
@@ -36,7 +44,15 @@ public class B2WorldCreator {
  * @param map The TiledMap object.
  * */
 
-    public B2WorldCreator(World world, TiledMap map, PlayScreen screen) {
+    public B2WorldCreator(World world, TiledMap map, PlayScreen screen, boolean resume) {
+        Preferences saving = Gdx.app.getPreferences("userData");
+        if(resume){
+            unlockedChoppingBoards = saving.getInteger("choppingBoardCount", 1);
+            unlockedPans = saving.getInteger("panCount", 1);
+            unlockedOvens = saving.getInteger("ovenCount", 1);
+        } else {
+            unlockedChoppingBoards = unlockedPans = unlockedOvens = 1;
+        }
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
         for (int x = 0; x < layer.getWidth(); x++) {
             for (int y = 0; y < layer.getHeight(); y++) {
@@ -66,7 +82,14 @@ public class B2WorldCreator {
                 } else if (mapObject.getName().equals("worktop")) {
                     new Worktop(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("chopping_board")) {
-                    new ChoppingBoard(world, map, bdef, rectangle);
+                    ChoppingBoard board;
+                    choppingBoardCount++;
+                    if(choppingBoardCount <=unlockedChoppingBoards){
+                        board = new ChoppingBoard(world, map, bdef, rectangle,false);
+                    } else {
+                        board = new ChoppingBoard(world, map, bdef, rectangle,true);
+                    }
+                    screen.addChoppingBoard(board);
                 } else if (mapObject.getName().equals("plate")) {
                     screen.plateStation = new PlateStation(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("tomato")) {
@@ -78,11 +101,25 @@ public class B2WorldCreator {
                 } else if (mapObject.getName().equals("onion")) {
                     new OnionStation(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("pan1")) {
-                    new Pan(world, map, bdef, rectangle);
+                    Pan pan;
+                    panCount++;
+                    if(panCount <=unlockedPans){
+                        pan = new Pan(world, map, bdef, rectangle,false);
+                    } else {
+                        pan = new Pan(world, map, bdef, rectangle,true);
+                    }
+                    screen.addPan(pan);
                 } else if (mapObject.getName().equals("steak")) {
                     new SteakStation(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("pan2")) {
-                    new Pan(world, map, bdef, rectangle);
+                    Pan pan;
+                    panCount++;
+                    if(panCount <=1){
+                        pan = new Pan(world, map, bdef, rectangle,false);
+                    } else {
+                        pan = new Pan(world, map, bdef, rectangle,true);
+                    }
+                    screen.addPan(pan);
                 } else if (mapObject.getName().equals("completed_dish")) {
                     new CompletedDishStation(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("cheese")){
@@ -97,7 +134,14 @@ public class B2WorldCreator {
                 } else if (mapObject.getName().equals("pizzaSauce")){
                     new PizzaSauceStation(world, map, bdef, rectangle);
                 } else if (mapObject.getName().equals("oven")){
-                    new Oven(world, map, bdef, rectangle);
+                    Oven oven;
+                    ovenCount++;
+                    if(ovenCount <=unlockedOvens){
+                        oven = new Oven(world, map, bdef, rectangle,false);
+                    } else {
+                        oven = new Oven(world, map, bdef, rectangle,true);
+                    }
+                    screen.addOven(oven);
                 }
             }
         }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
@@ -25,10 +24,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team13.piazzapanic.Screens.MainMenuScreen;
 import com.team13.piazzapanic.Screens.PlayScreen;
-
 import Recipes.Order;
-import Sprites.Chef;
-
+import Sprites.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -84,23 +82,35 @@ public class HUD implements Disposable {
 
     private Boolean isPaused = false;
     private ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseBtn.png"))));
-    private ImageButton pauseMenu = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
+    private Image pauseMenu = new Image (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
     private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
     private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
     private ImageButton xBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/xBtn.png"))));
 
     private ImageButton shopBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopBtn.png"))));
-    private ImageButton shopMenu = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopMenu.png"))));
-
+    private Image shopMenu = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopMenu.png"))));
+    private Label shopWalletLabel = new Label("", new Label.LabelStyle(font, new Color(1, 0.545f, 0.502f, 1)));
+    
     private ImageButton buyChefBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/chefBtn.png"))));
     private Label chefPriceLabel = new Label("$400 (1x)", new Label.LabelStyle(font, Color.GREEN));
     private Boolean chefAvailable = true;
-    private Label shopWalletLabel = new Label("", new Label.LabelStyle(font, new Color(1, 0.545f, 0.502f, 1)));
+
+    private ImageButton buyChoppingBoardBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/choppingBoardBtn.png"))));
+    private Label choppingBoardPriceLabel = new Label("$100 (2x)", new Label.LabelStyle(font, Color.GREEN));
+    private Boolean choppingBoardAvailable = true;
+
+    private ImageButton buyOvenBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/ovenBtn.png"))));
+    private Label ovenPriceLabel = new Label("$400 (1x)", new Label.LabelStyle(font, Color.GREEN));
+    private Boolean ovenAvailable = true;
+
+    private ImageButton buyPanBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/panBtn.png"))));
+    private Label panPriceLabel = new Label("200 (2x)", new Label.LabelStyle(font, Color.GREEN));
+    private Boolean panAvailable = true;
 
     private final static Integer CHEF_PRICE = 400;
-    private final static Integer OVEN_PRICE = 300;
-    private final static Integer BOARD_PRICE = 300;
-    private final static Integer PAN_PRICE = 300;
+    private final static Integer OVEN_PRICE = 400;
+    private final static Integer BOARD_PRICE = 100;
+    private final static Integer PAN_PRICE = 200;
 
     private Preferences saving;
     private String difficulty;
@@ -174,16 +184,29 @@ public class HUD implements Disposable {
         powerUps.add("FREEZE");
         powerUps.add("SPEEDY");
 
+        //HUD and menu Buttons
         pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);
         shopBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-12);
-        buyChefBtn.setPosition(30, 87);
-        chefPriceLabel.setPosition(27, 75);
-        shopWalletLabel.setPosition(65, 112);
         xBtn.setPosition(10, 143);
         pauseMenu.setPosition(10, 10);
         shopMenu.setPosition(10, 10);
         resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);
         quitBtn.setPosition((viewport.getWorldWidth()/2)-(quitBtn.getWidth()/2), 25);
+
+        //Shop menu buttons and labels
+        shopWalletLabel.setPosition(65, 112);
+
+        buyChefBtn.setPosition(30, 84);
+        chefPriceLabel.setPosition(27, 72);
+
+        buyChoppingBoardBtn.setPosition(70, 84);
+        choppingBoardPriceLabel.setPosition(67, 72);
+
+        buyPanBtn.setPosition(110, 84);
+        panPriceLabel.setPosition(107, 72);
+
+        buyOvenBtn.setPosition(30, 54);
+        ovenPriceLabel.setPosition(27, 42);
 
         stage.addActor(pauseBtn);
         stage.addActor(shopBtn);
@@ -477,14 +500,71 @@ public class HUD implements Disposable {
     public void showShop(){
         isPaused = true;
         freezeTime = true;
+        shopWalletLabel.setText("WALLET: $"+Integer.toString(score));
+        int choppingBoardCount = 0;
+        int panCount = 0;
+
+        //Check if you can buy any more chopping boards
+        for(ChoppingBoard board : screen.getChoppingBoards()){
+            if(!board.isLocked()){
+                choppingBoardCount++;
+            }
+        }
+        if(choppingBoardCount >= 3){
+            choppingBoardAvailable = false;
+            choppingBoardPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));
+            choppingBoardPriceLabel.setText("unavailable");
+        } else {
+            choppingBoardAvailable = true;
+        }
+
+        //check if you can buy any more pans
+        for(Pan pan : screen.getPans()){
+            if(!pan.isLocked()){
+                panCount++;
+            }
+        }
+        if(panCount >= 3){
+            panAvailable = false;
+            panPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));
+            panPriceLabel.setText("unavailable");
+        } else {
+            panAvailable = true;
+        }
+
+        //Change color of labels. If the player has enough money to buy the item it is green otherwise it is red
         if(chefAvailable){
             if(score < CHEF_PRICE){
                 chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));
-                shopWalletLabel.setText("WALLET: $"+Integer.toString(score));
             } else {
                 chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));
-                shopWalletLabel.setText("WALLET: $"+Integer.toString(score));
-            }}
+            }
+        }
+        if(ovenAvailable){
+            if(score < OVEN_PRICE){
+                ovenPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));
+            } else {
+                ovenPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));
+            }
+            ovenPriceLabel.setText("$400 (1x)");
+        }
+        if(choppingBoardAvailable){
+            if(score < BOARD_PRICE){
+                choppingBoardPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));
+            } else {
+                choppingBoardPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));
+            }
+            choppingBoardPriceLabel.setText("$100 ("+Integer.toString(3-choppingBoardCount)+"x)");
+        }
+        if(panAvailable){
+            if(score < PAN_PRICE){
+                panPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));
+            } else {
+                panPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));
+            }
+            panPriceLabel.setText("$200 ("+Integer.toString(3-panCount)+"x)");
+        }
+        
         stage.getActors().removeValue(shopBtn, false);
         stage.getActors().removeValue(pauseBtn, false);
         if(!stage.getActors().contains(shopMenu, true)){
@@ -493,14 +573,32 @@ public class HUD implements Disposable {
         if(!stage.getActors().contains(xBtn, true)){
             stage.getActors().add(xBtn);
         }
-        if(!stage.getActors().contains(buyChefBtn, true)){
-            stage.getActors().add(buyChefBtn);
-        }
         if(!stage.getActors().contains(shopWalletLabel, true)){
             stage.getActors().add(shopWalletLabel);
         }
+        if(!stage.getActors().contains(buyChefBtn, true)){
+            stage.getActors().add(buyChefBtn);
+        }
         if(!stage.getActors().contains(chefPriceLabel, true)){
             stage.getActors().add(chefPriceLabel);
+        }
+        if(!stage.getActors().contains(buyChoppingBoardBtn, true)){
+            stage.getActors().add(buyChoppingBoardBtn);
+        }
+        if(!stage.getActors().contains(choppingBoardPriceLabel, true)){
+            stage.getActors().add(choppingBoardPriceLabel);
+        }
+        if(!stage.getActors().contains(buyPanBtn, true)){
+            stage.getActors().add(buyPanBtn);
+        }
+        if(!stage.getActors().contains(panPriceLabel, true)){
+            stage.getActors().add(panPriceLabel);
+        }
+        if(!stage.getActors().contains(buyOvenBtn, true)){
+            stage.getActors().add(buyOvenBtn);
+        }
+        if(!stage.getActors().contains(ovenPriceLabel, true)){
+            stage.getActors().add(ovenPriceLabel);
         }
     }
 
@@ -513,9 +611,15 @@ public class HUD implements Disposable {
         freezeTime = true;
         stage.getActors().removeValue(shopMenu,false);
         stage.getActors().removeValue(xBtn,false);
-        stage.getActors().removeValue(buyChefBtn,false);
         stage.getActors().removeValue(shopWalletLabel,false);
+        stage.getActors().removeValue(buyChefBtn,false);
         stage.getActors().removeValue(chefPriceLabel,false);
+        stage.getActors().removeValue(buyChoppingBoardBtn,false);
+        stage.getActors().removeValue(choppingBoardPriceLabel,false);
+        stage.getActors().removeValue(buyPanBtn,false);
+        stage.getActors().removeValue(panPriceLabel,false);
+        stage.getActors().removeValue(buyOvenBtn,false);
+        stage.getActors().removeValue(ovenPriceLabel,false);
         if(!stage.getActors().contains(shopBtn, true)){
             stage.getActors().add(shopBtn);
         }
@@ -571,6 +675,50 @@ public class HUD implements Disposable {
                 }
             }
         }
+        if(buyChoppingBoardBtn.isPressed()){
+            if(choppingBoardAvailable&&(score >= BOARD_PRICE)){
+                for(ChoppingBoard board : screen.getChoppingBoards()){
+                    if(board.isLocked()){
+                        board.unlock();
+                        score -= BOARD_PRICE;
+                        scoreLabel.setText(Integer.toString(score));
+                        choppingBoardAvailable = false;
+                        break;
+                    }
+                }
+                hideShop();
+            }
+        }
+        if(buyPanBtn.isPressed()){
+            if(panAvailable&&(score >= PAN_PRICE)){
+                for(Pan pan : screen.getPans()){
+                    if(pan.isLocked()){
+                        pan.unlock();
+                        score -= PAN_PRICE;
+                        scoreLabel.setText(Integer.toString(score));
+                        panAvailable = false;
+                        break;
+                    }
+                }
+                hideShop();
+            }
+        }
+        if(buyOvenBtn.isPressed()){
+            if(ovenAvailable&&(score >= OVEN_PRICE)){
+                for(Oven oven : screen.getOvens()){
+                    if(oven.isLocked()){
+                        oven.unlock();
+                        score -= OVEN_PRICE;
+                        scoreLabel.setText(Integer.toString(score));
+                        ovenPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));
+                        ovenPriceLabel.setText("unavailable");
+                        ovenAvailable = false;
+                        break;
+                    }
+                }
+                hideShop();
+            }
+        }
         //x button for all menus
         if(xBtn.isPressed()){
             hideShop();
@@ -586,7 +734,28 @@ public class HUD implements Disposable {
         if(scenarioComplete){
             saving.clear();
         } else {
+            int choppingBoardCount = 0;
+            int panCount = 0;
+            int ovenCount = 0;
+            for(ChoppingBoard board : screen.getChoppingBoards()){
+                if(!board.isLocked()){
+                    choppingBoardCount++;
+                }
+            }
+            for(Pan pan : screen.getPans()){
+                if(!pan.isLocked()){
+                    panCount++;
+                }
+            }
+            for(Oven oven : screen.getOvens()){
+                if(!oven.isLocked()){
+                    ovenCount++;
+                }
+            }
             String currentDish = "currentOrderDish";
+            saving.putInteger("choppingBoardCount", choppingBoardCount);
+            saving.putInteger("panCount", panCount);
+            saving.putInteger("ovenCount", ovenCount);
             saving.putInteger("money", this.score);
             saving.putInteger("minutes", this.worldTimerM);
             saving.putInteger("seconds", this.worldTimerS);

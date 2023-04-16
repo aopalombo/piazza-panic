@@ -72,28 +72,26 @@ public class PlayScreen implements Screen {
     public static float trayY;
 
     private float timeSeconds = 0f;
-
     private float timeSecondsCount = 0f;
 
     private int orderCount;
-
     public static int orderTime = 40;
 
     private float chefSpeedMultiplier = 1f;
-
     private int moneyMultiplier = 1;
-
     private float cookSpeedMultiplier = 1f;
 
     private boolean endless = false;
 
     private int dishAmount = 1;
-
     private Preferences saving = Gdx.app.getPreferences("userData");
-
     private boolean resume;
 
     private Integer currentOrderNum = 1;
+
+    private ArrayList<ChoppingBoard> boards = new ArrayList<ChoppingBoard>();
+    private ArrayList<Pan> pans = new ArrayList<Pan>();
+    private ArrayList<Oven> ovens = new ArrayList<Oven>();
 
 
     /**
@@ -120,7 +118,7 @@ public class PlayScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1 / MainGame.PPM);
         gamecam.position.set(gameport.getWorldWidth() / 2, gameport.getWorldHeight() / 2, 0);
 
-        new B2WorldCreator(world, map, this);
+        new B2WorldCreator(world, map, this, resume);
         chef1.defineChef();
         chef2.defineChef();
         chefs.add(chef1);
@@ -147,6 +145,30 @@ public class PlayScreen implements Screen {
         }
         hud.setNumOrders(orderCount);
         Gdx.input.setInputProcessor(hud.stage);
+    }
+
+    public void addChoppingBoard(ChoppingBoard board){
+        boards.add(board);
+    }
+
+    public ArrayList<ChoppingBoard> getChoppingBoards(){
+        return boards;
+    }
+
+    public void addPan(Pan pan){
+        pans.add(pan);
+    }
+
+    public ArrayList<Pan> getPans(){
+        return pans;
+    }
+
+    public void addOven(Oven oven){
+        ovens.add(oven);
+    }
+
+    public ArrayList<Oven> getOvens(){
+        return ovens;
     }
 
     @Override
@@ -266,7 +288,8 @@ public class PlayScreen implements Screen {
 
                             case "Sprites.ChoppingBoard":
                                 if(controlledChef.getInHandsIng() != null){
-                                    if(controlledChef.getInHandsIng().prepareTime > 0){
+                                    ChoppingBoard choppingBoard = (ChoppingBoard) tile;
+                                    if((controlledChef.getInHandsIng().prepareTime > 0)&&(!choppingBoard.isLocked())){
                                         hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier);
                                         controlledChef.setUserControlChef(false);
                                         Chef temp = controlledChef;
@@ -283,7 +306,8 @@ public class PlayScreen implements Screen {
                                 break;
                             case "Sprites.Pan":
                                 if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Potato")) {
-                                    if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                    Pan pan = (Pan) tile;
+                                    if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0 && !pan.isLocked()){
                                         hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
                                         controlledChef.setUserControlChef(false);
                                         Chef temp = controlledChef;
@@ -294,7 +318,8 @@ public class PlayScreen implements Screen {
                                 break;
                             case "Sprites.Oven":
                             if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Steak")) {
-                                if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                Oven oven = (Oven) tile;
+                                if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0 && !oven.isLocked()){
                                     hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
                                     controlledChef.setUserControlChef(false);
                                     Chef temp = controlledChef;
@@ -479,6 +504,15 @@ public class PlayScreen implements Screen {
             if (chefs.get(i).previousInHandRecipe != null){
                 chefs.get(i).displayIngDynamic(game.batch);
             }
+        }
+        for(ChoppingBoard board : boards){
+            board.draw(hud);
+        }
+        for(Pan pan : pans){
+            pan.draw(hud);
+        }
+        for(Oven oven : ovens){
+            oven.draw(hud);
         }
         game.batch.end();
         if(Gdx.input.isKeyPressed(Input.Keys.T)){
