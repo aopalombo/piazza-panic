@@ -24,7 +24,7 @@ public class UnbakedPizzaRecipe extends Recipe{
         completedImg = new Texture("Food/UnbakedPizza.png");
     }
 
-    public UnbakedPizza getUnbackedPizza(){
+    public UnbakedPizza getUnbakedPizza(){
         return new UnbakedPizza(0, 5);
     }
 }
