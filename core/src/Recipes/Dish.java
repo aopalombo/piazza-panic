@@ -20,7 +20,7 @@ public class Dish extends Sprite {
     public Integer dishTime;
 
     /**
-     * Constructor for the `Order` class.
+     * Constructor for the `Dish` class.
      *
      * @param recipe The `Recipe` object associated with this order.
      * @param orderImg The image representing this order.
