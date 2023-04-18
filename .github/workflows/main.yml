@@ -117,7 +117,7 @@ jobs:
 #        run: |
 #          echo helloworld
 #          where java | set VAR
-#          echo $VAR
+#          echo $VAR 
 
       - name: Build with gradle wrapper
         run: ./gradlew desktop:dist
