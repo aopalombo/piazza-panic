@@ -5,6 +5,7 @@ import Recipe.BurgerRecipe;
 import Recipe.Recipe;
 import Recipe.SaladRecipe;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -65,6 +66,8 @@ public class Chef extends Sprite {
     private Recipe inHandsRecipe;
 
     private Boolean userControlChef;
+
+    public Boolean failState;
 
     private final Sprite circleSprite;
 
@@ -203,9 +206,19 @@ public class Chef extends Sprite {
             }
         } else if (!userControlChef && !chefOnChefCollision && getInHandsIng().isPrepared() && inHandsIng.cookTime > 0) {
             waitTimer += dt;
+            float endTime = 0;
             if (waitTimer > inHandsIng.cookTime) {
                 inHandsIng.cookTime = 0;
-                inHandsIng.setCooked();
+                endTime = waitTimer;
+                System.out.println(endTime);
+            }
+            if (waitTimer - endTime > 5) {
+                if (failState) {
+                    inHandsIng.setFailed();
+                } else {
+                    inHandsIng.setCooked();
+                }
+                failState = true;
                 userControlChef = true;
                 waitTimer = 0;
                 setChefSkin(inHandsIng);
@@ -330,35 +343,53 @@ public class Chef extends Sprite {
      * @param item the item that chef is holding
      *
      * The skin is set based on the following cases:
-     * - if item is null, then the skin is set to normalChef
+     * - if item is null, then the skin is set to Chef_normal
+     * - if item is failed, then the skin is set to Chef_holding_failed
      * - if item is a Lettuce, then the skin is set to
-     *    - choppedLettuceChef if the lettuce is prepared
-     *    - lettuceChef if the lettuce is not prepared
+     *    - Chef_holding_chopped_lettuce if the lettuce is prepared
+     *    - Chef_holding_lettuce if the lettuce is not prepared
      * - if item is a Steak, then the skin is set to
-     *    - burgerChef if the steak is prepared and cooked
-     *    - pattyChef if the steak is prepared but not cooked
-     *    - meatChef if the steak is not prepared
+     *    - Chef_holding_burger if the steak is prepared and cooked
+     *    - Chef_holding_patty if the steak is prepared but not cooked
+     *    - Chef_holding_meat if the steak is not prepared
      * - if item is an Onion, then the skin is set to
-     *    - choppedOnionChef if the onion is prepared
-     *    - onionChef if the onion is not prepared
+     *    - Chef_holding_chopped_onion if the onion is prepared
+     *    - Chef_holding_onion if the onion is not prepared
      * - if item is a Tomato, then the skin is set to
-     *    - choppedTomatoChef if the tomato is prepared
-     *    - tomatoChef if the tomato is not prepared
+     *    - Chef_holding_chopped_tomato if the tomato is prepared
+     *    - Chef_holding_tomato if the tomato is not prepared
+     * - if item is pizza sauce, then the skin is set to Chef_holding_pizza_sauce
      * - if item is a Bun, then the skin is set to
-     *    - bunsToastedChef if the bun is cooked
-     *    - bunsChef if the bun is not cooked
+     *    - Chef_holding_buns_toasted if the bun is cooked
+     *    - Chef_holding_buns if the bun is not cooked
      * - if item is a BurgerRecipe, then the skin is set to completedBurgerChef
      * - if item is a SaladRecipe, then the skin is set to saladChef
+     *
+     * These naming conventions are continued when adding new ingredients
+     * Capitalise the "C" in "Chef" and use snake case with lowercase letters
+     *
      */
 
     public void setChefSkin(Object item) {
         if (item == null) {
+<<<<<<< Updated upstream
             skinNeeded = normalChef;
         } else if (item instanceof Lettuce) {
             if (inHandsIng.isPrepared()) {
                 skinNeeded = choppedLettuceChef;
             } else {
                 skinNeeded = lettuceChef;
+=======
+            skinNeeded = skin.getRegion("Chef_normal");
+            ;
+        } else if (inHandsIng.isFailed()){
+            skinNeeded = skin.getRegion("Chef_holding_failed");
+        } else if (item instanceof Lettuce) {
+            if (inHandsIng.isPrepared()) {
+                skinNeeded = skin.getRegion("Chef_holding_chopped_lettuce");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_lettuce");
+>>>>>>> Stashed changes
             }
         } else if (item instanceof Steak) {
             if (inHandsIng.isPrepared() && inHandsIng.isCooked()) {
@@ -380,19 +411,55 @@ public class Chef extends Sprite {
             } else {
                 skinNeeded = tomatoChef;
             }
+<<<<<<< Updated upstream
+=======
+        }else if (item instanceof PizzaSauce) {
+            skinNeeded = skin.getRegion("Chef_holding_pizza_sauce");
+>>>>>>> Stashed changes
         } else if (item instanceof Bun) {
             if (inHandsIng.isCooked()) {
                 skinNeeded = bunsToastedChef;
             } else {
                 skinNeeded = bunsChef;
             }
+<<<<<<< Updated upstream
+=======
+        } else if (item instanceof Potato) {
+            if (inHandsIng.isCooked()) {
+                skinNeeded = skin.getRegion("Chef_holding_baked_potato");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_potato");
+            }
+        } else if (item instanceof PizzaDough) {
+            skinNeeded = skin.getRegion("Chef_holding_pizza_dough");
+        } else if (item instanceof Cheese) {
+            if (inHandsIng.isPrepared()) {
+                skinNeeded = skin.getRegion("Chef_holding_chopped_cheese");
+            } else {
+                skinNeeded = skin.getRegion("Chef_holding_cheese");
+            }
+        } else if (item instanceof UnbakedPizza) {
+            skinNeeded = skin.getRegion("Chef_holding_burger");
+>>>>>>> Stashed changes
         } else if (item instanceof BurgerRecipe) {
             skinNeeded = completedBurgerChef;
         } else if (item instanceof SaladRecipe) {
+<<<<<<< Updated upstream
             skinNeeded = saladChef;
         }
     }
 
+=======
+            skinNeeded = skin.getRegion("Chef_holding_salad");
+        } else if (item instanceof JacketPotatoRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_baked_potato");
+        } else if (item instanceof UnbakedPizzaRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_burger");
+        } else if (item instanceof PizzaRecipe) {
+            skinNeeded = skin.getRegion("Chef_holding_baked_potato");
+        }
+    }
+>>>>>>> Stashed changes
     /**
      * Method to display the ingredient on the specific interactive tile objects (ChoppingBoard/Pan)
      * @param batch the SpriteBatch used to render the texture.

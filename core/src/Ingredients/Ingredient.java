@@ -97,11 +97,21 @@ public abstract class Ingredient extends Sprite {
      * @return int - The correct skin of the ingredient, either 0, 1, or 2.
      * 0 represents the uncooked and unprepared ingredient.
      * 1 represents the prepared but uncooked ingredient.
+<<<<<<< Updated upstream
      * 2 represents the fully cooked and prepared ingredient.
      *
      * */
+=======
+     * 2 represents the failed ingredient (rearranged to simplify)
+     * 3 represents the fully cooked and prepared ingredient.
+     *
+     * */
+    // TODO add skin for failed ingredients using a 10x10 png file to replace temporary one
+>>>>>>> Stashed changes
     private int findCorrectSkin(){
-        if (isPrepared() && isCooked()){
+        if (isPrepared() && isCooked()) {
+            return 3;
+        } else if (isFailed()){
             return 2;
         } else if (isPrepared()){
             return 1;

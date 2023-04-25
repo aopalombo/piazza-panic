@@ -130,6 +130,8 @@ public class PlayScreen implements Screen {
      * If the controlled chef has the user control,
      * it checks if the 'W', 'A', 'S', or 'D' keys are pressed and sets the velocity of the chef accordingly.
      *
+     * If the 'F' key is just pressed, fail the ingredient held by the currently controlled chef
+     *
      * If the 'E' key is just pressed and the chef is touching a tile,
      * it checks the type of tile and sets the chef's in-hands ingredient accordingly.
      *
@@ -192,9 +194,16 @@ public class PlayScreen implements Screen {
         if (controlledChef.b2body.getLinearVelocity().y < 0){
             controlledChef.notificationSetBounds("Down");
         }
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F) && controlledChef.getInHandsIng() != null){
+            System.out.println("Failed current");
+            controlledChef.getInHandsIng().setFailed();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)){
+            controlledChef.failState = false;
+        }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
+<<<<<<< Updated upstream:core/src/com/team13/piazzapanic/PlayScreen.java
                 if(controlledChef.getTouchingTile() != null){
                     InteractiveTileObject tile = (InteractiveTileObject) controlledChef.getTouchingTile().getUserData();
                     String tileName = tile.getClass().getName();
@@ -267,18 +276,120 @@ public class PlayScreen implements Screen {
                                         controlledChef.dropItemOn(tile);
                                         ordersArray.get(0).orderComplete = true;
                                         controlledChef.setChefSkin(null);
+=======
+            if(controlledChef.getTouchingTile() != null){
+                InteractiveTileObject tile = (InteractiveTileObject) controlledChef.getTouchingTile().getUserData();
+                String tileName = tile.getClass().getName();
+                if (controlledChef.getInHandsIng() == null && controlledChef.getInHandsRecipe() == null) {
+                    switch (tileName) {
+                        case "Sprites.TomatoStation":
+                            controlledChef.setInHandsIng(new Tomato(2*cookSpeedMultiplier, 3));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.PizzaSauceStation":
+                            controlledChef.setInHandsIng(new PizzaSauce(0, 0));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.PotatoStation":
+                            controlledChef.setInHandsIng(new Potato(0, 3*cookSpeedMultiplier));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.PizzaDoughStation":
+                            controlledChef.setInHandsIng(new PizzaDough(2*cookSpeedMultiplier, 3*cookSpeedMultiplier));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.CheeseStation":
+                            controlledChef.setInHandsIng(new Cheese(2*cookSpeedMultiplier,0));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.BunsStation":
+                            controlledChef.setInHandsIng(new Bun(0,3*cookSpeedMultiplier));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.OnionStation":
+                            controlledChef.setInHandsIng(new Onion(2*cookSpeedMultiplier,0));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.SteakStation":
+                            controlledChef.setInHandsIng(new Steak(2*cookSpeedMultiplier,3*cookSpeedMultiplier));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.LettuceStation":
+                            controlledChef.setInHandsIng(new Lettuce(2*cookSpeedMultiplier, 0));
+                            controlledChef.setChefSkin(controlledChef.getInHandsIng());
+                            break;
+                        case "Sprites.PlateStation":
+                            if(plateStation.getPlate().size() > 0 || plateStation.getCompletedRecipe() != null){
+                                controlledChef.pickUpItemFrom(tile);
+
+                            }
+
+                    }
+                } else {
+                    switch (tileName) {
+                        case "Sprites.Bin":
+                            controlledChef.setInHandsRecipe(null);
+                            controlledChef.setInHandsIng(null);
+                            controlledChef.setChefSkin(null);
+                            break;
+
+                        case "Sprites.ChoppingBoard":
+                            if(controlledChef.getInHandsIng() != null && !controlledChef.getInHandsIng().isFailed()){
+                                if(controlledChef.getInHandsIng().prepareTime > 0){
+                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier);
+                                    controlledChef.setUserControlChef(false);
+                                }
+                            }
+                           break;
+                        case "Sprites.PlateStation":
+                            if (controlledChef.getInHandsRecipe() == null){
+                            controlledChef.dropItemOn(tile, controlledChef.getInHandsIng());
+                            controlledChef.setChefSkin(null);
+                        }
+                            break;
+                        case "Sprites.Pan":
+                            if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Potato") && !controlledChef.getInHandsIng().isFailed()) {
+                                if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                    controlledChef.setUserControlChef(false);
+                                }
+                            }
+                            break;
+                        case "Sprites.Oven":
+                        if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Steak") && !controlledChef.getInHandsIng().isFailed()) {
+                            if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0){
+                                hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                controlledChef.setUserControlChef(false);
+                            }
+                        }
+                        break;
+                        case "Sprites.CompletedDishStation":
+                            if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng() instanceof UnbakedPizza)&&(controlledChef.getInHandsIng().cookTime <= 0) && !controlledChef.getInHandsIng().isFailed()){
+                                controlledChef.setInHandsIng(null);
+                                controlledChef.setInHandsRecipe(new PizzaRecipe());
+                            }
+                            if (controlledChef.getInHandsRecipe() != null){
+                                if(ordersArray.get(0).completeDish(controlledChef.getInHandsRecipe())){
+                                    controlledChef.dropItemOn(tile);
+                                    controlledChef.setChefSkin(null);
+                                    if(ordersArray.get(0).isComplete()){
+                                        if((((orderCount+1) - ordersArray.size())%2) == 0){
+                                            hud.generatePowerUp();
+                                            activatePowerUp();
+                                        }
+>>>>>>> Stashed changes:core/src/com/team13/piazzapanic/Screens/PlayScreen.java
                                         if(ordersArray.size()==1){
                                             scenarioComplete = Boolean.TRUE;
                                         }
                                     }
                                 }
-                                break;
-                        }
+                            }
+                            break;
                     }
-
                 }
             }
         }
+    }
 
     /**
      * The update method updates the game elements, such as camera and characters,

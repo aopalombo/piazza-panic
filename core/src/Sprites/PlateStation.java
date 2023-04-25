@@ -31,6 +31,18 @@ public class PlateStation extends InteractiveTileObject {
     /** Static recipe for a salad */
     public static Recipe saladRecipe;
 
+<<<<<<< Updated upstream
+=======
+    /** Static recipe for a jacket potato */
+    public static Recipe jacketPotatoRecipe;
+
+    /** Static recipe for a unbaked pizza */
+    public static Recipe unbakedPizzaRecipe;
+
+    /** Static recipe for a pizza */
+    public static Recipe pizzaRecipe;
+
+>>>>>>> Stashed changes
     /** Recipe that has been completed on the plate */
     private Recipe recipeDone;
 

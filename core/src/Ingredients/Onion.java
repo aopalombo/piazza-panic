@@ -15,7 +15,13 @@ public class Onion extends Ingredient{
     public Onion(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
         super.tex = new ArrayList<>();
+<<<<<<< Updated upstream
         super.tex.add(new Texture("Food/Onion.png"));
         super.tex.add(new Texture("Food/Chopped_onion.png"));
+=======
+        super.tex.add(new Texture("Food/Ingredients/Onion.png"));
+        super.tex.add(new Texture("Food/Ingredients/Chopped_onion.png"));
+        super.tex.add(new Texture("Food/Failed_Ingredient.png"));
+>>>>>>> Stashed changes
     }
 }

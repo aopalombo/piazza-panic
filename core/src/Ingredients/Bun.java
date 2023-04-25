@@ -14,12 +14,19 @@ public class Bun extends Ingredient{
 
      */
 
+    //TODO for some reason the buns texture brakes once they are toasted and placed on the plate FIX THIS
     public Bun(float prepareTime, float cookTime) {
         super(prepareTime, cookTime);
         super.setPrepared();
         super.tex = new ArrayList<>();
         super.tex.add(null);
+<<<<<<< Updated upstream
         super.tex.add(new Texture("Food/Burger_buns.png"));
         super.tex.add(new Texture("Food/Toasted_burger_buns.png"));
+=======
+        super.tex.add(new Texture("Food/Ingredients/Burger_buns.png"));
+        super.tex.add(new Texture("Food/Ingredients/Toasted_burger_buns.png"));
+        super.tex.add(new Texture("Food/Failed_Ingredient.png"));
+>>>>>>> Stashed changes
     }
 }
