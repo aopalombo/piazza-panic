@@ -4,6 +4,7 @@ import Ingredients.*;
 import Recipes.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,6 +55,9 @@ public class Chef extends Sprite {
     private Recipe inHandsRecipe;
 
     public Boolean userControlChef;
+
+    public Boolean failState;
+    private Boolean burnable;
 
     private final Sprite circleSprite;
 
@@ -183,26 +187,65 @@ public class Chef extends Sprite {
                     setChefSkin(inHandsIng);
                 }
             }
-        } else if (!userControlChef && getInHandsIng().prepareTime > 0) {
+        } else if (!userControlChef && getInHandsIng().prepareTime != 0) {
             waitTimer += dt;
-            if (waitTimer > inHandsIng.prepareTime) {
-                inHandsIng.prepareTime = 0;
-                inHandsIng.setPrepared();
-                userControlChef = true;
+            if (waitTimer >= inHandsIng.prepareTime && inHandsIng.prepareTime != -1) {
                 waitTimer = 0;
-                setChefSkin(inHandsIng);
+                inHandsIng.prepareTime = -1;
+            } else if (inHandsIng.prepareTime == -1) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                    resetFailState();
+                }
+                if (waitTimer <= 3 && !failState) {
+                    inHandsIng.setPrepared();
+                    waitTimer = 3;
+                } else if (waitTimer > 3) {
+                    if (failState) {
+                        inHandsIng.setFailed();
+                    } else {
+                        inHandsIng.setPrepared();
+                    }
+                    userControlChef = true;
+                    waitTimer = 0;
+                    inHandsIng.prepareTime = 0;
+                    setChefSkin(inHandsIng);
+                }
             }
-        } else if (!userControlChef && !chefOnChefCollision && getInHandsIng().isPrepared() && inHandsIng.cookTime > 0) {
+        } else if (!userControlChef && getInHandsIng().isPrepared()) {
             waitTimer += dt;
-            if (waitTimer > inHandsIng.cookTime) {
-                inHandsIng.cookTime = 0;
-                inHandsIng.setCooked();
-                userControlChef = true;
+            if (waitTimer >= inHandsIng.cookTime && inHandsIng.cookTime != 0) {
                 waitTimer = 0;
-                setChefSkin(inHandsIng);
+                inHandsIng.cookTime = 0;
+                System.out.println("A");
+            }else if (inHandsIng.cookTime == 0) {
+                System.out.println("B");
+                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                    resetFailState();
+                    System.out.println("C");
+                }
+                if (waitTimer <= 3 && !failState) {
+                    System.out.println("D");
+                    inHandsIng.setCooked();
+                    waitTimer = 3;
+                } else if (waitTimer > 3) {
+                    System.out.println("E");
+                    if (failState) {
+                        System.out.println("F");
+                        inHandsIng.setFailed();
+                    } else {
+                        inHandsIng.setCooked();
+                        System.out.println("G");
+                    }
+                    userControlChef = true;
+                    waitTimer = 0;
+                    setChefSkin(inHandsIng);
+                }
             }
         }
     }
+
+
+
 
     /**
      * This method sets the bounds for the notification based on the given direction.
@@ -344,12 +387,14 @@ public class Chef extends Sprite {
 
     public void setChefSkin(Object item) {
         if (item == null) {
-            skinNeeded = skin.getRegion("Chef_normal");;
+            skinNeeded = skin.getRegion("Chef_normal");
+        } else if (inHandsIng != null && inHandsIng.isFailed()){
+            skinNeeded = skin.getRegion("Chef_holding_failed");
         } else if (item instanceof Lettuce) {
             if (inHandsIng.isPrepared()) {
-                skinNeeded = skin.getRegion("Chef_holding_chopped_lettuce");;
+                skinNeeded = skin.getRegion("Chef_holding_chopped_lettuce");
             } else {
-                skinNeeded = skin.getRegion("Chef_holding_lettuce");;
+                skinNeeded = skin.getRegion("Chef_holding_lettuce");
             }
         } else if (item instanceof Steak) {
             if (inHandsIng.isPrepared() && inHandsIng.isCooked()) {
@@ -596,6 +641,14 @@ public class Chef extends Sprite {
                 setChefSkin(item);
             }
         }
+    }
+
+    public void setFailState(){
+        failState = true;
+    }
+
+    public void resetFailState(){
+        failState = false;
     }
 }
 

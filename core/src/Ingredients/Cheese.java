@@ -19,5 +19,6 @@ public class Cheese extends Ingredient{
         super.tex = new ArrayList<>();
         super.tex.add(new Texture("Food/Ingredients/Cheese.png"));
         super.tex.add(new Texture("Food/Ingredients/Chopped_cheese.png"));
+        super.tex.add(new Texture("Food/Ingredients/Failed_ingredient.png"));
     }
 }

@@ -214,7 +214,11 @@ public class PlayScreen implements Screen {
             controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),
                                 Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),
                                 chefSpeedMultiplier);
+            if (controlledChef.getInHandsIng() != null && Gdx.input.isKeyJustPressed(Input.Keys.F)){
+                controlledChef.getInHandsIng().setFailed();
+                System.out.println("Failed current");
             }
+        }
         if (controlledChef.b2body.getLinearVelocity().x > 0){
             controlledChef.notificationSetBounds("Right");
         }
@@ -279,6 +283,7 @@ public class PlayScreen implements Screen {
 
                         }
                     } else {
+                        controlledChef.setFailState();
                         switch (tileName) {
                             case "Sprites.Bin":
                                 controlledChef.setInHandsRecipe(null);

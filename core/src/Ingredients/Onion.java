@@ -17,5 +17,6 @@ public class Onion extends Ingredient{
         super.tex = new ArrayList<>();
         super.tex.add(new Texture("Food/Ingredients/Onion.png"));
         super.tex.add(new Texture("Food/Ingredients/Chopped_onion.png"));
+        super.tex.add(new Texture("Food/Ingredients/Failed_ingredient.png"));
     }
 }
