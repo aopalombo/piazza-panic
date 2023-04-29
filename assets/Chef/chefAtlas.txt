@@ -6,7 +6,7 @@ filter: Nearest, Nearest
 repeat: none
 Chef_holding_buns
   rotate: false
-  xy: 538, 50
+  xy: 538, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
@@ -20,7 +20,7 @@ Chef_holding_buns_toasted
   index: -1
 Chef_holding_burger
   rotate: false
-  xy: 806, 50
+  xy: 806, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
@@ -34,28 +34,28 @@ Chef_holding_chopped_lettuce
   index: -1
 Chef_holding_chopped_onion
   rotate: false
-  xy: 672, 50
+  xy: 672, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
 Chef_holding_chopped_tomato
   rotate: false
-  xy: 404, 2
+  xy: 538, 50
+  size: 132, 46
+  orig: 132, 46
+  offset: 0, 0
+  index: -1
+Chef_holding_complete_burger
+  rotate: false
+  xy: 2, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
 Chef_holding_failed
   rotate: false
-  xy: 136, 50
-  size: 132, 46
-  orig: 132, 46
-  offset: 0, 0
-  index: -1
-Chef_holding_front
-  rotate: false
-  xy: 806, 2
+  xy: 136, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
@@ -69,28 +69,28 @@ Chef_holding_lettuce
   index: -1
 Chef_holding_meat
   rotate: false
-  xy: 538, 2
+  xy: 672, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
 Chef_holding_onion
   rotate: false
-  xy: 404, 50
+  xy: 404, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
 Chef_holding_patty
   rotate: false
-  xy: 672, 2
+  xy: 806, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
 Chef_holding_salad
   rotate: false
-  xy: 270, 2
+  xy: 404, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
@@ -104,42 +104,42 @@ Chef_holding_tomato
   index: -1
 Chef_normal
   rotate: false
-  xy: 2, 2
+  xy: 136, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_baked_potato
+chef_holding_baked_potato
   rotate: false
   xy: 1074, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_cheese
+chef_holding_cheese
   rotate: false
-  xy: 270, 50
+  xy: 270, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_chopped_cheese
+chef_holding_chopped_cheese
   rotate: false
   xy: 1208, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_pizzadough
+chef_holding_pizzadough
   rotate: false
   xy: 1208, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-Chef_holding_potato
+chef_holding_potato
   rotate: false
-  xy: 136, 2
+  xy: 270, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0

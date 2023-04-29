@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/Chef/chefAtlas.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Chef/chefAtlas.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/Chef/chefAtlas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Chef/chefAtlas.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Bun.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Bun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Cheese.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Cheese.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Ingredient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Lettuce.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Lettuce.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Onion.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Onion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/PizzaDough.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/PizzaDough.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/PizzaSauce.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/PizzaSauce.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Potato.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Potato.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Steak.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Steak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/Tomato.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/Tomato.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Ingredients/UnbakedPizza.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Ingredients/UnbakedPizza.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/Sprites/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/Sprites/Chef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/team13/piazzapanic/Screens/PlayScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/team13/piazzapanic/Screens/PlayScreen.java" afterDir="false" />
-    </list>
+    <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
