@@ -52,10 +52,14 @@ allprojects {
     //region JaCoCo
     jacocoTestReport {
         dependsOn test
+        sourceSets project(':core').sourceSets.main
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: ['**/*Tests.*', '**/GdxTestRunner.*'])
+            }))
+        }
         reports {
             html.enabled true
-            xml.enabled false
-            csv.enabled false
         }
     }
     test {

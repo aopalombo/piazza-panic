@@ -101,6 +101,7 @@ jobs:
           files: ./exe_gen/Piazza Panic-1.0.pkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
 
   windows-build:
     runs-on: windows-latest
