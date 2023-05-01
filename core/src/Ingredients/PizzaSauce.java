@@ -18,6 +18,5 @@ public class PizzaSauce extends Ingredient{
         super.tex = new ArrayList<>();
         tex.add(new Texture("Food/Ingredients/PizzaSauce.png"));
         tex.add(new Texture("Food/Ingredients/PizzaSauce.png"));
-        tex.add(new Texture("Food/Ingredients/Failed_ingredient.png"));
     }
 }

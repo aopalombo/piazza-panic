@@ -17,7 +17,6 @@ public class UnbakedPizza extends Ingredient{
         super.tex = new ArrayList<>();
         tex.add(new Texture("Food/UnbakedPizza.png"));
         tex.add(new Texture("Food/UnbakedPizza.png"));
-        tex.add(new Texture("Food/Ingredients/Failed_ingredient.png"));
         tex.add(new Texture("Food/Pizza.png"));
 
     }

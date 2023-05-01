@@ -411,9 +411,13 @@ public class HUD implements Disposable {
      * @param duration the duration of the bar
      */
 
-    public void createProgressBar(float x, float y, Chef chef, float duration) {
+    public ProgressBar createProgressBar(float x, float y, Chef chef, float duration, boolean fail) {
         ProgressBarStyle style = new ProgressBarStyle();
-        style.background = getColoredDrawable(20, 5, Color.GREEN);
+        if(fail){
+            style.background = getColoredDrawable(20, 5, Color.RED);
+        } else {
+            style.background = getColoredDrawable(20, 5, Color.GREEN);
+        }
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
         ProgressBar bar = new ProgressBar(0, duration, 0.05f, false, style);
@@ -422,8 +426,11 @@ public class HUD implements Disposable {
         bar.setValue(15f);
         bar.setX(x);
         bar.setY(y);
-        stage.addActor(bar);
-        bars.put(bar,chef);
+        if(!bars.values().contains(chef)){
+            stage.addActor(bar);
+            bars.put(bar,chef);
+        }
+        return bar;
     }
 
     /**
@@ -437,6 +444,7 @@ public class HUD implements Disposable {
                 }
                 if (bar.getValue() <= 0) {
                     stage.getActors().removeValue(bar, false);
+                    bars.remove(bar);
                 }
             }
         }
@@ -776,5 +784,10 @@ public class HUD implements Disposable {
         if(quit){
             game.setScreen(new MainMenuScreen(game));
         }
+    }
+    public void removeBar(ProgressBar bar){
+        bar.setValue(0);
+        this.stage.getActors().removeValue(bar, false);
+        bars.remove(bar);
     }
 }

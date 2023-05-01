@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
 
 import java.util.Objects;
@@ -58,6 +60,7 @@ public class Chef extends Sprite {
 
     public Boolean failState;
     private Boolean burnable;
+    private HUD hud;
 
     private final Sprite circleSprite;
 
@@ -132,6 +135,8 @@ public class Chef extends Sprite {
      * @param dt The delta time.
      */
     public void update(float dt) {
+        ProgressBar bar = null;
+        boolean barCreated = false;
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         currentSkin = getSkin(dt);
         setRegion(currentSkin);
@@ -177,8 +182,8 @@ public class Chef extends Sprite {
 
         if (!userControlChef && chefOnChefCollision) {
             waitTimer += dt;
-            b2body.setLinearVelocity(new Vector2(startVector.x * -1, startVector.y * -1));
-            if (waitTimer > 0.3f) {
+            b2body.setLinearVelocity(new Vector2(startVector.x * -0.25f, startVector.y * -0.25f));
+            if (waitTimer > 0.2f) {
                 b2body.setLinearVelocity(new Vector2(0, 0));
                 chefOnChefCollision = false;
                 userControlChef = true;
@@ -192,6 +197,7 @@ public class Chef extends Sprite {
             if (waitTimer >= inHandsIng.prepareTime && inHandsIng.prepareTime != -1) {
                 waitTimer = 0;
                 inHandsIng.prepareTime = -1;
+                hud.createProgressBar(Math.round(this.b2body.getPosition().x*MainGame.PPM)-14,Math.round(this.b2body.getPosition().y*MainGame.PPM)+12, this,9, true);
             } else if (inHandsIng.prepareTime == -1) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
                     resetFailState();
@@ -211,7 +217,7 @@ public class Chef extends Sprite {
                     setChefSkin(inHandsIng);
                 }
             }
-        } else if (!userControlChef && getInHandsIng().isPrepared()) {
+        } else if (!userControlChef && getInHandsIng().isPrepared() && inHandsIng.cookTime != -1) {
             waitTimer += dt;
             if (waitTimer >= inHandsIng.cookTime && inHandsIng.cookTime != 0) {
                 waitTimer = 0;
@@ -219,6 +225,10 @@ public class Chef extends Sprite {
                 System.out.println("A");
             }else if (inHandsIng.cookTime == 0) {
                 System.out.println("B");
+                if(!barCreated){
+                    bar = hud.createProgressBar(Math.round(this.b2body.getPosition().x*MainGame.PPM)-14,Math.round(this.b2body.getPosition().y*MainGame.PPM)+12, this,9, true);
+                    barCreated = true;
+                }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
                     resetFailState();
                     System.out.println("C");
@@ -226,19 +236,24 @@ public class Chef extends Sprite {
                 if (waitTimer <= 3 && !failState) {
                     System.out.println("D");
                     inHandsIng.setCooked();
+                    hud.removeBar(bar);
                     waitTimer = 3;
+
                 } else if (waitTimer > 3) {
                     System.out.println("E");
                     if (failState) {
                         System.out.println("F");
                         inHandsIng.setFailed();
+                        barCreated = true;
                     } else {
                         inHandsIng.setCooked();
                         System.out.println("G");
                     }
                     userControlChef = true;
                     waitTimer = 0;
+                    inHandsIng.cookTime = -1;
                     setChefSkin(inHandsIng);
+                    hud.removeBar(bar);
                 }
             }
         }
@@ -649,6 +664,10 @@ public class Chef extends Sprite {
 
     public void resetFailState(){
         failState = false;
+    }
+
+    public void setHUD(HUD hud){
+        this.hud = hud;
     }
 }
 

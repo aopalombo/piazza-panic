@@ -109,35 +109,35 @@ Chef_normal
   orig: 132, 46
   offset: 0, 0
   index: -1
-chef_holding_baked_potato
+Chef_holding_baked_potato
   rotate: false
   xy: 1074, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-chef_holding_cheese
+Chef_holding_cheese
   rotate: false
   xy: 270, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-chef_holding_chopped_cheese
+Chef_holding_chopped_cheese
   rotate: false
   xy: 1208, 50
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-chef_holding_pizzadough
+Chef_holding_pizzadough
   rotate: false
   xy: 1208, 2
   size: 132, 46
   orig: 132, 46
   offset: 0, 0
   index: -1
-chef_holding_potato
+Chef_holding_potato
   rotate: false
   xy: 270, 50
   size: 132, 46

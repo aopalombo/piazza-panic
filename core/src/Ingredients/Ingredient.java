@@ -86,7 +86,7 @@ public abstract class Ingredient extends Sprite {
      * Sets the flag indicating that the ingredient preparation has failed.
      *
      */
-    public void setFailed() { amIFailed= true;    }
+    public void setFailed() { amIFailed= true; }
 
     /**
      * Returns the value of the flag indicating whether the ingredient preparation has failed.
@@ -94,7 +94,6 @@ public abstract class Ingredient extends Sprite {
      * @return A boolean indicating whether the ingredient preparation has failed.
      */
     public boolean isFailed() { return amIFailed; }
-
 
     /**
      * Creates and draws a new Sprite object representing the ingredient.
@@ -116,15 +115,13 @@ public abstract class Ingredient extends Sprite {
      * @return int - The correct skin of the ingredient, either 0, 1, or 2.
      * 0 represents the uncooked and unprepared ingredient.
      * 1 represents the prepared but uncooked ingredient.
-     * 3 represents the failed ingredient
      * 2 represents the fully cooked and prepared ingredient.
+     * 3 represents the failed ingredient
      *
      * */
     // TODO add skin for failed ingredients using a 10x10 png file
     private int findCorrectSkin(){
-        if (isPrepared() && isCooked()) {
-            return 3;
-        } else if (isFailed()){
+        if (isPrepared() && isCooked()){
             return 2;
         } else if (isPrepared()){
             return 1;

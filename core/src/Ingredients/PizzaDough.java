@@ -18,8 +18,8 @@ public class PizzaDough extends Ingredient{
         super(prepareTime, cookTime);
         super.setPrepared();
         super.tex = new ArrayList<>();
+        super.tex.add(null);
         super.tex.add(new Texture("Food/Ingredients/PizzaDough.png"));
         super.tex.add(new Texture("Food/Ingredients/PizzaDough.png"));
-        super.tex.add(new Texture("Food/Ingredients/Failed_ingredient.png"));
     }
 }

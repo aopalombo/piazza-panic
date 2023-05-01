@@ -123,6 +123,9 @@ public class PlayScreen implements Screen {
         chef2.defineChef();
         chefs.add(chef1);
         chefs.add(chef2);
+        chef1.setHUD(hud);
+        chef2.setHUD(hud);
+        chef3.setHUD(hud);
 
         controlledChef = chef1;
         world.setContactListener(new WorldContactListener());
@@ -214,11 +217,7 @@ public class PlayScreen implements Screen {
             controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),
                                 Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),
                                 chefSpeedMultiplier);
-            if (controlledChef.getInHandsIng() != null && Gdx.input.isKeyJustPressed(Input.Keys.F)){
-                controlledChef.getInHandsIng().setFailed();
-                System.out.println("Failed current");
             }
-        }
         if (controlledChef.b2body.getLinearVelocity().x > 0){
             controlledChef.notificationSetBounds("Right");
         }
@@ -295,7 +294,7 @@ public class PlayScreen implements Screen {
                                 if(controlledChef.getInHandsIng() != null){
                                     ChoppingBoard choppingBoard = (ChoppingBoard) tile;
                                     if((controlledChef.getInHandsIng().prepareTime > 0)&&(!choppingBoard.isLocked())){
-                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier);
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier, false);
                                         controlledChef.setUserControlChef(false);
                                         Chef temp = controlledChef;
                                         controlledChef = lastChef;
@@ -313,7 +312,7 @@ public class PlayScreen implements Screen {
                                 if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Potato")) {
                                     Pan pan = (Pan) tile;
                                     if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0 && !pan.isLocked()){
-                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier, false);
                                         controlledChef.setUserControlChef(false);
                                         Chef temp = controlledChef;
                                         controlledChef = lastChef;
@@ -325,7 +324,7 @@ public class PlayScreen implements Screen {
                             if((controlledChef.getInHandsIng() != null)&&(controlledChef.getInHandsIng().getClass().getName() != "Ingredients.Steak")) {
                                 Oven oven = (Oven) tile;
                                 if (controlledChef.getInHandsIng().isPrepared() && controlledChef.getInHandsIng().cookTime > 0 && !oven.isLocked()){
-                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier);
+                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier, false);
                                     controlledChef.setUserControlChef(false);
                                     Chef temp = controlledChef;
                                     controlledChef = lastChef;
@@ -536,7 +535,7 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void activatePowerUp() {
+    public void activatePowerUp() {
         if(hud.getPowerUp() ==  "2X SPEED"){
             chefSpeedMultiplier = 1.75f;
         } else if (hud.getPowerUp() ==  "2X MONEY"){
@@ -548,13 +547,17 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void disablePowerUps(){
+    public void disablePowerUps(){
         if(hud.getPowerUp() == ""){
             chefSpeedMultiplier = 1f;
             moneyMultiplier = 1;
             hud.unfreezeTime();
             cookSpeedMultiplier = 1f;
         }
+    }
+
+    public HUD getHUD(){
+        return hud;
     }
 
     @Override
