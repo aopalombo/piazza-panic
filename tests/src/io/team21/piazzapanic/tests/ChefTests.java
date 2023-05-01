@@ -1,6 +1,7 @@
 package io.team21.piazzapanic.tests;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -101,5 +102,23 @@ public class ChefTests {
         float initialVelocity = chefTest.b2body.getLinearVelocity().x;
         chefTest.move(true,false,false,false,1);
         assertTrue("This test only passes if the chef moves left",chefTest.b2body.getLinearVelocity().x<initialVelocity);
+    }
+
+    @Test
+    public void chefSwitch(){
+        World world = new World(new Vector2(0, 0),true);
+        world.setContactListener(new WorldContactListener());
+        int x = 20;
+        int y = 20;
+        Chef chefTest = new Chef(world, x, y);
+        Chef chefTest2 = new Chef(world, x, y);
+        chefTest.defineChef();
+        chefTest2.defineChef();
+        chefTest.setUserControlChef(false);
+        chefTest2.setUserControlChef(true);
+        assertTrue("This test only passes if only one chef is controlled", (chefTest.getUserControlChef()==false)&&(chefTest2.getUserControlChef()==true));
+        chefTest2.setUserControlChef(false);
+        chefTest.setUserControlChef(true);
+        assertTrue("This test only passes if the chefs switch properly", (chefTest.getUserControlChef()==true)&&(chefTest2.getUserControlChef()==false));
     }
 }

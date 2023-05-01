@@ -609,7 +609,12 @@ public class Chef extends Sprite {
      * @return userControlChef The boolean value indicating chef's control.
      */
     public boolean getUserControlChef () {
-            return Objects.requireNonNullElse(userControlChef, false);
+            if(userControlChef == null){
+                return false;
+            } else {
+                return userControlChef;
+            }
+            //return Objects.requireNonNullElse(userControlChef, false);
         }
 
 
