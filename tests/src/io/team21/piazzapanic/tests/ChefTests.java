@@ -1,7 +1,6 @@
 package io.team21.piazzapanic.tests;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -120,5 +119,34 @@ public class ChefTests {
         chefTest2.setUserControlChef(false);
         chefTest.setUserControlChef(true);
         assertTrue("This test only passes if the chefs switch properly", (chefTest.getUserControlChef()==true)&&(chefTest2.getUserControlChef()==false));
+    }
+
+    @Test
+    public void chefCollision(){
+        World world = new World(new Vector2(0, 0),true);
+        world.setContactListener(new WorldContactListener());
+        int x = 20;
+        int y = 20;
+        Chef chefTest = new Chef(world, x, y);
+        Chef chefTest2 = new Chef(world, x, y);
+        chefTest.defineChef();
+        chefTest2.defineChef();
+
+        float initialX1 = chefTest.b2body.getLinearVelocity().x;
+        float initialY1 = chefTest.b2body.getLinearVelocity().y;
+        float initialX2 = chefTest2.b2body.getLinearVelocity().x;
+        float initialY2 = chefTest2.b2body.getLinearVelocity().y;
+
+        chefTest.setUserControlChef(true);
+        chefTest.chefsColliding();
+        assertTrue("This test only passes if the user can't control the chef after collision", chefTest.getUserControlChef()==false);
+
+        chefTest.update(0.21f);
+        assertTrue("This test only passes if the user can control the chef after cooldown", chefTest.getUserControlChef()==true);
+
+        chefTest2.chefsColliding();
+        boolean chef1Opp = (chefTest.b2body.getLinearVelocity().x*-0.25f==initialX1)&&((chefTest.b2body.getLinearVelocity().y*-0.25f==initialY1));
+        boolean chef2Opp = (chefTest2.b2body.getLinearVelocity().x*-0.25f==initialX2)&&((chefTest2.b2body.getLinearVelocity().y*-0.25f==initialY2));
+        assertTrue("This test only passes if the chefs move in opposite directions after colliding", chef1Opp&&chef2Opp);
     }
 }

@@ -85,7 +85,9 @@ public class HUD implements Disposable {
     private Image pauseMenu = new Image (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/pauseMenu.png"))));
     private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/resumeBtn.png"))));
     private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/quitBtn.png"))));
+    private ImageButton helpBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/helpBtn.png"))));
     private ImageButton xBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/xBtn.png"))));
+    private Image helpImage = new Image (new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/controls.png"))));
 
     private ImageButton shopBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopBtn.png"))));
     private Image shopMenu = new Image(new TextureRegionDrawable(new TextureRegion(new Texture("Buttons/shopMenu.png"))));
@@ -184,13 +186,15 @@ public class HUD implements Disposable {
         powerUps.add("FREEZE");
         powerUps.add("SPEEDY");
 
-        //HUD and menu Buttons
+        //HUD and pause menu buttons
         pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);
         shopBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-12);
         xBtn.setPosition(10, 143);
         pauseMenu.setPosition(10, 10);
         shopMenu.setPosition(10, 10);
         resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);
+        helpBtn.setPosition(127, 128);
+        helpImage.setPosition((viewport.getWorldWidth()/2)-(helpImage.getWidth()/2), (viewport.getWorldHeight()/2)-(helpImage.getHeight()/2));
         quitBtn.setPosition((viewport.getWorldWidth()/2)-(quitBtn.getWidth()/2), 25);
 
         //Shop menu buttons and labels
@@ -482,6 +486,9 @@ public class HUD implements Disposable {
         if(!stage.getActors().contains(xBtn, true)){
             stage.getActors().add(xBtn);
         }
+        if(!stage.getActors().contains(helpBtn, true)){
+            stage.getActors().add(helpBtn);
+        }
     }
     /*
      * Activated when the player unpauses the game
@@ -494,6 +501,8 @@ public class HUD implements Disposable {
         stage.getActors().removeValue(resumeBtn,false);
         stage.getActors().removeValue(quitBtn,false);
         stage.getActors().removeValue(xBtn,false);
+        stage.getActors().removeValue(helpBtn,false);
+        stage.getActors().removeValue(helpImage,false);
         if(!stage.getActors().contains(pauseBtn, true)){
             stage.getActors().add(pauseBtn);
         }
@@ -653,6 +662,11 @@ public class HUD implements Disposable {
         }
         if(resumeBtn.isPressed()){
             unPause();
+        }
+        if(helpBtn.isPressed()){
+            if(!stage.getActors().contains(helpImage, true)){
+                stage.getActors().add(helpImage);
+            }
         }
         if(quitBtn.isPressed()){
             if(scenarioComplete){

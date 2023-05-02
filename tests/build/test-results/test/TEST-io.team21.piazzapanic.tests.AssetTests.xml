@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="io.team21.piazzapanic.tests.AssetTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2023-05-01T16:22:14" hostname="nas-10-240-235-183.york.ac.uk" time="0.099">
+<testsuite name="io.team21.piazzapanic.tests.AssetTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2023-04-27T20:48:49" hostname="nas-10-240-149-208.york.ac.uk" time="0.1">
   <properties/>
-  <testcase name="ChefSpritesExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.003"/>
+  <testcase name="ChefSpritesExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.008"/>
   <testcase name="StartImageExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.001"/>
-  <testcase name="KitchenMapTMXExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.0"/>
-  <testcase name="ChefAtlasExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.001"/>
-  <testcase name="TileSetExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.001"/>
-  <testcase name="FoodAssetsExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.001"/>
+  <testcase name="KitchenMapTMXExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.003"/>
+  <testcase name="ChefAtlasExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.002"/>
+  <testcase name="TileSetExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.004"/>
+  <testcase name="FoodAssetsExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.004"/>
   <testcase name="KitchenTileSetTSXExists" classname="io.team21.piazzapanic.tests.AssetTests" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

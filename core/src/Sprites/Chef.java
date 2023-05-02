@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.team13.piazzapanic.HUD;
 import com.team13.piazzapanic.MainGame;
 
-import java.util.Objects;
 
 /**
  * Chef class extends {@link Sprite} and represents a chef in the game.
@@ -59,7 +58,6 @@ public class Chef extends Sprite {
     public Boolean userControlChef;
 
     public Boolean failState;
-    private Boolean burnable;
     private HUD hud;
 
     private final Sprite circleSprite;
