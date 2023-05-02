@@ -2,6 +2,7 @@ package io.team21.piazzapanic.tests;
 import static org.junit.Assert.assertTrue;
 
 import Ingredients.*;
+import Recipes.SaladRecipe;
 import Sprites.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 import com.team13.piazzapanic.MainGame;
 
 import Tools.WorldContactListener;
@@ -112,6 +112,34 @@ public class StationTests {
 
     @Test
     public void recipeRecognisedByPlateStation() {
+        World world = new World(new Vector2(0, 0),true);
+        world.setContactListener(new WorldContactListener());
+        TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
+        TiledMap map = mapLoader.load("Kitchen.tmx");
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(12/ MainGame.PPM, 12 / MainGame.PPM);
+        bdef.type = BodyDef.BodyType.StaticBody;
+        Rectangle rectangle = new Rectangle(12, 12, 16, 16);
 
+        Chef chefTest = new Chef(world, 10, 10);
+        SaladRecipe saladTest = new SaladRecipe();
+        Onion onionTest = new Onion(0,0);
+        Lettuce lettuceTest = new Lettuce(0,0);
+        Tomato tomatoTest = new Tomato(0,0);
+        PlateStation plateStationTest = new PlateStation(world, map, bdef, rectangle);
+        onionTest.setPrepared();
+        lettuceTest.setPrepared();
+        tomatoTest.setPrepared();
+        chefTest.setInHandsIng(onionTest);
+        chefTest.dropItemOn(plateStationTest, chefTest.getInHandsIng());
+        chefTest.setInHandsIng(lettuceTest);
+        chefTest.dropItemOn(plateStationTest, chefTest.getInHandsIng());
+        chefTest.setInHandsIng(tomatoTest);
+        chefTest.dropItemOn(plateStationTest, chefTest.getInHandsIng());
+        chefTest.pickUpItemFrom(plateStationTest);
+        plateStationTest.getCompletedRecipe();
+        System.out.println(chefTest.getInHandsRecipe());
+
+        assertTrue("This test only passes when the platestation recognises a recipe and changes it to the dish", chefTest.getInHandsRecipe().getClass().getName()==saladTest.getClass().getName());
     }
 }
