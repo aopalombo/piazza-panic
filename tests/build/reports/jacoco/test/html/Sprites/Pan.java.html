@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pan.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">Sprites</a> &gt; <span class="el_source">Pan.java</span></div><h1>Pan.java</h1><pre class="source lang-java linenums">package Sprites;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.team13.piazzapanic.HUD;
+import com.team13.piazzapanic.MainGame;
+
+/**
+ * Pan is a concrete class that extends the {@link InteractiveTileObject} class.
+ * Pan is a class extending InteractiveTileObject representing a Pan in the game where the chef can cook steaks
+ * and toast buns
+ */
+
+public class Pan extends InteractiveTileObject {
+    private boolean locked;
+<span class="nc" id="L22">    private Image lockImage = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Food/lock.png&quot;))));</span>
+    public Pan(World world, TiledMap map, BodyDef bdef, Rectangle rectangle, boolean locked) {
+<span class="nc" id="L24">        super(world, map, bdef, rectangle);</span>
+<span class="nc" id="L25">        this.locked = locked;</span>
+<span class="nc" id="L26">        fixture.setUserData(this);</span>
+
+<span class="nc" id="L28">    }</span>
+
+    public float getX(){
+<span class="nc" id="L31">        return super.bdefNew.position.x;</span>
+    }
+
+    public float getY(){
+<span class="nc" id="L35">        return super.bdefNew.position.y;</span>
+    }
+
+    public void unlock(){
+<span class="nc" id="L39">        locked = false;</span>
+<span class="nc" id="L40">    }</span>
+
+    public void lock(){
+<span class="nc" id="L43">        locked = true;</span>
+<span class="nc" id="L44">    }</span>
+
+    public boolean isLocked() {
+<span class="nc" id="L47">        return locked;</span>
+    }
+
+    public void draw(HUD hud){
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if(locked){</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if(!hud.stage.getActors().contains(lockImage, true)){</span>
+<span class="nc" id="L53">                lockImage.setPosition(getX()*MainGame.PPM-8, getY()*MainGame.PPM-8);</span>
+<span class="nc" id="L54">                hud.stage.addActor(lockImage);</span>
+            }
+        } else {
+<span class="nc" id="L57">            hud.stage.getActors().removeValue(lockImage, false);</span>
+        }
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

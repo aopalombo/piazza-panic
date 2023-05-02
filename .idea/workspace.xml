@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eb6bc5c-6029-4951-8b23-ceb14e60566f" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/StationTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/jacoco/test.exec" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/jacoco/test.exec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/build/libs/tests-0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/libs/tests-0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/build/reports/checkstyle/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/reports/checkstyle/main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build/libs/tests-0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build/reports/checkstyle/main.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/reports/jacoco/test/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/reports/jacoco/test/html/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/reports/jacoco/test/html/io.team21.piazzapanic.tests/AssetTests.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/reports/jacoco/test/html/io.team21.piazzapanic.tests/AssetTests.java.html" beforeDir="false" />
@@ -28,6 +27,7 @@
       <change beforePath="$PROJECT_DIR$/tests/build/resources/main/Chef/OldImages/Chef_holding_front.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/resources/main/Chef/chefAtlas.png" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/resources/main/Chef/chefAtlas.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/resources/main/Chef/chefAtlas.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/resources/main/Chef/chefAtlas.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build/resources/main/startImage.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/test-results/test/TEST-io.team21.piazzapanic.tests.AssetTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/test-results/test/TEST-io.team21.piazzapanic.tests.AssetTests.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/test-results/test/TEST-io.team21.piazzapanic.tests.ChefTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/test-results/test/TEST-io.team21.piazzapanic.tests.ChefTests.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/test-results/test/binary/output.bin" afterDir="false" />
@@ -39,6 +39,8 @@
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/compileTestJava/compileTransaction/stash-dir/ChefMovementTests.class.uniqueId1" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/compileTestJava/compileTransaction/stash-dir/ChefTests.class.uniqueId0" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/compileTestJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/tests/build/tmp/compileTestJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build/tmp/expandedArchives/checkstyle-10.8.1.jar_caaac97f82ac05a6c90dbff18123edae/google_checks.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/build/tmp/jar/MANIFEST.MF" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_10087354797827614288_tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_11147712747864906286_tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_11338659860876360798_tmp" beforeDir="false" />
@@ -87,6 +89,8 @@
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_8392593387155791580_tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_8985745268554316257_tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/build/tmp/test/jar_extract_9391027491137512347_tmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/AssetTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/AssetTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/ChefTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/io/team21/piazzapanic/tests/ChefTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +130,13 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -148,26 +159,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/andrew/Downloads/untitled10/piazza-panic/build.gradle",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/andrew/Downloads/untitled10/piazza-panic/build.gradle&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.piazza-panic [run]">
+  <component name="RunManager" selected="Gradle.StationTests">
     <configuration name="AssetTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -192,29 +203,7 @@
       <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="piazza-panic [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>false</ForceTestExec>
-      <method v="2" />
-    </configuration>
-    <configuration name="piazza-panic [desktop:dist]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="StationTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -225,15 +214,41 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="desktop:dist" />
+            <option value=":tests:test" />
+            <option value="--tests" />
+            <option value="&quot;io.team21.piazzapanic.tests.StationTests&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>false</ForceTestExec>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="StationTests.bunDispense" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":tests:test" />
+            <option value="--tests" />
+            <option value="&quot;io.team21.piazzapanic.tests.StationTests.bunDispense&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration name="piazza-panic [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -281,19 +296,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Gradle.StationTests" />
+      <item itemvalue="Gradle.StationTests.bunDispense" />
       <item itemvalue="Gradle.AssetTests" />
-      <item itemvalue="Gradle.piazza-panic [build]" />
-      <item itemvalue="Gradle.piazza-panic [desktop:dist]" />
       <item itemvalue="Gradle.piazza-panic:desktop [build]" />
       <item itemvalue="Gradle.piazza-panic [run]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.StationTests" />
+        <item itemvalue="Gradle.StationTests.bunDispense" />
         <item itemvalue="Gradle.piazza-panic [run]" />
         <item itemvalue="Gradle.piazza-panic:desktop [build]" />
         <item itemvalue="Gradle.AssetTests" />
-        <item itemvalue="Gradle.piazza-panic [build]" />
-        <item itemvalue="Gradle.piazza-panic [desktop:dist]" />
       </list>
     </recent_temporary>
   </component>

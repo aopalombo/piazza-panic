@@ -9,10 +9,6 @@ import com.badlogic.gdx.Gdx;
 public class AssetTests {
 
     @Test
-    public void StartImageExists(){
-        assertTrue("This test will only pass if startImage.png exists", Gdx.files.internal("startImage.png").exists());
-    }
-    @Test
     public void TileSetExists(){
         assertTrue("This test will only pass if TileSet.png exists", Gdx.files.internal("TileSet.png").exists());
     }

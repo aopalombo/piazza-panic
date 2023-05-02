@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Chef.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">Sprites</a> &gt; <span class="el_source">Chef.java</span></div><h1>Chef.java</h1><pre class="source lang-java linenums">package Sprites;
+
+import Ingredients.*;
+import Recipes.*;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.team13.piazzapanic.HUD;
+import com.team13.piazzapanic.MainGame;
+
+
+/**
+ * Chef class extends {@link Sprite} and represents a chef in the game.
+ * It has fields for the world it exists in, a Box2D body, the initial X and Y
+ * positions, a wait timer, collision flag, various textures for different skins,
+ * state (UP, DOWN, LEFT, RIGHT), skin needed, fixture of what it is touching, ingredient
+ * and recipe in hand, control flag, circle sprite, chef notification X, Y, width and height,
+ * and completed dish station.
+ */
+
+public class Chef extends Sprite {
+    public World world;
+    public Body b2body;
+
+    private final float initialX;
+    private final float initialY;
+
+
+    public Vector2 startVector;
+    private float waitTimer;
+
+    private float putDownWaitTimer;
+    public boolean chefOnChefCollision;
+    private final Skin skin;
+
+
+<span class="fc" id="L46">    public enum State {UP, DOWN, LEFT, RIGHT}</span>
+
+    public State currentState;
+    private TextureRegion currentSkin;
+
+    private TextureRegion skinNeeded;
+
+    private Fixture whatTouching;
+
+    private Ingredient inHandsIng;
+    private Recipe inHandsRecipe;
+
+    public Boolean userControlChef;
+
+    public Boolean failState;
+    private HUD hud;
+
+    private final Sprite circleSprite;
+
+    private float notificationX;
+    private float notificationY;
+    private float notificationWidth;
+    private float notificationHeight;
+
+    private CompletedDishStation completedStation;
+
+    public int nextOrderAppearTime;
+    public Recipe previousInHandRecipe;
+
+    /**
+     * Chef class constructor that initializes all the fields
+     * @param world the world the chef exists in
+     * @param startX starting X position
+     * @param startY starting Y position
+     */
+
+<span class="fc" id="L82">    public Chef(World world, float startX, float startY) {</span>
+<span class="fc" id="L83">        initialX = startX / MainGame.PPM;</span>
+<span class="fc" id="L84">        initialY = startY / MainGame.PPM;</span>
+
+<span class="fc" id="L86">        TextureAtlas chefAtlas = new TextureAtlas(&quot;Chef/chefAtlas.txt&quot;);</span>
+<span class="fc" id="L87">        System.out.println(chefAtlas.getRegions());</span>
+<span class="fc" id="L88">        skin = new Skin();</span>
+<span class="fc" id="L89">        skin.addRegions(chefAtlas);</span>
+
+
+<span class="fc" id="L92">        skinNeeded = skin.getRegion(&quot;Chef_normal&quot;);</span>
+
+<span class="fc" id="L94">        this.world = world;</span>
+<span class="fc" id="L95">        currentState = State.DOWN;</span>
+
+<span class="fc" id="L97">        float chefWidth = 13 / MainGame.PPM;</span>
+<span class="fc" id="L98">        float chefHeight = 20 / MainGame.PPM;</span>
+<span class="fc" id="L99">        setBounds(0, 0, chefWidth, chefHeight);</span>
+<span class="fc" id="L100">        chefOnChefCollision = false;</span>
+<span class="fc" id="L101">        waitTimer = 0;</span>
+<span class="fc" id="L102">        putDownWaitTimer = 0;</span>
+<span class="fc" id="L103">        startVector = new Vector2(0, 0);</span>
+<span class="fc" id="L104">        whatTouching = null;</span>
+<span class="fc" id="L105">        inHandsIng = null;</span>
+<span class="fc" id="L106">        inHandsRecipe = null;</span>
+<span class="fc" id="L107">        userControlChef = true;</span>
+<span class="fc" id="L108">        Texture circleTexture = new Texture(&quot;Chef/chefIdentifier.png&quot;);</span>
+<span class="fc" id="L109">        circleSprite = new Sprite(circleTexture);</span>
+<span class="fc" id="L110">        nextOrderAppearTime = 3;</span>
+<span class="fc" id="L111">        completedStation = null;</span>
+<span class="fc" id="L112">    }</span>
+    /**
+     * Moves the chef around
+     * @param left if true the chef moves to the left
+     * @param right if true the chef moves to the right
+     * @param down if true the chef moves to the down
+     * @param up if true the chef moves to the up
+     * @param multiplier speed multiplier for the chef (default is 1)
+     */
+    public void move(boolean left, boolean right, boolean down, boolean up, float multiplier) {
+<span class="fc" id="L122">        float xVelocity = 0;</span>
+<span class="fc" id="L123">        float yVelocity = 0;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(left) xVelocity -= 0.5f*multiplier;</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if(right) xVelocity += 0.5f*multiplier;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if(down) yVelocity -= 0.5f*multiplier;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if(up) yVelocity += 0.5f*multiplier;</span>
+<span class="fc" id="L128">        b2body.setLinearVelocity(xVelocity, yVelocity);</span>
+<span class="fc" id="L129">    }</span>
+    /**
+     * Update the position and region of the chef and set the notification position based on the chef's current state.
+     *
+     * @param dt The delta time.
+     */
+    public void update(float dt) {
+<span class="fc" id="L136">        ProgressBar bar = null;</span>
+<span class="fc" id="L137">        boolean barCreated = false;</span>
+<span class="fc" id="L138">        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);</span>
+<span class="fc" id="L139">        currentSkin = getSkin(dt);</span>
+<span class="fc" id="L140">        setRegion(currentSkin);</span>
+<span class="pc bpc" id="L141" title="4 of 5 branches missed.">        switch (currentState) {</span>
+            case UP:
+<span class="nc bnc" id="L143" title="All 4 branches missed.">                if (this.inHandsIng == null &amp;&amp; this.inHandsRecipe == null) {</span>
+<span class="nc" id="L144">                    notificationX = b2body.getPosition().x - (1.75f / MainGame.PPM);</span>
+<span class="nc" id="L145">                    notificationY = b2body.getPosition().y - (7.7f / MainGame.PPM);</span>
+                } else {
+<span class="nc" id="L147">                    notificationX = b2body.getPosition().x - (0.67f / MainGame.PPM);</span>
+<span class="nc" id="L148">                    notificationY = b2body.getPosition().y - (7.2f / MainGame.PPM);</span>
+                }
+<span class="nc" id="L150">                break;</span>
+            case DOWN:
+<span class="pc bpc" id="L152" title="2 of 4 branches missed.">                if (this.inHandsIng == null &amp;&amp; this.inHandsRecipe == null) {</span>
+<span class="fc" id="L153">                    notificationX = b2body.getPosition().x + (0.95f / MainGame.PPM);</span>
+<span class="fc" id="L154">                    notificationY = b2body.getPosition().y - (5.015f / MainGame.PPM);</span>
+                } else {
+<span class="nc" id="L156">                    notificationX = b2body.getPosition().x + (0.55f / MainGame.PPM);</span>
+<span class="nc" id="L157">                    notificationY = b2body.getPosition().y - (5.3f / MainGame.PPM);</span>
+                }
+<span class="nc" id="L159">                break;</span>
+            case LEFT:
+<span class="nc bnc" id="L161" title="All 4 branches missed.">                if (this.inHandsIng == null &amp;&amp; this.inHandsRecipe == null) {</span>
+<span class="nc" id="L162">                    notificationX = b2body.getPosition().x;</span>
+<span class="nc" id="L163">                    notificationY = b2body.getPosition().y - (5.015f / MainGame.PPM);</span>
+                } else {
+<span class="nc" id="L165">                    notificationX = b2body.getPosition().x - (1.92f / MainGame.PPM);</span>
+<span class="nc" id="L166">                    notificationY = b2body.getPosition().y - (4.6f / MainGame.PPM);</span>
+                }
+<span class="nc" id="L168">                break;</span>
+            case RIGHT:
+<span class="nc bnc" id="L170" title="All 4 branches missed.">                if (this.inHandsIng == null &amp;&amp; this.inHandsRecipe == null) {</span>
+<span class="nc" id="L171">                    notificationX = b2body.getPosition().x + (0.5f / MainGame.PPM);</span>
+<span class="nc" id="L172">                    notificationY = b2body.getPosition().y - (5.015f / MainGame.PPM);</span>
+                } else {
+<span class="nc" id="L174">                    notificationX = b2body.getPosition().x + (0.17f / MainGame.PPM);</span>
+<span class="nc" id="L175">                    notificationY = b2body.getPosition().y - (4.63f / MainGame.PPM);</span>
+                }
+                break;
+        }
+
+
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">        if (!userControlChef &amp;&amp; chefOnChefCollision) {</span>
+<span class="fc" id="L182">            waitTimer += dt;</span>
+<span class="fc" id="L183">            b2body.setLinearVelocity(new Vector2(startVector.x * -0.25f, startVector.y * -0.25f));</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">            if (waitTimer &gt; 0.2f) {</span>
+<span class="fc" id="L185">                b2body.setLinearVelocity(new Vector2(0, 0));</span>
+<span class="fc" id="L186">                chefOnChefCollision = false;</span>
+<span class="fc" id="L187">                userControlChef = true;</span>
+<span class="fc" id="L188">                waitTimer = 0;</span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">                if (inHandsIng != null) {</span>
+<span class="nc" id="L190">                    setChefSkin(inHandsIng);</span>
+                }
+            }
+<span class="nc bnc" id="L193" title="All 4 branches missed.">        } else if (!userControlChef &amp;&amp; getInHandsIng().prepareTime != 0) {</span>
+<span class="nc" id="L194">            waitTimer += dt;</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">            if (waitTimer &gt;= inHandsIng.prepareTime &amp;&amp; inHandsIng.prepareTime != -1) {</span>
+<span class="nc" id="L196">                waitTimer = 0;</span>
+<span class="nc" id="L197">                inHandsIng.prepareTime = -1;</span>
+<span class="nc" id="L198">                hud.createProgressBar(Math.round(this.b2body.getPosition().x*MainGame.PPM)-14,Math.round(this.b2body.getPosition().y*MainGame.PPM)+12, this,9, true);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            } else if (inHandsIng.prepareTime == -1) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {</span>
+<span class="nc" id="L201">                    resetFailState();</span>
+                }
+<span class="nc bnc" id="L203" title="All 4 branches missed.">                if (waitTimer &lt;= 3 &amp;&amp; !failState) {</span>
+<span class="nc" id="L204">                    inHandsIng.setPrepared();</span>
+<span class="nc" id="L205">                    waitTimer = 3;</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                } else if (waitTimer &gt; 3) {</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                    if (failState) {</span>
+<span class="nc" id="L208">                        inHandsIng.setFailed();</span>
+                    } else {
+<span class="nc" id="L210">                        inHandsIng.setPrepared();</span>
+                    }
+<span class="nc" id="L212">                    userControlChef = true;</span>
+<span class="nc" id="L213">                    waitTimer = 0;</span>
+<span class="nc" id="L214">                    inHandsIng.prepareTime = 0;</span>
+<span class="nc" id="L215">                    setChefSkin(inHandsIng);</span>
+                }
+            }
+<span class="nc bnc" id="L218" title="All 6 branches missed.">        } else if (!userControlChef &amp;&amp; getInHandsIng().isPrepared() &amp;&amp; inHandsIng.cookTime != -1) {</span>
+<span class="nc" id="L219">            waitTimer += dt;</span>
+<span class="nc bnc" id="L220" title="All 4 branches missed.">            if (waitTimer &gt;= inHandsIng.cookTime &amp;&amp; inHandsIng.cookTime != 0) {</span>
+<span class="nc" id="L221">                waitTimer = 0;</span>
+<span class="nc" id="L222">                inHandsIng.cookTime = 0;</span>
+<span class="nc" id="L223">                System.out.println(&quot;A&quot;);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            }else if (inHandsIng.cookTime == 0) {</span>
+<span class="nc" id="L225">                System.out.println(&quot;B&quot;);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                if(!barCreated){</span>
+<span class="nc" id="L227">                    bar = hud.createProgressBar(Math.round(this.b2body.getPosition().x*MainGame.PPM)-14,Math.round(this.b2body.getPosition().y*MainGame.PPM)+12, this,9, true);</span>
+<span class="nc" id="L228">                    barCreated = true;</span>
+                }
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {</span>
+<span class="nc" id="L231">                    resetFailState();</span>
+<span class="nc" id="L232">                    System.out.println(&quot;C&quot;);</span>
+                }
+<span class="nc bnc" id="L234" title="All 4 branches missed.">                if (waitTimer &lt;= 3 &amp;&amp; !failState) {</span>
+<span class="nc" id="L235">                    System.out.println(&quot;D&quot;);</span>
+<span class="nc" id="L236">                    inHandsIng.setCooked();</span>
+<span class="nc" id="L237">                    hud.removeBar(bar);</span>
+<span class="nc" id="L238">                    waitTimer = 3;</span>
+
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                } else if (waitTimer &gt; 3) {</span>
+<span class="nc" id="L241">                    System.out.println(&quot;E&quot;);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                    if (failState) {</span>
+<span class="nc" id="L243">                        System.out.println(&quot;F&quot;);</span>
+<span class="nc" id="L244">                        inHandsIng.setFailed();</span>
+<span class="nc" id="L245">                        barCreated = true;</span>
+                    } else {
+<span class="nc" id="L247">                        inHandsIng.setCooked();</span>
+<span class="nc" id="L248">                        System.out.println(&quot;G&quot;);</span>
+                    }
+<span class="nc" id="L250">                    userControlChef = true;</span>
+<span class="nc" id="L251">                    waitTimer = 0;</span>
+<span class="nc" id="L252">                    inHandsIng.cookTime = -1;</span>
+<span class="nc" id="L253">                    setChefSkin(inHandsIng);</span>
+<span class="nc" id="L254">                    hud.removeBar(bar);</span>
+                }
+            }
+        }
+<span class="fc" id="L258">    }</span>
+
+
+
+
+    /**
+     * This method sets the bounds for the notification based on the given direction.
+     * @param direction - A string representing the direction of the notification.
+     *                   Can be &quot;Left&quot;, &quot;Right&quot;, &quot;Up&quot;, or &quot;Down&quot;.
+     */
+
+    public void notificationSetBounds(String direction) {
+<span class="nc bnc" id="L270" title="All 4 branches missed.">        switch (direction) {</span>
+            case &quot;Left&quot;:
+            case &quot;Right&quot;:
+<span class="nc" id="L273">                notificationWidth = 1.5f / MainGame.PPM;</span>
+<span class="nc" id="L274">                notificationHeight = 1.5f / MainGame.PPM;</span>
+<span class="nc" id="L275">                break;</span>
+            case &quot;Up&quot;:
+<span class="nc" id="L277">                notificationWidth = 4 / MainGame.PPM;</span>
+<span class="nc" id="L278">                notificationHeight = 4 / MainGame.PPM;</span>
+<span class="nc" id="L279">                break;</span>
+            case &quot;Down&quot;:
+<span class="nc" id="L281">                notificationWidth = 2 / MainGame.PPM;</span>
+<span class="nc" id="L282">                notificationHeight = 2 / MainGame.PPM;</span>
+                break;
+        }
+<span class="nc" id="L285">    }</span>
+
+    /**
+     Draws a notification to help the user understand what chef they are controlling.
+     The notification is a sprite that looks like at &quot;C&quot; on the controlled chef.
+     @param batch The sprite batch that the notification should be drawn with.
+     */
+    public void drawNotification(SpriteBatch batch) {
+<span class="nc bnc" id="L293" title="All 2 branches missed.">        if (this.getUserControlChef()) {</span>
+<span class="nc" id="L294">            circleSprite.setBounds(notificationX, notificationY, notificationWidth, notificationHeight);</span>
+<span class="nc" id="L295">            circleSprite.draw(batch);</span>
+        }
+<span class="nc" id="L297">    }</span>
+
+    /**
+     * Get the texture region for the current state of the player.
+     *
+     * @param dt the time difference between this and the last frame
+     * @return the texture region for the player's current state
+     */
+
+    private TextureRegion getSkin(float dt) {
+<span class="fc" id="L307">        currentState = getState();</span>
+
+        TextureRegion region;
+<span class="pc bpc" id="L310" title="4 of 5 branches missed.">        switch (currentState) {</span>
+            case UP:
+<span class="nc" id="L312">                region = new TextureRegion(skinNeeded, 0, 0, 33, 46);</span>
+<span class="nc" id="L313">                break;</span>
+            case DOWN:
+<span class="fc" id="L315">                region = new TextureRegion(skinNeeded, 33, 0, 33, 46);</span>
+<span class="fc" id="L316">                break;</span>
+            case LEFT:
+<span class="nc" id="L318">                region = new TextureRegion(skinNeeded, 64, 0, 33, 46);</span>
+<span class="nc" id="L319">                break;</span>
+            case RIGHT:
+<span class="nc" id="L321">                region = new TextureRegion(skinNeeded, 96, 0, 33, 46);</span>
+<span class="nc" id="L322">                break;</span>
+            default:
+<span class="nc" id="L324">                region = currentSkin;</span>
+        }
+<span class="fc" id="L326">        return region;</span>
+    }
+
+
+    /**
+     Returns the current state of the player based on the controlled chefs velocity.
+     @return current state of the player - UP, DOWN, LEFT, or RIGHT
+     */
+    public State getState() {
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">        if (b2body.getLinearVelocity().y &gt; 0)</span>
+<span class="nc" id="L336">            return State.UP;</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (b2body.getLinearVelocity().y &lt; 0)</span>
+<span class="nc" id="L338">            return State.DOWN;</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (b2body.getLinearVelocity().x &gt; 0)</span>
+<span class="nc" id="L340">            return State.RIGHT;</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">        if (b2body.getLinearVelocity().x &lt; 0)</span>
+<span class="nc" id="L342">            return State.LEFT;</span>
+        else
+<span class="fc" id="L344">            return currentState;</span>
+    }
+
+    /**
+     * Define the body and fixture of the chef object.
+     *
+     * This method creates a dynamic body definition and sets its position with the `initialX` and `initialY`
+     * variables, then creates the body in the physics world. A fixture definition is also created and a
+     * circle shape is set with a radius of `4.5f / MainGame.PPM` and a position shifted by `(0.5f / MainGame.PPM)`
+     * in the x-axis and `-(5.5f / MainGame.PPM)` in the y-axis. The created fixture is then set as the user data
+     * of the chef object.
+     */
+
+    public void defineChef() {
+<span class="fc" id="L358">        BodyDef bdef = new BodyDef();</span>
+<span class="fc" id="L359">        bdef.position.set(initialX, initialY);</span>
+<span class="fc" id="L360">        bdef.type = BodyDef.BodyType.DynamicBody;</span>
+<span class="fc" id="L361">        b2body = world.createBody(bdef);</span>
+
+<span class="fc" id="L363">        FixtureDef fdef = new FixtureDef();</span>
+<span class="fc" id="L364">        CircleShape shape = new CircleShape();</span>
+<span class="fc" id="L365">        shape.setRadius(4.5f / MainGame.PPM);</span>
+<span class="fc" id="L366">        shape.setPosition(new Vector2(shape.getPosition().x + (0.5f / MainGame.PPM), shape.getPosition().y - (5.5f / MainGame.PPM)));</span>
+
+
+<span class="fc" id="L369">        fdef.shape = shape;</span>
+<span class="fc" id="L370">        b2body.createFixture(fdef).setUserData(this);</span>
+<span class="fc" id="L371">    }</span>
+
+
+    /**
+     * Method to set the skin of the chef character based on the item the chef is holding.
+     *
+     * @param item the item that chef is holding
+     *
+     * The skin is set based on the following cases:
+     * - if item is null, then the skin is set to normalChef
+     * - if item is a Lettuce, then the skin is set to
+     *    - choppedLettuceChef if the lettuce is prepared
+     *    - lettuceChef if the lettuce is not prepared
+     * - if item is a Steak, then the skin is set to
+     *    - burgerChef if the steak is prepared and cooked
+     *    - pattyChef if the steak is prepared but not cooked
+     *    - meatChef if the steak is not prepared
+     * - if item is an Onion, then the skin is set to
+     *    - choppedOnionChef if the onion is prepared
+     *    - onionChef if the onion is not prepared
+     * - if item is a Tomato, then the skin is set to
+     *    - choppedTomatoChef if the tomato is prepared
+     *    - tomatoChef if the tomato is not prepared
+     * - if item is a Bun, then the skin is set to
+     *    - bunsToastedChef if the bun is cooked
+     *    - bunsChef if the bun is not cooked
+     * - if item is a BurgerRecipe, then the skin is set to completedBurgerChef
+     * - if item is a SaladRecipe, then the skin is set to saladChef
+     */
+
+    public void setChefSkin(Object item) {
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">        if (item == null) {</span>
+<span class="nc" id="L403">            skinNeeded = skin.getRegion(&quot;Chef_normal&quot;);</span>
+<span class="pc bpc" id="L404" title="2 of 4 branches missed.">        } else if (inHandsIng != null &amp;&amp; inHandsIng.isFailed()){</span>
+<span class="nc" id="L405">            skinNeeded = skin.getRegion(&quot;Chef_holding_failed&quot;);</span>
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        } else if (item instanceof Lettuce) {</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">            if (inHandsIng.isPrepared()) {</span>
+<span class="nc" id="L408">                skinNeeded = skin.getRegion(&quot;Chef_holding_chopped_lettuce&quot;);</span>
+            } else {
+<span class="nc" id="L410">                skinNeeded = skin.getRegion(&quot;Chef_holding_lettuce&quot;);</span>
+            }
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">        } else if (item instanceof Steak) {</span>
+<span class="nc bnc" id="L413" title="All 4 branches missed.">            if (inHandsIng.isPrepared() &amp;&amp; inHandsIng.isCooked()) {</span>
+<span class="nc" id="L414">                skinNeeded = skin.getRegion(&quot;Chef_holding_burger&quot;);</span>
+<span class="nc bnc" id="L415" title="All 2 branches missed.">            } else if (inHandsIng.isPrepared()) {</span>
+<span class="nc" id="L416">                skinNeeded = skin.getRegion(&quot;Chef_holding_patty&quot;);</span>
+            } else {
+<span class="nc" id="L418">                skinNeeded = skin.getRegion(&quot;Chef_holding_meat&quot;);</span>
+            }
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        } else if (item instanceof Onion) {</span>
+<span class="pc bpc" id="L421" title="1 of 2 branches missed.">            if (inHandsIng.isPrepared()) {</span>
+<span class="nc" id="L422">                skinNeeded = skin.getRegion(&quot;Chef_holding_chopped_onion&quot;);</span>
+            } else {
+<span class="fc" id="L424">                skinNeeded = skin.getRegion(&quot;Chef_holding_onion&quot;);</span>
+            }
+<span class="nc bnc" id="L426" title="All 2 branches missed.">        } else if (item instanceof Tomato) {</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">            if (inHandsIng.isPrepared()) {</span>
+<span class="nc" id="L428">                skinNeeded = skin.getRegion(&quot;Chef_holding_chopped_tomato&quot;);</span>
+            } else {
+<span class="nc" id="L430">                skinNeeded = skin.getRegion(&quot;Chef_holding_tomato&quot;);</span>
+            }
+<span class="nc bnc" id="L432" title="All 2 branches missed.">        }else if (item instanceof PizzaSauce) {</span>
+<span class="nc" id="L433">            skinNeeded = skin.getRegion(&quot;Chef_holding_tomato&quot;);</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">        } else if (item instanceof Bun) {</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">            if (inHandsIng.isCooked()) {</span>
+<span class="nc" id="L436">                skinNeeded = skin.getRegion(&quot;Chef_holding_buns_toasted&quot;);</span>
+            } else {
+<span class="nc" id="L438">                skinNeeded = skin.getRegion(&quot;Chef_holding_buns&quot;);</span>
+            }
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        } else if (item instanceof Potato) {</span>
+<span class="nc bnc" id="L441" title="All 2 branches missed.">            if (inHandsIng.isCooked()) {</span>
+<span class="nc" id="L442">                skinNeeded = skin.getRegion(&quot;Chef_holding_baked_potato&quot;);</span>
+            } else {
+<span class="nc" id="L444">                skinNeeded = skin.getRegion(&quot;Chef_holding_potato&quot;);</span>
+            }
+<span class="nc bnc" id="L446" title="All 2 branches missed.">        } else if (item instanceof PizzaDough) {</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">            if (inHandsIng.isCooked()) {</span>
+                // TODO make actual texture for prepared pizza dough
+<span class="nc" id="L449">                skinNeeded = skin.getRegion(&quot;Chef_holding_pizzadough&quot;);</span>
+            } else {
+<span class="nc" id="L451">                skinNeeded = skin.getRegion(&quot;Chef_holding_pizzadough&quot;);</span>
+            }
+<span class="nc bnc" id="L453" title="All 2 branches missed.">        } else if (item instanceof Cheese) {</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">            if (inHandsIng.isPrepared()) {</span>
+<span class="nc" id="L455">                skinNeeded = skin.getRegion(&quot;Chef_holding_chopped_cheese&quot;);</span>
+            } else {
+<span class="nc" id="L457">                skinNeeded = skin.getRegion(&quot;Chef_holding_cheese&quot;);</span>
+            }
+<span class="nc bnc" id="L459" title="All 2 branches missed.">        } else if (item instanceof UnbakedPizza) {</span>
+<span class="nc" id="L460">            skinNeeded = skin.getRegion(&quot;Chef_holding_burger&quot;);</span>
+<span class="nc bnc" id="L461" title="All 2 branches missed.">        } else if (item instanceof BurgerRecipe) {</span>
+<span class="nc" id="L462">            skinNeeded = skin.getRegion(&quot;Chef_holding_complete_burger&quot;);</span>
+<span class="nc bnc" id="L463" title="All 2 branches missed.">        } else if (item instanceof SaladRecipe) {</span>
+<span class="nc" id="L464">            skinNeeded = skin.getRegion(&quot;Chef_holding_salad&quot;);</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">        } else if (item instanceof JacketPotatoRecipe) {</span>
+<span class="nc" id="L466">            skinNeeded = skin.getRegion(&quot;Chef_holding_baked_potato&quot;);</span>
+<span class="nc bnc" id="L467" title="All 2 branches missed.">        } else if (item instanceof UnbakedPizzaRecipe) {</span>
+<span class="nc" id="L468">            skinNeeded = skin.getRegion(&quot;Chef_holding_burger&quot;);</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">        } else if (item instanceof PizzaRecipe) {</span>
+<span class="nc" id="L470">            skinNeeded = skin.getRegion(&quot;Chef_holding_baked_potato&quot;);</span>
+        }
+<span class="fc" id="L472">        }</span>
+    /**
+     * Method to display the ingredient on the specific interactive tile objects (ChoppingBoard/Pan)
+     * @param batch the SpriteBatch used to render the texture.
+     */
+
+    public void displayIngStatic(SpriteBatch batch) {
+<span class="nc" id="L479">        Gdx.app.log(&quot;&quot;, inHandsIng.toString());</span>
+<span class="nc bnc" id="L480" title="All 4 branches missed.">        if (whatTouching != null &amp;&amp; !chefOnChefCollision) {</span>
+<span class="nc" id="L481">            InteractiveTileObject tile = (InteractiveTileObject) whatTouching.getUserData();</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">            if (tile instanceof ChoppingBoard) {</span>
+<span class="nc" id="L483">                ChoppingBoard tileNew = (ChoppingBoard) tile;</span>
+<span class="nc" id="L484">                inHandsIng.create(tileNew.getX() - (0.5f / MainGame.PPM), tileNew.getY() - (0.2f / MainGame.PPM), batch);</span>
+<span class="nc" id="L485">                setChefSkin(null);</span>
+<span class="nc bnc" id="L486" title="All 2 branches missed.">            } else if (tile instanceof Pan) {</span>
+<span class="nc" id="L487">                Pan tileNew = (Pan) tile;</span>
+<span class="nc" id="L488">                inHandsIng.create(tileNew.getX(), tileNew.getY() - (0.01f / MainGame.PPM), batch);</span>
+<span class="nc" id="L489">                setChefSkin(null);</span>
+            }
+        }
+<span class="nc" id="L492">    }</span>
+
+    /**
+     * The method creates an instance of the recipe and sets its position on the completed station coordinates.
+     * The method also implements a timer for each ingredient which gets removed from the screen after a certain amount of time.
+     *
+     * @param batch The batch used for drawing the sprite on the screen
+     */
+
+    public void displayIngDynamic(SpriteBatch batch){
+<span class="nc" id="L502">        putDownWaitTimer += 1/60f;</span>
+<span class="nc" id="L503">        previousInHandRecipe.create(completedStation.getX(), completedStation.getY() - (0.01f / MainGame.PPM), batch);</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">        if (putDownWaitTimer &gt; nextOrderAppearTime) {</span>
+<span class="nc" id="L505">            previousInHandRecipe = null;</span>
+<span class="nc" id="L506">            putDownWaitTimer = 0;</span>
+        }
+<span class="nc" id="L508">    }</span>
+
+    /**
+
+      * This method updates the state of the chef when it is in a collision with another chef.
+      * The method sets the userControlChef to false, meaning the user cannot control the chef while it's in collision.
+      * It also sets the chefOnChefCollision to true, indicating that the chef is in collision with another chef.
+      * Finally, it calls the setStartVector method to update the position of the chef.
+     */
+        public void chefsColliding () {
+<span class="fc" id="L518">            userControlChef = false;</span>
+<span class="fc" id="L519">            chefOnChefCollision = true;</span>
+<span class="fc" id="L520">            setStartVector();</span>
+<span class="fc" id="L521">        }</span>
+
+    /**
+     * Set the starting velocity vector of the chef
+     * when the chef collides with another chef
+     *
+     */
+    public void setStartVector () {
+<span class="fc" id="L529">        startVector = new Vector2(b2body.getLinearVelocity().x, b2body.getLinearVelocity().y);</span>
+<span class="fc" id="L530">    }</span>
+
+    /**
+     * Set the touching tile fixture
+     *
+     * @param obj fixture that the chef is touching
+     */
+    public void setTouchingTile (Fixture obj){
+<span class="nc" id="L538">        this.whatTouching = obj;</span>
+<span class="nc" id="L539">    }</span>
+
+    /**
+     * Get the fixture that the chef is touching
+     *
+     * @return the fixture that the chef is touching
+     */
+    public Fixture getTouchingTile () {
+<span class="nc bnc" id="L547" title="All 2 branches missed.">        if (whatTouching == null) {</span>
+<span class="nc" id="L548">            return null;</span>
+        } else {
+<span class="nc" id="L550">            return whatTouching;</span>
+        }
+    }
+
+    /**
+     * Get the ingredient that the chef is holding
+     *
+     * @return the ingredient that the chef is holding
+     */
+    public Ingredient getInHandsIng () {
+<span class="fc" id="L560">        return inHandsIng;</span>
+    }
+
+    /**
+     * Get the recipe that the chef is holding
+     *
+     * @return the recipe that the chef is holding
+     */
+    public Recipe getInHandsRecipe () {
+<span class="nc" id="L569">        return inHandsRecipe;</span>
+    }
+
+    /**
+     * Set the ingredient that the chef is holding
+     *
+     * @param ing the ingredient that the chef is holding
+     */
+    public void setInHandsIng (Ingredient ing){
+<span class="fc" id="L578">        inHandsIng = ing;</span>
+<span class="fc" id="L579">        inHandsRecipe = null;</span>
+<span class="fc" id="L580">    }</span>
+
+    /**
+     * Set the recipe that the chef is holding
+     *
+     * @param recipe the recipe that the chef is holding
+     */
+    public void setInHandsRecipe (Recipe recipe){
+<span class="fc" id="L588">        inHandsRecipe = recipe;</span>
+<span class="fc" id="L589">        inHandsIng = null;</span>
+<span class="fc" id="L590">    }</span>
+
+    /**
+     * Set the chef's control by the user
+     *
+     * @param value whether the chef is controlled by the user
+     */
+    public void setUserControlChef ( boolean value){
+<span class="fc" id="L598">        userControlChef = value;</span>
+
+<span class="fc" id="L600">    }</span>
+
+    /**
+
+     * Returns a boolean value indicating whether the chef is under user control.
+     * If not specified, returns false.
+     *
+     * @return userControlChef The boolean value indicating chef's control.
+     */
+    public boolean getUserControlChef () {
+<span class="pc bpc" id="L610" title="1 of 2 branches missed.">            if(userControlChef == null){</span>
+<span class="nc" id="L611">                return false;</span>
+            } else {
+<span class="fc" id="L613">                return userControlChef;</span>
+            }
+            //return Objects.requireNonNullElse(userControlChef, false);
+        }
+
+
+    /**
+      * Drops the given ingredient on a plate station.
+      * @param station The plate station to drop the ingredient on.
+      * @param ing The ingredient to be dropped.
+     */
+
+    public void dropItemOn (InteractiveTileObject station, Ingredient ing){
+<span class="pc bpc" id="L626" title="1 of 2 branches missed.">        if (station instanceof PlateStation) {</span>
+<span class="fc" id="L627">                ((PlateStation) station).dropItem(ing);</span>
+        }
+<span class="fc" id="L629">        setInHandsRecipe(null);</span>
+<span class="fc" id="L630">    }</span>
+
+    /**
+     * Drops the in-hand recipe on a completed dish station and saves the previous in-hand recipe.
+     *
+     * @param station The completed dish station to drop the recipe on.
+     */
+        public void dropItemOn (InteractiveTileObject station){
+<span class="nc bnc" id="L638" title="All 2 branches missed.">            if (station instanceof CompletedDishStation) {</span>
+<span class="nc" id="L639">                previousInHandRecipe = getInHandsRecipe();</span>
+<span class="nc" id="L640">                completedStation = (CompletedDishStation) station;</span>
+            }
+<span class="nc" id="L642">            setInHandsRecipe(null);</span>
+<span class="nc" id="L643">        }</span>
+
+    /**
+     * Picks up an item from a plate station and sets it as in-hand ingredient or recipe.
+     *
+     * @param station The plate station to pick up the item from.
+     */
+    public void pickUpItemFrom(InteractiveTileObject station){
+<span class="pc bpc" id="L651" title="1 of 2 branches missed.">        if (station instanceof PlateStation){</span>
+<span class="fc" id="L652">            PlateStation pStation = (PlateStation) station;</span>
+<span class="fc" id="L653">            Object item = pStation.pickUpItem();</span>
+<span class="pc bpc" id="L654" title="1 of 2 branches missed.">            if (item instanceof Ingredient){</span>
+<span class="fc" id="L655">                setInHandsIng((Ingredient) item);</span>
+<span class="fc" id="L656">                setChefSkin(item);</span>
+<span class="nc bnc" id="L657" title="All 2 branches missed.">            } else if (item instanceof Recipe){</span>
+<span class="nc" id="L658">                setInHandsRecipe(((Recipe) item));</span>
+<span class="nc" id="L659">                setChefSkin(item);</span>
+            }
+        }
+<span class="fc" id="L662">    }</span>
+
+    public void setFailState(){
+<span class="nc" id="L665">        failState = true;</span>
+<span class="nc" id="L666">    }</span>
+
+    public void resetFailState(){
+<span class="nc" id="L669">        failState = false;</span>
+<span class="nc" id="L670">    }</span>
+
+    public void setHUD(HUD hud){
+<span class="nc" id="L673">        this.hud = hud;</span>
+<span class="nc" id="L674">    }</span>
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -50,9 +50,9 @@ public class ChefTests {
         chefTest.setInHandsIng(onionTest);
 
         chefTest.dropItemOn(plateStationTest, chefTest.getInHandsIng());
-        assertTrue("This test passes if the chef succesfull dropped an ingredient on the station", (chefTest.getInHandsIng()==null)&&(plateStationTest.getPlate().contains(onionTest)));
+        assertTrue("This test passes if the chef successfully dropped an ingredient on the station", (chefTest.getInHandsIng()==null)&&(plateStationTest.getPlate().contains(onionTest)));
         chefTest.pickUpItemFrom(plateStationTest);
-        assertTrue("This test passes if the chef succesfull picked up an ingredient from the station", chefTest.getInHandsIng()==onionTest);
+        assertTrue("This test passes if the chef successfully picked up an ingredient from the station", chefTest.getInHandsIng()==onionTest);
     }
     @Test
     public void moveUp(){

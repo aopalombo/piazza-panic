@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HUD.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">com.team13.piazzapanic</a> &gt; <span class="el_source">HUD.java</span></div><h1>HUD.java</h1><pre class="source lang-java linenums">package com.team13.piazzapanic;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team13.piazzapanic.Screens.MainMenuScreen;
+import com.team13.piazzapanic.Screens.PlayScreen;
+import Recipes.Order;
+import Sprites.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+
+
+public class HUD implements Disposable {
+    public Stage stage;
+    private MainGame game;
+    private PlayScreen screen;
+    private Boolean scenarioComplete;
+
+    private Integer worldTimerM;
+    private Integer worldTimerS;
+
+    private Integer score;
+
+    public String timeStr;
+
+    public Table table;
+
+    private Label timeLabelT;
+    private Label timeLabel;
+
+    private Label reputationLabel;
+    private Label reputationLabelT;
+<span class="nc" id="L55">    public Integer repPoints = 3;</span>
+
+    private Label orderTimeLabel;
+    private Label orderTimeLabelT;
+    private Order currentOrder;
+    private Integer currentOrderNum;
+
+    private Label scoreLabel;
+    private Label scoreLabelT;
+
+    private Label powerUpLabel;
+    private Label powerUpLabelT;
+
+    private Label orderNumL;
+    private Label orderNumLT;
+    private Integer numOrders;
+
+<span class="nc" id="L72">    private Integer powerUpTime = 31;</span>
+<span class="nc" id="L73">    private Boolean powerUp = false;</span>
+<span class="nc" id="L74">    private ArrayList&lt;String&gt; powerUps = new ArrayList&lt;String&gt;();</span>
+    private String currentPowerUp;
+<span class="nc" id="L76">    private Random randomizer = new Random();</span>
+<span class="nc" id="L77">    private Boolean freezeTime = false;</span>
+
+<span class="nc" id="L79">    private BitmapFont font = new BitmapFont();</span>
+
+<span class="nc" id="L81">    private HashMap&lt;ProgressBar,Chef&gt; bars = new HashMap&lt;ProgressBar,Chef&gt;();</span>
+
+<span class="nc" id="L83">    private Boolean isPaused = false;</span>
+<span class="nc" id="L84">    private ImageButton pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/pauseBtn.png&quot;))));</span>
+<span class="nc" id="L85">    private Image pauseMenu = new Image (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/pauseMenu.png&quot;))));</span>
+<span class="nc" id="L86">    private ImageButton resumeBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/resumeBtn.png&quot;))));</span>
+<span class="nc" id="L87">    private ImageButton quitBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/quitBtn.png&quot;))));</span>
+<span class="nc" id="L88">    private ImageButton helpBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/helpBtn.png&quot;))));</span>
+<span class="nc" id="L89">    private ImageButton xBtn = new ImageButton (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/xBtn.png&quot;))));</span>
+<span class="nc" id="L90">    private Image helpImage = new Image (new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/controls.png&quot;))));</span>
+
+<span class="nc" id="L92">    private ImageButton shopBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/shopBtn.png&quot;))));</span>
+<span class="nc" id="L93">    private Image shopMenu = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/shopMenu.png&quot;))));</span>
+<span class="nc" id="L94">    private Label shopWalletLabel = new Label(&quot;&quot;, new Label.LabelStyle(font, new Color(1, 0.545f, 0.502f, 1)));</span>
+    
+<span class="nc" id="L96">    private ImageButton buyChefBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/chefBtn.png&quot;))));</span>
+<span class="nc" id="L97">    private Label chefPriceLabel = new Label(&quot;$400 (1x)&quot;, new Label.LabelStyle(font, Color.GREEN));</span>
+<span class="nc" id="L98">    private Boolean chefAvailable = true;</span>
+
+<span class="nc" id="L100">    private ImageButton buyChoppingBoardBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/choppingBoardBtn.png&quot;))));</span>
+<span class="nc" id="L101">    private Label choppingBoardPriceLabel = new Label(&quot;$100 (2x)&quot;, new Label.LabelStyle(font, Color.GREEN));</span>
+<span class="nc" id="L102">    private Boolean choppingBoardAvailable = true;</span>
+
+<span class="nc" id="L104">    private ImageButton buyOvenBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/ovenBtn.png&quot;))));</span>
+<span class="nc" id="L105">    private Label ovenPriceLabel = new Label(&quot;$400 (1x)&quot;, new Label.LabelStyle(font, Color.GREEN));</span>
+<span class="nc" id="L106">    private Boolean ovenAvailable = true;</span>
+
+<span class="nc" id="L108">    private ImageButton buyPanBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(&quot;Buttons/panBtn.png&quot;))));</span>
+<span class="nc" id="L109">    private Label panPriceLabel = new Label(&quot;200 (2x)&quot;, new Label.LabelStyle(font, Color.GREEN));</span>
+<span class="nc" id="L110">    private Boolean panAvailable = true;</span>
+
+<span class="nc" id="L112">    private final static Integer CHEF_PRICE = 400;</span>
+<span class="nc" id="L113">    private final static Integer OVEN_PRICE = 400;</span>
+<span class="nc" id="L114">    private final static Integer BOARD_PRICE = 100;</span>
+<span class="nc" id="L115">    private final static Integer PAN_PRICE = 200;</span>
+
+    private Preferences saving;
+    private String difficulty;
+
+<span class="nc" id="L120">    public HUD(SpriteBatch sb, MainGame game, String difficulty, Boolean resume, PlayScreen screen){</span>
+<span class="nc" id="L121">        this.game = game;</span>
+<span class="nc" id="L122">        this.screen = screen;</span>
+<span class="nc" id="L123">        this.scenarioComplete = Boolean.FALSE;</span>
+<span class="nc" id="L124">        saving = Gdx.app.getPreferences(&quot;userData&quot;);</span>
+<span class="nc" id="L125">        this.difficulty = difficulty;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if(resume){</span>
+<span class="nc" id="L127">            this.worldTimerM = saving.getInteger(&quot;minutes&quot;,0);</span>
+<span class="nc" id="L128">            this.worldTimerS = saving.getInteger(&quot;seconds&quot;, 0);</span>
+<span class="nc" id="L129">            this.repPoints = saving.getInteger(&quot;rep&quot;,3);</span>
+<span class="nc" id="L130">            this.score = saving.getInteger(&quot;money&quot;, 0);</span>
+        } else {
+<span class="nc" id="L132">            worldTimerM = 0;</span>
+<span class="nc" id="L133">            worldTimerS = 0;</span>
+<span class="nc" id="L134">            score = 0;</span>
+        }
+<span class="nc" id="L136">        timeStr = String.format(&quot;%d&quot;, worldTimerM) + &quot; : &quot; + String.format(&quot;%d&quot;, worldTimerS);</span>
+<span class="nc" id="L137">        float fontX = 0.4F;</span>
+<span class="nc" id="L138">        float fontY = 0.2F;</span>
+        
+<span class="nc" id="L140">        font.getData().setScale(fontX, fontY);</span>
+<span class="nc" id="L141">        Viewport viewport = new FitViewport(MainGame.V_WIDTH, MainGame.V_HEIGHT, new OrthographicCamera());</span>
+<span class="nc" id="L142">        stage = new Stage(viewport, sb);</span>
+
+<span class="nc" id="L144">        table = new Table();</span>
+<span class="nc" id="L145">        table.left().top();</span>
+<span class="nc" id="L146">        table.setFillParent(true);</span>
+
+<span class="nc" id="L148">        timeLabel = new Label(String.format(&quot;%d&quot;, worldTimerM, &quot;:&quot;, &quot;%i&quot;, worldTimerS), new Label.LabelStyle(font, Color.WHITE));</span>
+<span class="nc" id="L149">        timeLabelT = new Label(&quot;TIME&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L150">        orderNumLT = new Label(&quot;ORDER&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L151">        orderNumL = new Label(String.format(&quot;%d&quot;, 0), new Label.LabelStyle(font, Color.WHITE));</span>
+        
+
+<span class="nc" id="L154">        orderTimeLabel = new Label(&quot;&quot;, new Label.LabelStyle(font, Color.WHITE));</span>
+<span class="nc" id="L155">        orderTimeLabelT = new Label(&quot;TIMER&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+
+<span class="nc" id="L157">        reputationLabel = new Label(String.format(&quot;%d&quot;, repPoints), new Label.LabelStyle(font, Color.WHITE));</span>
+<span class="nc" id="L158">        reputationLabelT = new Label(&quot;REP&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+
+<span class="nc" id="L160">        scoreLabel = new Label(String.format(&quot;%d&quot;, score), new Label.LabelStyle(font, Color.WHITE));</span>
+<span class="nc" id="L161">        scoreLabelT = new Label(&quot;MONEY&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+
+<span class="nc" id="L163">        powerUpLabel = new Label(&quot;&quot;, new Label.LabelStyle(font, Color.WHITE));</span>
+<span class="nc" id="L164">        powerUpLabelT = new Label(&quot;&quot;, new Label.LabelStyle(font, Color.BLACK));</span>
+
+
+<span class="nc" id="L167">        table.add(timeLabelT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L168">        table.add(scoreLabelT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L169">        table.add(orderNumLT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L170">        table.row();</span>
+<span class="nc" id="L171">        table.add(timeLabel).padTop(2).padLeft(2);</span>
+<span class="nc" id="L172">        table.add(scoreLabel).padTop(2).padLeft(2);</span>
+<span class="nc" id="L173">        table.add(orderNumL).padTop(2).padLeft(2);</span>
+<span class="nc" id="L174">        table.row();</span>
+<span class="nc" id="L175">        table.add(reputationLabelT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L176">        table.add(orderTimeLabelT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L177">        table.add(powerUpLabelT).padTop(2).padLeft(2);</span>
+<span class="nc" id="L178">        table.row();</span>
+<span class="nc" id="L179">        table.add(reputationLabel).padTop(2).padLeft(2);</span>
+<span class="nc" id="L180">        table.add(orderTimeLabel).padTop(2).padLeft(2);</span>
+<span class="nc" id="L181">        table.add(powerUpLabel).padTop(2).padLeft(2);</span>
+<span class="nc" id="L182">        table.left().top();</span>
+
+<span class="nc" id="L184">        powerUps.add(&quot;2X SPEED&quot;);</span>
+<span class="nc" id="L185">        powerUps.add(&quot;2X MONEY&quot;);</span>
+<span class="nc" id="L186">        powerUps.add(&quot;FREEZE&quot;);</span>
+<span class="nc" id="L187">        powerUps.add(&quot;SPEEDY&quot;);</span>
+
+        //HUD and pause menu buttons
+<span class="nc" id="L190">        pauseBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-1);</span>
+<span class="nc" id="L191">        shopBtn.setPosition(1, viewport.getWorldHeight()-pauseBtn.getHeight()-12);</span>
+<span class="nc" id="L192">        xBtn.setPosition(10, 143);</span>
+<span class="nc" id="L193">        pauseMenu.setPosition(10, 10);</span>
+<span class="nc" id="L194">        shopMenu.setPosition(10, 10);</span>
+<span class="nc" id="L195">        resumeBtn.setPosition((viewport.getWorldWidth()/2)-(resumeBtn.getWidth()/2), 68);</span>
+<span class="nc" id="L196">        helpBtn.setPosition(127, 128);</span>
+<span class="nc" id="L197">        helpImage.setPosition((viewport.getWorldWidth()/2)-(helpImage.getWidth()/2), (viewport.getWorldHeight()/2)-(helpImage.getHeight()/2));</span>
+<span class="nc" id="L198">        quitBtn.setPosition((viewport.getWorldWidth()/2)-(quitBtn.getWidth()/2), 25);</span>
+
+        //Shop menu buttons and labels
+<span class="nc" id="L201">        shopWalletLabel.setPosition(65, 112);</span>
+
+<span class="nc" id="L203">        buyChefBtn.setPosition(30, 84);</span>
+<span class="nc" id="L204">        chefPriceLabel.setPosition(27, 72);</span>
+
+<span class="nc" id="L206">        buyChoppingBoardBtn.setPosition(70, 84);</span>
+<span class="nc" id="L207">        choppingBoardPriceLabel.setPosition(67, 72);</span>
+
+<span class="nc" id="L209">        buyPanBtn.setPosition(110, 84);</span>
+<span class="nc" id="L210">        panPriceLabel.setPosition(107, 72);</span>
+
+<span class="nc" id="L212">        buyOvenBtn.setPosition(30, 54);</span>
+<span class="nc" id="L213">        ovenPriceLabel.setPosition(27, 42);</span>
+
+<span class="nc" id="L215">        stage.addActor(pauseBtn);</span>
+<span class="nc" id="L216">        stage.addActor(shopBtn);</span>
+<span class="nc" id="L217">        table.setPosition(pauseBtn.getWidth(), table.getY());</span>
+<span class="nc" id="L218">        stage.addActor(table);</span>
+<span class="nc" id="L219">    }</span>
+
+    /**
+     * Updates the time label.
+     *
+     * @param scenarioComplete Whether the game scenario has been completed.
+     */
+    public void updateTime(Boolean scenarioComplete, Order currentOrder){
+<span class="nc" id="L227">        this.currentOrder = currentOrder;</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        if(!Objects.isNull(currentOrder)){</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            if(!freezeTime){</span>
+<span class="nc" id="L230">                currentOrder.orderTime--;</span>
+            }
+<span class="nc" id="L232">            orderTimeLabel.setText(Integer.toString(currentOrder.orderTime));</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if(currentOrder.orderTime==0){</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">                if(!scenarioComplete){</span>
+<span class="nc" id="L235">                    repPoints--;</span>
+<span class="nc" id="L236">                    reputationLabel.setText(Integer.toString(repPoints));</span>
+                }
+            }
+        }
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if(scenarioComplete){</span>
+<span class="nc" id="L241">            saving.clear();</span>
+<span class="nc" id="L242">            saving.flush();</span>
+<span class="nc" id="L243">            timeLabel.setColor(Color.GREEN);</span>
+<span class="nc" id="L244">            timeStr = String.format(&quot;%d&quot;, worldTimerM) + &quot;:&quot; + String.format(&quot;%d&quot;, worldTimerS);</span>
+<span class="nc" id="L245">            timeLabel.setText(String.format(&quot;TIME: &quot; + timeStr + &quot; MONEY: %d&quot;, score));</span>
+<span class="nc" id="L246">            timeLabelT.setText(&quot;SCENARIO COMPLETE&quot;);</span>
+<span class="nc" id="L247">            reputationLabelT.setStyle(new LabelStyle(font, Color.GREEN));</span>
+<span class="nc" id="L248">            reputationLabelT.setText(&quot;Finished with &quot; + Integer.toString(repPoints) + &quot; Reputation points&quot;);</span>
+<span class="nc" id="L249">            reputationLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L250">            reputationLabel.remove();</span>
+<span class="nc" id="L251">            table.center().top();</span>
+<span class="nc" id="L252">            stage.addActor(table);</span>
+<span class="nc" id="L253">            stage.getActors().removeValue(shopBtn, false);</span>
+<span class="nc" id="L254">            return;</span>
+        }
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        if(!isPaused) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">            if (worldTimerS == 59) {</span>
+<span class="nc" id="L258">                worldTimerM += 1;</span>
+<span class="nc" id="L259">                worldTimerS = 0;</span>
+            } else {
+<span class="nc" id="L261">                worldTimerS += 1;</span>
+            }
+<span class="nc bnc" id="L263" title="All 2 branches missed.">            if(worldTimerS%10==0){</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                if(!scenarioComplete){</span>
+<span class="nc" id="L265">                    save(false);</span>
+                }
+            }
+        }
+<span class="nc" id="L269">        table.left().top();</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        if(worldTimerS &lt; 10){</span>
+<span class="nc" id="L271">            timeStr = String.format(&quot;%d&quot;, worldTimerM) + &quot;:0&quot; + String.format(&quot;%d&quot;, worldTimerS);</span>
+        }
+        else {
+<span class="nc" id="L274">            timeStr = String.format(&quot;%d&quot;, worldTimerM) + &quot;:&quot; + String.format(&quot;%d&quot;, worldTimerS);</span>
+        }
+<span class="nc" id="L276">        timeLabel.setText(timeStr);</span>
+
+<span class="nc bnc" id="L278" title="All 4 branches missed.">        if(powerUp&amp;&amp;(!isPaused)){</span>
+<span class="nc" id="L279">            powerUpTime--;</span>
+<span class="nc" id="L280">            powerUpLabel.setText(Integer.toString(powerUpTime));</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if(powerUpTime == 0){</span>
+<span class="nc" id="L282">                powerUpLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L283">                powerUpLabelT.setText(&quot;&quot;);</span>
+<span class="nc" id="L284">                powerUp = false;</span>
+<span class="nc" id="L285">                powerUpTime = 31;</span>
+<span class="nc" id="L286">                currentPowerUp = &quot;&quot;;</span>
+            }
+        }
+<span class="nc" id="L289">    }</span>
+
+    /**
+     * Calculates the user's score per order and updates the label.
+     *
+     * @param scenarioComplete Whether the game scenario has been completed.
+     * @param expectedTime The expected time an order should be completed in.
+     */
+    public void updateScore(Boolean scenarioComplete, Integer expectedTime, Integer multiplier, Order currentOrder){
+<span class="nc" id="L298">        this.currentOrder = currentOrder;</span>
+<span class="nc" id="L299">        int addScore = 0;</span>
+        int currentTime;
+
+<span class="nc bnc" id="L302" title="All 2 branches missed.">        if(this.scenarioComplete == Boolean.FALSE){</span>
+<span class="nc" id="L303">            currentTime = ((worldTimerM * 60) + worldTimerS)/numOrders;</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            if (currentTime &lt;= expectedTime) {</span>
+<span class="nc" id="L305">                addScore = 100*multiplier;</span>
+            }
+            else{
+<span class="nc" id="L308">                addScore = 100*multiplier - (currentTime -expectedTime);</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                if(addScore &lt; 0){</span>
+<span class="nc" id="L310">                    addScore = 0;</span>
+                }
+            }
+<span class="nc bnc" id="L313" title="All 2 branches missed.">            if(currentOrder.orderTime==0){</span>
+<span class="nc" id="L314">                addScore = 0;</span>
+            }
+<span class="nc" id="L316">            score += addScore;</span>
+        }
+
+
+<span class="nc bnc" id="L320" title="All 2 branches missed.">        if(scenarioComplete==Boolean.TRUE){</span>
+<span class="nc" id="L321">            scoreLabel.setColor(Color.GREEN);</span>
+<span class="nc" id="L322">            scoreLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L323">            scoreLabelT.setText(&quot;&quot;);</span>
+<span class="nc" id="L324">            orderTimeLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L325">            orderTimeLabelT.setText(&quot;&quot;);</span>
+<span class="nc" id="L326">            powerUpLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L327">            powerUpLabelT.setText(&quot;&quot;);</span>
+<span class="nc" id="L328">            powerUpLabel.remove();</span>
+<span class="nc" id="L329">            powerUpLabelT.remove();</span>
+<span class="nc" id="L330">            orderTimeLabel.remove();</span>
+<span class="nc" id="L331">            orderTimeLabelT.remove();</span>
+<span class="nc" id="L332">            scoreLabelT.remove();</span>
+<span class="nc" id="L333">            scoreLabel.remove();</span>
+<span class="nc" id="L334">            table.center().top();</span>
+<span class="nc" id="L335">            stage.addActor(table);</span>
+<span class="nc" id="L336">            this.scenarioComplete = Boolean.TRUE;</span>
+<span class="nc" id="L337">            return;</span>
+        }
+
+<span class="nc" id="L340">        table.left().top();</span>
+<span class="nc" id="L341">        scoreLabel.setText(String.format(&quot;%d&quot;, score));</span>
+<span class="nc" id="L342">        stage.addActor(table);</span>
+
+<span class="nc" id="L344">    }</span>
+
+    /**
+     * Updates the order label.
+     *
+     * @param scenarioComplete Whether the game scenario has been completed.
+     * @param orderNum The index number of the order.
+     */
+    public void updateOrder(Boolean scenarioComplete, Integer orderNum){
+<span class="nc" id="L353">        this.currentOrderNum = orderNum;</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">        if(scenarioComplete==Boolean.TRUE){</span>
+<span class="nc" id="L355">            orderNumL.remove();</span>
+<span class="nc" id="L356">            orderNumLT.remove();</span>
+<span class="nc" id="L357">            table.center().top();</span>
+<span class="nc" id="L358">            stage.addActor(table);</span>
+        }
+
+<span class="nc" id="L361">        table.left().top();</span>
+<span class="nc" id="L362">        orderNumL.setText(String.format(&quot;%d&quot;, currentOrderNum));</span>
+<span class="nc" id="L363">        orderNumLT.setText(&quot;ORDER&quot;);</span>
+<span class="nc" id="L364">        stage.addActor(table);</span>
+
+<span class="nc" id="L366">    }</span>
+
+    /**
+     * Generates a random power up from the 5 selections: 2x speed, 2x money, 2x cooking speed, no burning food, freeze order time
+     */
+
+    public void generatePowerUp(){
+<span class="nc" id="L373">        currentPowerUp = powerUps.get(randomizer.nextInt(powerUps.size()));</span>
+<span class="nc" id="L374">        powerUp = true;</span>
+<span class="nc" id="L375">        powerUpLabelT.setText(currentPowerUp);</span>
+<span class="nc" id="L376">    }</span>
+
+    /**
+     * returns current power up
+     */
+
+    public String getPowerUp(){
+<span class="nc" id="L383">        return currentPowerUp;</span>
+    }
+
+    /**
+     * freezes the time of the current order
+     */
+
+    public void freezeTime(){
+<span class="nc" id="L391">        freezeTime = true;</span>
+<span class="nc" id="L392">    }</span>
+
+    /**
+     * unfreezes the time of the current order
+     */
+
+    public void unfreezeTime(){
+<span class="nc" id="L399">        freezeTime = false;</span>
+<span class="nc" id="L400">    }</span>
+
+    public void setNumOrders(Integer num){
+<span class="nc" id="L403">        this.numOrders = num;</span>
+<span class="nc" id="L404">    }</span>
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L408">        stage.dispose();</span>
+<span class="nc" id="L409">    }</span>
+
+    /**
+     * Generates a progress bar at position x, y for a given duration
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param duration the duration of the bar
+     */
+
+    public ProgressBar createProgressBar(float x, float y, Chef chef, float duration, boolean fail) {
+<span class="nc" id="L419">        ProgressBarStyle style = new ProgressBarStyle();</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">        if(fail){</span>
+<span class="nc" id="L421">            style.background = getColoredDrawable(20, 5, Color.RED);</span>
+        } else {
+<span class="nc" id="L423">            style.background = getColoredDrawable(20, 5, Color.GREEN);</span>
+        }
+<span class="nc" id="L425">        style.knob = getColoredDrawable(0, 5, Color.WHITE);</span>
+<span class="nc" id="L426">        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);</span>
+<span class="nc" id="L427">        ProgressBar bar = new ProgressBar(0, duration, 0.05f, false, style);</span>
+<span class="nc" id="L428">        bar.setWidth(30);</span>
+<span class="nc" id="L429">        bar.setHeight(5);</span>
+<span class="nc" id="L430">        bar.setValue(15f);</span>
+<span class="nc" id="L431">        bar.setX(x);</span>
+<span class="nc" id="L432">        bar.setY(y);</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">        if(!bars.values().contains(chef)){</span>
+<span class="nc" id="L434">            stage.addActor(bar);</span>
+<span class="nc" id="L435">            bars.put(bar,chef);</span>
+        }
+<span class="nc" id="L437">        return bar;</span>
+    }
+
+    /**
+     * Updates the progress bars
+     */
+    public void updateProgressBars() {
+<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (!bars.isEmpty()) {</span>
+<span class="nc bnc" id="L445" title="All 2 branches missed.">            for (ProgressBar bar : bars.keySet()) {</span>
+<span class="nc bnc" id="L446" title="All 2 branches missed.">                if(!isPaused){</span>
+<span class="nc" id="L447">                    bar.setValue(bar.getValue() - 0.05f);</span>
+                }
+<span class="nc bnc" id="L449" title="All 2 branches missed.">                if (bar.getValue() &lt;= 0) {</span>
+<span class="nc" id="L450">                    stage.getActors().removeValue(bar, false);</span>
+<span class="nc" id="L451">                    bars.remove(bar);</span>
+                }
+<span class="nc" id="L453">            }</span>
+        }
+<span class="nc" id="L455">    }</span>
+
+    /**
+     * Helper function to create rectangles, used for progress bars
+     */
+    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
+<span class="nc" id="L461">        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);</span>
+<span class="nc" id="L462">        pixmap.setColor(color);</span>
+<span class="nc" id="L463">        pixmap.fill();</span>
+<span class="nc" id="L464">        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));</span>
+<span class="nc" id="L465">        pixmap.dispose();</span>
+<span class="nc" id="L466">        return drawable;</span>
+    }
+    /*
+     * Activated when the player pauses the game
+     * Pauses the time, stops the movement of the chefs
+     */
+    public void pause(){
+<span class="nc" id="L473">        isPaused = true;</span>
+<span class="nc" id="L474">        freezeTime = true;</span>
+<span class="nc" id="L475">        stage.getActors().removeValue(pauseBtn, false);</span>
+<span class="nc" id="L476">        stage.getActors().removeValue(shopBtn, false);</span>
+<span class="nc bnc" id="L477" title="All 2 branches missed.">        if(!stage.getActors().contains(pauseMenu, true)){</span>
+<span class="nc" id="L478">            stage.getActors().add(pauseMenu);</span>
+        }
+<span class="nc bnc" id="L480" title="All 2 branches missed.">        if(!stage.getActors().contains(resumeBtn, true)){</span>
+<span class="nc" id="L481">            stage.getActors().add(resumeBtn);</span>
+        }
+<span class="nc bnc" id="L483" title="All 2 branches missed.">        if(!stage.getActors().contains(quitBtn, true)){</span>
+<span class="nc" id="L484">            stage.getActors().add(quitBtn);</span>
+        }
+<span class="nc bnc" id="L486" title="All 2 branches missed.">        if(!stage.getActors().contains(xBtn, true)){</span>
+<span class="nc" id="L487">            stage.getActors().add(xBtn);</span>
+        }
+<span class="nc bnc" id="L489" title="All 2 branches missed.">        if(!stage.getActors().contains(helpBtn, true)){</span>
+<span class="nc" id="L490">            stage.getActors().add(helpBtn);</span>
+        }
+<span class="nc" id="L492">    }</span>
+    /*
+     * Activated when the player unpauses the game
+     * Resumes the time and activates the movement of the chefs
+     */
+    public void unPause(){
+<span class="nc" id="L498">        isPaused = false;</span>
+<span class="nc" id="L499">        freezeTime = false;</span>
+<span class="nc" id="L500">        stage.getActors().removeValue(pauseMenu,false);</span>
+<span class="nc" id="L501">        stage.getActors().removeValue(resumeBtn,false);</span>
+<span class="nc" id="L502">        stage.getActors().removeValue(quitBtn,false);</span>
+<span class="nc" id="L503">        stage.getActors().removeValue(xBtn,false);</span>
+<span class="nc" id="L504">        stage.getActors().removeValue(helpBtn,false);</span>
+<span class="nc" id="L505">        stage.getActors().removeValue(helpImage,false);</span>
+<span class="nc bnc" id="L506" title="All 2 branches missed.">        if(!stage.getActors().contains(pauseBtn, true)){</span>
+<span class="nc" id="L507">            stage.getActors().add(pauseBtn);</span>
+        }
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if(!stage.getActors().contains(shopBtn, true)){</span>
+<span class="nc" id="L510">            stage.getActors().add(shopBtn);</span>
+        }
+<span class="nc" id="L512">    }</span>
+    /*
+     * Activated when the player presses the shop button
+     * Shows the shop menu. The user can buy new stations and new chefs
+     */
+    public void showShop(){
+<span class="nc" id="L518">        isPaused = true;</span>
+<span class="nc" id="L519">        freezeTime = true;</span>
+<span class="nc" id="L520">        shopWalletLabel.setText(&quot;WALLET: $&quot;+Integer.toString(score));</span>
+<span class="nc" id="L521">        int choppingBoardCount = 0;</span>
+<span class="nc" id="L522">        int panCount = 0;</span>
+
+        //Check if you can buy any more chopping boards
+<span class="nc bnc" id="L525" title="All 2 branches missed.">        for(ChoppingBoard board : screen.getChoppingBoards()){</span>
+<span class="nc bnc" id="L526" title="All 2 branches missed.">            if(!board.isLocked()){</span>
+<span class="nc" id="L527">                choppingBoardCount++;</span>
+            }
+<span class="nc" id="L529">        }</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">        if(choppingBoardCount &gt;= 3){</span>
+<span class="nc" id="L531">            choppingBoardAvailable = false;</span>
+<span class="nc" id="L532">            choppingBoardPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L533">            choppingBoardPriceLabel.setText(&quot;unavailable&quot;);</span>
+        } else {
+<span class="nc" id="L535">            choppingBoardAvailable = true;</span>
+        }
+
+        //check if you can buy any more pans
+<span class="nc bnc" id="L539" title="All 2 branches missed.">        for(Pan pan : screen.getPans()){</span>
+<span class="nc bnc" id="L540" title="All 2 branches missed.">            if(!pan.isLocked()){</span>
+<span class="nc" id="L541">                panCount++;</span>
+            }
+<span class="nc" id="L543">        }</span>
+<span class="nc bnc" id="L544" title="All 2 branches missed.">        if(panCount &gt;= 3){</span>
+<span class="nc" id="L545">            panAvailable = false;</span>
+<span class="nc" id="L546">            panPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L547">            panPriceLabel.setText(&quot;unavailable&quot;);</span>
+        } else {
+<span class="nc" id="L549">            panAvailable = true;</span>
+        }
+
+        //Change color of labels. If the player has enough money to buy the item it is green otherwise it is red
+<span class="nc bnc" id="L553" title="All 2 branches missed.">        if(chefAvailable){</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">            if(score &lt; CHEF_PRICE){</span>
+<span class="nc" id="L555">                chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));</span>
+            } else {
+<span class="nc" id="L557">                chefPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));</span>
+            }
+        }
+<span class="nc bnc" id="L560" title="All 2 branches missed.">        if(ovenAvailable){</span>
+<span class="nc bnc" id="L561" title="All 2 branches missed.">            if(score &lt; OVEN_PRICE){</span>
+<span class="nc" id="L562">                ovenPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));</span>
+            } else {
+<span class="nc" id="L564">                ovenPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));</span>
+            }
+<span class="nc" id="L566">            ovenPriceLabel.setText(&quot;$400 (1x)&quot;);</span>
+        }
+<span class="nc bnc" id="L568" title="All 2 branches missed.">        if(choppingBoardAvailable){</span>
+<span class="nc bnc" id="L569" title="All 2 branches missed.">            if(score &lt; BOARD_PRICE){</span>
+<span class="nc" id="L570">                choppingBoardPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));</span>
+            } else {
+<span class="nc" id="L572">                choppingBoardPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));</span>
+            }
+<span class="nc" id="L574">            choppingBoardPriceLabel.setText(&quot;$100 (&quot;+Integer.toString(3-choppingBoardCount)+&quot;x)&quot;);</span>
+        }
+<span class="nc bnc" id="L576" title="All 2 branches missed.">        if(panAvailable){</span>
+<span class="nc bnc" id="L577" title="All 2 branches missed.">            if(score &lt; PAN_PRICE){</span>
+<span class="nc" id="L578">                panPriceLabel.setStyle(new Label.LabelStyle(font, Color.RED));</span>
+            } else {
+<span class="nc" id="L580">                panPriceLabel.setStyle(new Label.LabelStyle(font, Color.GREEN));</span>
+            }
+<span class="nc" id="L582">            panPriceLabel.setText(&quot;$200 (&quot;+Integer.toString(3-panCount)+&quot;x)&quot;);</span>
+        }
+        
+<span class="nc" id="L585">        stage.getActors().removeValue(shopBtn, false);</span>
+<span class="nc" id="L586">        stage.getActors().removeValue(pauseBtn, false);</span>
+<span class="nc bnc" id="L587" title="All 2 branches missed.">        if(!stage.getActors().contains(shopMenu, true)){</span>
+<span class="nc" id="L588">            stage.getActors().add(shopMenu);</span>
+        }
+<span class="nc bnc" id="L590" title="All 2 branches missed.">        if(!stage.getActors().contains(xBtn, true)){</span>
+<span class="nc" id="L591">            stage.getActors().add(xBtn);</span>
+        }
+<span class="nc bnc" id="L593" title="All 2 branches missed.">        if(!stage.getActors().contains(shopWalletLabel, true)){</span>
+<span class="nc" id="L594">            stage.getActors().add(shopWalletLabel);</span>
+        }
+<span class="nc bnc" id="L596" title="All 2 branches missed.">        if(!stage.getActors().contains(buyChefBtn, true)){</span>
+<span class="nc" id="L597">            stage.getActors().add(buyChefBtn);</span>
+        }
+<span class="nc bnc" id="L599" title="All 2 branches missed.">        if(!stage.getActors().contains(chefPriceLabel, true)){</span>
+<span class="nc" id="L600">            stage.getActors().add(chefPriceLabel);</span>
+        }
+<span class="nc bnc" id="L602" title="All 2 branches missed.">        if(!stage.getActors().contains(buyChoppingBoardBtn, true)){</span>
+<span class="nc" id="L603">            stage.getActors().add(buyChoppingBoardBtn);</span>
+        }
+<span class="nc bnc" id="L605" title="All 2 branches missed.">        if(!stage.getActors().contains(choppingBoardPriceLabel, true)){</span>
+<span class="nc" id="L606">            stage.getActors().add(choppingBoardPriceLabel);</span>
+        }
+<span class="nc bnc" id="L608" title="All 2 branches missed.">        if(!stage.getActors().contains(buyPanBtn, true)){</span>
+<span class="nc" id="L609">            stage.getActors().add(buyPanBtn);</span>
+        }
+<span class="nc bnc" id="L611" title="All 2 branches missed.">        if(!stage.getActors().contains(panPriceLabel, true)){</span>
+<span class="nc" id="L612">            stage.getActors().add(panPriceLabel);</span>
+        }
+<span class="nc bnc" id="L614" title="All 2 branches missed.">        if(!stage.getActors().contains(buyOvenBtn, true)){</span>
+<span class="nc" id="L615">            stage.getActors().add(buyOvenBtn);</span>
+        }
+<span class="nc bnc" id="L617" title="All 2 branches missed.">        if(!stage.getActors().contains(ovenPriceLabel, true)){</span>
+<span class="nc" id="L618">            stage.getActors().add(ovenPriceLabel);</span>
+        }
+<span class="nc" id="L620">    }</span>
+
+    /*
+     * Activated when the player presses the exit button in the shop button
+     * Shows the shop menu. The user can buy new stations and new chefs
+     */
+    public void hideShop(){
+<span class="nc" id="L627">        isPaused = false;</span>
+<span class="nc" id="L628">        freezeTime = true;</span>
+<span class="nc" id="L629">        stage.getActors().removeValue(shopMenu,false);</span>
+<span class="nc" id="L630">        stage.getActors().removeValue(xBtn,false);</span>
+<span class="nc" id="L631">        stage.getActors().removeValue(shopWalletLabel,false);</span>
+<span class="nc" id="L632">        stage.getActors().removeValue(buyChefBtn,false);</span>
+<span class="nc" id="L633">        stage.getActors().removeValue(chefPriceLabel,false);</span>
+<span class="nc" id="L634">        stage.getActors().removeValue(buyChoppingBoardBtn,false);</span>
+<span class="nc" id="L635">        stage.getActors().removeValue(choppingBoardPriceLabel,false);</span>
+<span class="nc" id="L636">        stage.getActors().removeValue(buyPanBtn,false);</span>
+<span class="nc" id="L637">        stage.getActors().removeValue(panPriceLabel,false);</span>
+<span class="nc" id="L638">        stage.getActors().removeValue(buyOvenBtn,false);</span>
+<span class="nc" id="L639">        stage.getActors().removeValue(ovenPriceLabel,false);</span>
+<span class="nc bnc" id="L640" title="All 2 branches missed.">        if(!stage.getActors().contains(shopBtn, true)){</span>
+<span class="nc" id="L641">            stage.getActors().add(shopBtn);</span>
+        }
+<span class="nc bnc" id="L643" title="All 2 branches missed.">        if(!stage.getActors().contains(pauseBtn, true)){</span>
+<span class="nc" id="L644">            stage.getActors().add(pauseBtn);</span>
+        }
+<span class="nc" id="L646">    }</span>
+
+    /*
+     * Returns true if the game is paused, otherwise false
+     */
+    public boolean isPaused(){
+<span class="nc" id="L652">        return isPaused;</span>
+    }
+
+    /*
+     * Handles all inputs on the buttons in the game
+     */
+    public void handleButtons(){
+        //pause menu buttons
+<span class="nc bnc" id="L660" title="All 2 branches missed.">        if(pauseBtn.isPressed()){</span>
+<span class="nc" id="L661">            pause();</span>
+        }
+<span class="nc bnc" id="L663" title="All 2 branches missed.">        if(resumeBtn.isPressed()){</span>
+<span class="nc" id="L664">            unPause();</span>
+        }
+<span class="nc bnc" id="L666" title="All 2 branches missed.">        if(helpBtn.isPressed()){</span>
+<span class="nc bnc" id="L667" title="All 2 branches missed.">            if(!stage.getActors().contains(helpImage, true)){</span>
+<span class="nc" id="L668">                stage.getActors().add(helpImage);</span>
+            }
+        }
+<span class="nc bnc" id="L671" title="All 2 branches missed.">        if(quitBtn.isPressed()){</span>
+<span class="nc bnc" id="L672" title="All 2 branches missed.">            if(scenarioComplete){</span>
+<span class="nc" id="L673">                game.setScreen(new MainMenuScreen(game));</span>
+            } else {
+<span class="nc" id="L675">                save(true);</span>
+            }
+        }
+        //shop menu buttons
+<span class="nc bnc" id="L679" title="All 2 branches missed.">        if(shopBtn.isPressed()){</span>
+<span class="nc" id="L680">            showShop();</span>
+        }
+<span class="nc bnc" id="L682" title="All 2 branches missed.">        if(buyChefBtn.isPressed()){</span>
+<span class="nc bnc" id="L683" title="All 2 branches missed.">            if(chefAvailable){</span>
+<span class="nc bnc" id="L684" title="All 2 branches missed.">                if(score &gt;= CHEF_PRICE){</span>
+<span class="nc bnc" id="L685" title="All 2 branches missed.">                    if(!screen.chefs.contains(screen.chef3)){</span>
+<span class="nc" id="L686">                        screen.chef3.defineChef();</span>
+<span class="nc" id="L687">                        screen.chefs.add(screen.chef3);</span>
+                        
+<span class="nc" id="L689">                        chefAvailable = false;</span>
+<span class="nc" id="L690">                        chefPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L691">                        chefPriceLabel.setText(&quot;unavailable&quot;);</span>
+
+<span class="nc" id="L693">                        score -= CHEF_PRICE;</span>
+<span class="nc" id="L694">                        scoreLabel.setText(Integer.toString(score));</span>
+                    }
+<span class="nc" id="L696">                    hideShop();</span>
+                }
+            }
+        }
+<span class="nc bnc" id="L700" title="All 2 branches missed.">        if(buyChoppingBoardBtn.isPressed()){</span>
+<span class="nc bnc" id="L701" title="All 4 branches missed.">            if(choppingBoardAvailable&amp;&amp;(score &gt;= BOARD_PRICE)){</span>
+<span class="nc bnc" id="L702" title="All 2 branches missed.">                for(ChoppingBoard board : screen.getChoppingBoards()){</span>
+<span class="nc bnc" id="L703" title="All 2 branches missed.">                    if(board.isLocked()){</span>
+<span class="nc" id="L704">                        board.unlock();</span>
+<span class="nc" id="L705">                        score -= BOARD_PRICE;</span>
+<span class="nc" id="L706">                        scoreLabel.setText(Integer.toString(score));</span>
+<span class="nc" id="L707">                        choppingBoardAvailable = false;</span>
+<span class="nc" id="L708">                        break;</span>
+                    }
+<span class="nc" id="L710">                }</span>
+<span class="nc" id="L711">                hideShop();</span>
+            }
+        }
+<span class="nc bnc" id="L714" title="All 2 branches missed.">        if(buyPanBtn.isPressed()){</span>
+<span class="nc bnc" id="L715" title="All 4 branches missed.">            if(panAvailable&amp;&amp;(score &gt;= PAN_PRICE)){</span>
+<span class="nc bnc" id="L716" title="All 2 branches missed.">                for(Pan pan : screen.getPans()){</span>
+<span class="nc bnc" id="L717" title="All 2 branches missed.">                    if(pan.isLocked()){</span>
+<span class="nc" id="L718">                        pan.unlock();</span>
+<span class="nc" id="L719">                        score -= PAN_PRICE;</span>
+<span class="nc" id="L720">                        scoreLabel.setText(Integer.toString(score));</span>
+<span class="nc" id="L721">                        panAvailable = false;</span>
+<span class="nc" id="L722">                        break;</span>
+                    }
+<span class="nc" id="L724">                }</span>
+<span class="nc" id="L725">                hideShop();</span>
+            }
+        }
+<span class="nc bnc" id="L728" title="All 2 branches missed.">        if(buyOvenBtn.isPressed()){</span>
+<span class="nc bnc" id="L729" title="All 4 branches missed.">            if(ovenAvailable&amp;&amp;(score &gt;= OVEN_PRICE)){</span>
+<span class="nc bnc" id="L730" title="All 2 branches missed.">                for(Oven oven : screen.getOvens()){</span>
+<span class="nc bnc" id="L731" title="All 2 branches missed.">                    if(oven.isLocked()){</span>
+<span class="nc" id="L732">                        oven.unlock();</span>
+<span class="nc" id="L733">                        score -= OVEN_PRICE;</span>
+<span class="nc" id="L734">                        scoreLabel.setText(Integer.toString(score));</span>
+<span class="nc" id="L735">                        ovenPriceLabel.setStyle(new LabelStyle(font, Color.BLACK));</span>
+<span class="nc" id="L736">                        ovenPriceLabel.setText(&quot;unavailable&quot;);</span>
+<span class="nc" id="L737">                        ovenAvailable = false;</span>
+<span class="nc" id="L738">                        break;</span>
+                    }
+<span class="nc" id="L740">                }</span>
+<span class="nc" id="L741">                hideShop();</span>
+            }
+        }
+        //x button for all menus
+<span class="nc bnc" id="L745" title="All 2 branches missed.">        if(xBtn.isPressed()){</span>
+<span class="nc" id="L746">            hideShop();</span>
+<span class="nc" id="L747">            unPause();</span>
+        }
+<span class="nc" id="L749">    }</span>
+
+    /*
+     * Saves current game state in an XML file in the user profile on the local machine
+     * If quit is true it will send the user to the main menu after saving
+     */
+    public void save(boolean quit){
+<span class="nc bnc" id="L756" title="All 2 branches missed.">        if(scenarioComplete){</span>
+<span class="nc" id="L757">            saving.clear();</span>
+        } else {
+<span class="nc" id="L759">            int choppingBoardCount = 0;</span>
+<span class="nc" id="L760">            int panCount = 0;</span>
+<span class="nc" id="L761">            int ovenCount = 0;</span>
+<span class="nc bnc" id="L762" title="All 2 branches missed.">            for(ChoppingBoard board : screen.getChoppingBoards()){</span>
+<span class="nc bnc" id="L763" title="All 2 branches missed.">                if(!board.isLocked()){</span>
+<span class="nc" id="L764">                    choppingBoardCount++;</span>
+                }
+<span class="nc" id="L766">            }</span>
+<span class="nc bnc" id="L767" title="All 2 branches missed.">            for(Pan pan : screen.getPans()){</span>
+<span class="nc bnc" id="L768" title="All 2 branches missed.">                if(!pan.isLocked()){</span>
+<span class="nc" id="L769">                    panCount++;</span>
+                }
+<span class="nc" id="L771">            }</span>
+<span class="nc bnc" id="L772" title="All 2 branches missed.">            for(Oven oven : screen.getOvens()){</span>
+<span class="nc bnc" id="L773" title="All 2 branches missed.">                if(!oven.isLocked()){</span>
+<span class="nc" id="L774">                    ovenCount++;</span>
+                }
+<span class="nc" id="L776">            }</span>
+<span class="nc" id="L777">            String currentDish = &quot;currentOrderDish&quot;;</span>
+<span class="nc" id="L778">            saving.putInteger(&quot;choppingBoardCount&quot;, choppingBoardCount);</span>
+<span class="nc" id="L779">            saving.putInteger(&quot;panCount&quot;, panCount);</span>
+<span class="nc" id="L780">            saving.putInteger(&quot;ovenCount&quot;, ovenCount);</span>
+<span class="nc" id="L781">            saving.putInteger(&quot;money&quot;, this.score);</span>
+<span class="nc" id="L782">            saving.putInteger(&quot;minutes&quot;, this.worldTimerM);</span>
+<span class="nc" id="L783">            saving.putInteger(&quot;seconds&quot;, this.worldTimerS);</span>
+<span class="nc" id="L784">            saving.putInteger(&quot;currentOrderNum&quot;, this.currentOrderNum);</span>
+<span class="nc" id="L785">            saving.putInteger(&quot;currentOrderTimer&quot;, this.currentOrder.orderTime);</span>
+<span class="nc" id="L786">            saving.putInteger(&quot;countOrder&quot;, this.numOrders);</span>
+<span class="nc" id="L787">            saving.putInteger(&quot;rep&quot;, this.repPoints);</span>
+<span class="nc" id="L788">            saving.putString(&quot;difficulty&quot;, this.difficulty);</span>
+<span class="nc bnc" id="L789" title="All 2 branches missed.">            for(int i = 0; i&lt;3;i++){</span>
+<span class="nc bnc" id="L790" title="All 2 branches missed.">                if((i)&lt;currentOrder.dishes.size()){</span>
+<span class="nc" id="L791">                    saving.putString((currentDish+Integer.toString(i+1)), currentOrder.dishes.get(i).recipe.getClass().getName());</span>
+                } else {
+<span class="nc" id="L793">                    saving.putString((currentDish+Integer.toString(i+1)),&quot;none&quot;);</span>
+                }
+            }
+        }
+<span class="nc" id="L797">        saving.flush();</span>
+<span class="nc bnc" id="L798" title="All 2 branches missed.">        if(quit){</span>
+<span class="nc" id="L799">            game.setScreen(new MainMenuScreen(game));</span>
+        }
+<span class="nc" id="L801">    }</span>
+    public void removeBar(ProgressBar bar){
+<span class="nc" id="L803">        bar.setValue(0);</span>
+<span class="nc" id="L804">        this.stage.getActors().removeValue(bar, false);</span>
+<span class="nc" id="L805">        bars.remove(bar);</span>
+<span class="nc" id="L806">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
