@@ -22,8 +22,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Run tests and build JaCoCo report
-        run: ./gradlew test
+      - name: Run tests (and build JaCoCo report)
+        run: ./gradlew clean build test
 
       - name: Upload test report
         uses: actions/upload-artifact@v3.1.1
@@ -129,9 +129,11 @@ jobs:
         with:
           name: PiazzaPanicWindows
           path: .\exe_gen\Piazza Panic-1.0.exe
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: .\exe_gen\Piazza Panic-1.0.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

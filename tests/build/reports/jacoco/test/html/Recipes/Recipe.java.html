@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Recipe.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">Recipes</a> &gt; <span class="el_source">Recipe.java</span></div><h1>Recipe.java</h1><pre class="source lang-java linenums">package Recipes;
+
+import Ingredients.Ingredient;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.team13.piazzapanic.MainGame;
+
+import java.util.ArrayList;
+
+/**
+ * The Recipe class is a subclass of Sprite that represents a completed dish in the kitchen game.
+ * It holds an ArrayList of {@link Ingredients.Ingredient}s and a Texture of the completed dish image.
+ *
+ */
+public class Recipe extends Sprite {
+    protected ArrayList&lt;Ingredient&gt; ingredients;
+    protected Texture completedImg;
+
+    /**
+     * Constructor for the Recipe class.
+     */
+<span class="fc" id="L23">    public Recipe(){</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * Returns the ArrayList of ingredients used in the recipe.
+     * @return ingredients The list of ingredients used in the recipe.
+     */
+    public ArrayList&lt;Ingredient&gt; getIngredients(){
+<span class="fc" id="L31">        return ingredients;</span>
+    }
+
+    /**
+     * Creates the completed dish sprite and draws it to the screen.
+     * @param x The x-coordinate of the dish's location.
+     * @param y The y-coordinate of the dish's location.
+     * @param batch The SpriteBatch used to draw the sprite.
+     * @see com.badlogic.gdx.graphics.g2d.SpriteBatch
+     */
+    public void create(float x, float y, SpriteBatch batch){
+<span class="nc" id="L42">        Sprite sprite = new Sprite(completedImg);</span>
+<span class="nc" id="L43">        float adjustedX =  x - (5/ MainGame.PPM);</span>
+<span class="nc" id="L44">        float adjustedY =  y - (4.5f / MainGame.PPM);</span>
+<span class="nc" id="L45">        sprite.setBounds(adjustedX,adjustedY,10/ MainGame.PPM,10/ MainGame.PPM);</span>
+<span class="nc" id="L46">        sprite.draw(batch);</span>
+<span class="nc" id="L47">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

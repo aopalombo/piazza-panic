@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainMenuScreen.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">com.team13.piazzapanic.Screens</a> &gt; <span class="el_source">MainMenuScreen.java</span></div><h1>MainMenuScreen.java</h1><pre class="source lang-java linenums">package com.team13.piazzapanic.Screens;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.team13.piazzapanic.MainGame;
+
+
+public class MainMenuScreen implements Screen{
+<span class="nc" id="L21">    private int Height = 720;</span>
+<span class="nc" id="L22">    private int Width = 1280;</span>
+<span class="nc" id="L23">    private FitViewport view = new FitViewport(Width, Height);</span>
+    private Stage stage;
+    private MainGame game;
+
+<span class="nc" id="L27">    private ImageButton exitBtn = createButton(&quot;Buttons/exitBtn.png&quot;);</span>
+<span class="nc" id="L28">    private ImageButton startBtn = createButton(&quot;Buttons/playBtn.png&quot;);</span>
+<span class="nc" id="L29">    private ImageButton resumeBtn = createButton(&quot;Buttons/resumeGameBtn.png&quot;);</span>
+<span class="nc" id="L30">    private Texture logo = new Texture(&quot;Piazza_Panic_Logo.png&quot;);</span>
+
+<span class="nc" id="L32">    private Preferences save = Gdx.app.getPreferences(&quot;userData&quot;);</span>
+
+<span class="nc" id="L34">    public MainMenuScreen (MainGame game){</span>
+<span class="nc" id="L35">        stage = new Stage(view, game.batch);</span>
+<span class="nc" id="L36">        view.getCamera().position.set(Width / 2, Height / 2, 1f);</span>
+<span class="nc" id="L37">        this.game = game;</span>
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if(!(save.get().size() == 0)){</span>
+<span class="nc" id="L40">            startBtn.setPosition(((Width / 2) - (startBtn.getWidth() / 2))-startBtn.getWidth()/1.5f, 125);</span>
+<span class="nc" id="L41">            resumeBtn.setPosition(((Width / 2) - (startBtn.getWidth() / 2))+resumeBtn.getWidth()/1.5f, 125);</span>
+<span class="nc" id="L42">            exitBtn.setPosition((Width / 2) - (exitBtn.getWidth() / 2), 10);</span>
+<span class="nc" id="L43">            stage.addActor(resumeBtn);</span>
+        } else {
+<span class="nc" id="L45">            startBtn.setPosition((Width / 2) - (startBtn.getWidth() / 2), 125);</span>
+<span class="nc" id="L46">            exitBtn.setPosition((Width / 2) - (exitBtn.getWidth() / 2), 10);</span>
+        }
+<span class="nc" id="L48">        stage.addActor(startBtn);</span>
+<span class="nc" id="L49">        stage.addActor(exitBtn);</span>
+
+
+<span class="nc" id="L52">        Gdx.input.setInputProcessor(stage);</span>
+<span class="nc" id="L53">    }</span>
+
+    private ImageButton createButton(String assetPath){
+<span class="nc" id="L56">        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(assetPath)));</span>
+<span class="nc" id="L57">        ImageButton output = new ImageButton(drawable);</span>
+<span class="nc" id="L58">        ClickListener cursorHovering = new ClickListener() {</span>
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+<span class="nc" id="L61">                Gdx.graphics.setSystemCursor(SystemCursor.Hand);}</span>
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+<span class="nc" id="L64">                Gdx.graphics.setSystemCursor(SystemCursor.Arrow);}</span>
+        };
+<span class="nc" id="L66">        output.addListener(cursorHovering);</span>
+<span class="nc" id="L67">        return output;</span>
+    }
+
+    @Override
+    public void show() {
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void render(float delta) {
+<span class="nc" id="L76">        stage.act();</span>
+<span class="nc" id="L77">        ScreenUtils.clear(1, 1, 1, 1);</span>
+<span class="nc" id="L78">        view.apply();</span>
+
+<span class="nc" id="L80">        game.batch.setProjectionMatrix(view.getCamera().combined);</span>
+<span class="nc" id="L81">        game.batch.begin();</span>
+<span class="nc" id="L82">        game.batch.draw(logo, ((Width / 2) - (logo.getWidth() / 2)), 250);</span>
+<span class="nc" id="L83">        game.batch.end();</span>
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if(startBtn.isPressed()){</span>
+<span class="nc" id="L86">            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);</span>
+<span class="nc" id="L87">            game.setScreen(new OptionScreen(game));</span>
+        }
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if(resumeBtn.isPressed()){</span>
+<span class="nc" id="L90">            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);</span>
+<span class="nc" id="L91">            String difficulty = save.getString(&quot;difficulty&quot;);</span>
+<span class="nc" id="L92">            game.setScreen(new PlayScreen(game, difficulty, true));</span>
+        }
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if(exitBtn.isPressed()){</span>
+<span class="nc" id="L95">            dispose();</span>
+<span class="nc" id="L96">            Gdx.app.exit();</span>
+        }
+<span class="nc" id="L98">        stage.draw();</span>
+<span class="nc" id="L99">    }</span>
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L103">        stage.getViewport().update(width, height);</span>
+<span class="nc" id="L104">    }</span>
+
+    @Override
+    public void pause() {
+<span class="nc" id="L108">    }</span>
+
+    @Override
+    public void resume() {
+<span class="nc" id="L112">    }</span>
+
+    @Override
+    public void hide() {
+<span class="nc" id="L116">    }</span>
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L120">        logo.dispose();</span>
+<span class="nc" id="L121">        stage.dispose();</span>
+<span class="nc" id="L122">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

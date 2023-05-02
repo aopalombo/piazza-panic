@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayScreen.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tests</a> &gt; <a href="index.source.html" class="el_package">com.team13.piazzapanic.Screens</a> &gt; <span class="el_source">PlayScreen.java</span></div><h1>PlayScreen.java</h1><pre class="source lang-java linenums">package com.team13.piazzapanic.Screens;
+
+import Ingredients.*;
+import Recipes.*;
+import Sprites.*;
+import Tools.B2WorldCreator;
+import Tools.WorldContactListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team13.piazzapanic.HUD;
+import com.team13.piazzapanic.MainGame;
+import java.util.ArrayList;
+
+/**
+ * The PlayScreen class is responsible for displaying the game to the user and handling the user's interactions.
+ * The PlayScreen class implements the Screen interface which is part of the LibGDX framework.
+ *
+ * The PlayScreen class contains several important fields, including the game instance, stage instance, viewport instance,
+ * and several other helper classes and variables. The game instance is used to access the global game configuration and
+ * to switch between screens. The stage instance is used to display the graphics and handle user interactions, while the
+ * viewport instance is used to manage the scaling and resizing of the game window.
+ *
+ * The PlayScreen class also contains several methods for initializing and updating the game state, including the
+ * constructor, show(), render(), update(), and dispose() methods. The constructor sets up the stage, viewport, and
+ * other helper classes and variables. The show() method is called when the PlayScreen becomes the active screen. The
+ * render() method is called repeatedly to render the game graphics and update the game state. The update() method is
+ * called to update the game state and handle user inputs. The dispose() method is called when the PlayScreen is no longer
+ * needed and is used to clean up resources and prevent memory leaks.
+ */
+
+
+public class PlayScreen implements Screen {
+
+    private final MainGame game;
+    private final OrthographicCamera gamecam;
+    private final Viewport gameport;
+    private final HUD hud;
+
+    private final TiledMap map;
+    private final OrthogonalTiledMapRenderer renderer;
+
+<span class="nc" id="L54">    private final World world= new World(new Vector2(0,0), true);</span>
+<span class="nc" id="L55">    private Chef chef1 = new Chef(this.world, 31.5F,65);</span>
+<span class="nc" id="L56">    private Chef chef2 = new Chef(this.world, 128,65);</span>
+<span class="nc" id="L57">    public Chef chef3 = new Chef(this.world, 80,93);</span>
+<span class="nc" id="L58">    public ArrayList&lt;Chef&gt; chefs = new ArrayList&lt;Chef&gt;();</span>
+
+    private Chef controlledChef;
+<span class="nc" id="L61">    private Chef lastChef = chef2;</span>
+
+<span class="nc" id="L63">    public ArrayList&lt;Order&gt; ordersArray = new ArrayList&lt;Order&gt;();</span>
+
+    public PlateStation plateStation;
+
+
+    public Boolean scenarioComplete;
+    public Boolean createdOrder;
+
+    public static float trayX;
+    public static float trayY;
+
+<span class="nc" id="L74">    private float timeSeconds = 0f;</span>
+<span class="nc" id="L75">    private float timeSecondsCount = 0f;</span>
+
+    private int orderCount;
+<span class="nc" id="L78">    public static int orderTime = 40;</span>
+
+<span class="nc" id="L80">    private float chefSpeedMultiplier = 1f;</span>
+<span class="nc" id="L81">    private int moneyMultiplier = 1;</span>
+<span class="nc" id="L82">    private float cookSpeedMultiplier = 1f;</span>
+
+<span class="nc" id="L84">    private boolean endless = false;</span>
+
+<span class="nc" id="L86">    private int dishAmount = 1;</span>
+<span class="nc" id="L87">    private Preferences saving = Gdx.app.getPreferences(&quot;userData&quot;);</span>
+    private boolean resume;
+
+<span class="nc" id="L90">    private Integer currentOrderNum = 1;</span>
+
+<span class="nc" id="L92">    private ArrayList&lt;ChoppingBoard&gt; boards = new ArrayList&lt;ChoppingBoard&gt;();</span>
+<span class="nc" id="L93">    private ArrayList&lt;Pan&gt; pans = new ArrayList&lt;Pan&gt;();</span>
+<span class="nc" id="L94">    private ArrayList&lt;Oven&gt; ovens = new ArrayList&lt;Oven&gt;();</span>
+
+
+    /**
+     * PlayScreen constructor initializes the game instance, sets initial conditions for scenarioComplete and createdOrder,
+     * creates and initializes game camera and viewport,
+     * creates and initializes HUD and orders hud, loads and initializes the map,
+     * creates and initializes world, creates and initializes chefs and sets them, sets contact listener for world, and initializes ordersArray.
+     * @param game The MainGame instance that the PlayScreen will be a part of.
+     */
+
+<span class="nc" id="L105">    public PlayScreen(MainGame game, String difficulty, boolean resume){</span>
+<span class="nc" id="L106">        this.game = game;</span>
+<span class="nc" id="L107">        this.resume = resume;</span>
+<span class="nc" id="L108">        scenarioComplete = Boolean.FALSE;</span>
+<span class="nc" id="L109">        createdOrder = Boolean.FALSE;</span>
+<span class="nc" id="L110">        gamecam = new OrthographicCamera();</span>
+        // FitViewport to maintain aspect ratio whilst scaling to screen size
+<span class="nc" id="L112">        gameport = new FitViewport(MainGame.V_WIDTH / MainGame.PPM, MainGame.V_HEIGHT / MainGame.PPM, gamecam);</span>
+        // create HUD
+<span class="nc" id="L114">        hud = new HUD(game.batch, game, difficulty,resume, this);</span>
+        // create map
+<span class="nc" id="L116">        TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());</span>
+<span class="nc" id="L117">        map = mapLoader.load(&quot;Kitchen.tmx&quot;);</span>
+<span class="nc" id="L118">        renderer = new OrthogonalTiledMapRenderer(map, 1 / MainGame.PPM);</span>
+<span class="nc" id="L119">        gamecam.position.set(gameport.getWorldWidth() / 2, gameport.getWorldHeight() / 2, 0);</span>
+
+<span class="nc" id="L121">        new B2WorldCreator(world, map, this, resume);</span>
+<span class="nc" id="L122">        chef1.defineChef();</span>
+<span class="nc" id="L123">        chef2.defineChef();</span>
+<span class="nc" id="L124">        chefs.add(chef1);</span>
+<span class="nc" id="L125">        chefs.add(chef2);</span>
+<span class="nc" id="L126">        chef1.setHUD(hud);</span>
+<span class="nc" id="L127">        chef2.setHUD(hud);</span>
+<span class="nc" id="L128">        chef3.setHUD(hud);</span>
+
+<span class="nc" id="L130">        controlledChef = chef1;</span>
+<span class="nc" id="L131">        world.setContactListener(new WorldContactListener());</span>
+<span class="nc" id="L132">        controlledChef.notificationSetBounds(&quot;Down&quot;);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if(resume){</span>
+<span class="nc" id="L134">            orderCount = saving.getInteger(&quot;countOrder&quot;);</span>
+<span class="nc" id="L135">            orderCount -= saving.getInteger(&quot;currentOrderNum&quot;,1);</span>
+<span class="nc" id="L136">            currentOrderNum = saving.getInteger(&quot;currentOrderNum&quot;, 1);</span>
+        } else {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            if(difficulty == &quot;easy&quot;){</span>
+<span class="nc" id="L139">                this.orderCount = 5;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            } else if(difficulty == &quot;normal&quot;){</span>
+<span class="nc" id="L141">                this.orderCount = 8;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            } else if(difficulty == &quot;hard&quot;){</span>
+<span class="nc" id="L143">                this.orderCount = 11;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            } else if(difficulty == &quot;endless&quot;){</span>
+<span class="nc" id="L145">                this.orderCount = 10;</span>
+<span class="nc" id="L146">                this.endless = true;</span>
+            }
+        }
+<span class="nc" id="L149">        hud.setNumOrders(orderCount);</span>
+<span class="nc" id="L150">        Gdx.input.setInputProcessor(hud.stage);</span>
+<span class="nc" id="L151">    }</span>
+
+    public void addChoppingBoard(ChoppingBoard board){
+<span class="nc" id="L154">        boards.add(board);</span>
+<span class="nc" id="L155">    }</span>
+
+    public ArrayList&lt;ChoppingBoard&gt; getChoppingBoards(){
+<span class="nc" id="L158">        return boards;</span>
+    }
+
+    public void addPan(Pan pan){
+<span class="nc" id="L162">        pans.add(pan);</span>
+<span class="nc" id="L163">    }</span>
+
+    public ArrayList&lt;Pan&gt; getPans(){
+<span class="nc" id="L166">        return pans;</span>
+    }
+
+    public void addOven(Oven oven){
+<span class="nc" id="L170">        ovens.add(oven);</span>
+<span class="nc" id="L171">    }</span>
+
+    public ArrayList&lt;Oven&gt; getOvens(){
+<span class="nc" id="L174">        return ovens;</span>
+    }
+
+    @Override
+    public void show(){
+
+<span class="nc" id="L180">    }</span>
+
+
+    /**
+     * The handleInput method is responsible for handling the input events of the game such as movement and interaction with objects.
+     *
+     * It checks if the 'R' key is just pressed and both chefs have the user control, if so,
+     * it switches the control between the two chefs.
+     *
+     * If the controlled chef does not have the user control,
+     * the method checks if chef1 or chef2 have the user control and sets the control to that chef.
+     *
+     * If the controlled chef has the user control,
+     * it checks if the 'W', 'A', 'S', or 'D' keys are pressed and sets the velocity of the chef accordingly.
+     *
+     * If the 'E' key is just pressed and the chef is touching a tile,
+     * it checks the type of tile and sets the chef's in-hands ingredient accordingly.
+     *
+     * The method also sets the direction of the chef based on its linear velocity.
+     *
+     * @param dt is the time delta between the current and previous frame.
+     */
+
+    public void handleInput(float dt){
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        for(int i = 0; i&lt;chefs.size();i++){</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1+i)){</span>
+<span class="nc" id="L206">                lastChef = controlledChef;</span>
+<span class="nc" id="L207">                controlledChef = chefs.get(i);</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                for(int j = 0; j&lt;chefs.size();j++){</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if(j!=i){</span>
+<span class="nc" id="L210">                        chefs.get(j).b2body.setLinearVelocity(0,0);</span>
+                    }
+                }
+            }
+        }
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (controlledChef.getUserControlChef()) {</span>
+            //move chef using WASD
+<span class="nc" id="L217">            controlledChef.move(Gdx.input.isKeyPressed(Input.Keys.A),Gdx.input.isKeyPressed(Input.Keys.D),</span>
+<span class="nc" id="L218">                                Gdx.input.isKeyPressed(Input.Keys.S), Gdx.input.isKeyPressed(Input.Keys.W),</span>
+                                chefSpeedMultiplier);
+            }
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (controlledChef.b2body.getLinearVelocity().x &gt; 0){</span>
+<span class="nc" id="L222">            controlledChef.notificationSetBounds(&quot;Right&quot;);</span>
+        }
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (controlledChef.b2body.getLinearVelocity().x &lt; 0){</span>
+<span class="nc" id="L225">            controlledChef.notificationSetBounds(&quot;Left&quot;);</span>
+        }
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (controlledChef.b2body.getLinearVelocity().y &gt; 0){</span>
+<span class="nc" id="L228">            controlledChef.notificationSetBounds(&quot;Up&quot;);</span>
+        }
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (controlledChef.b2body.getLinearVelocity().y &lt; 0){</span>
+<span class="nc" id="L231">            controlledChef.notificationSetBounds(&quot;Down&quot;);</span>
+        }
+
+
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        if(Gdx.input.isKeyJustPressed(Input.Keys.E)){</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">                if(controlledChef.getTouchingTile() != null){</span>
+<span class="nc" id="L237">                    InteractiveTileObject tile = (InteractiveTileObject) controlledChef.getTouchingTile().getUserData();</span>
+<span class="nc" id="L238">                    String tileName = tile.getClass().getName();</span>
+<span class="nc bnc" id="L239" title="All 4 branches missed.">                    if (controlledChef.getInHandsIng() == null &amp;&amp; controlledChef.getInHandsRecipe() == null) {</span>
+<span class="nc bnc" id="L240" title="All 11 branches missed.">                        switch (tileName) {</span>
+                            case &quot;Sprites.TomatoStation&quot;:
+<span class="nc" id="L242">                                controlledChef.setInHandsIng(new Tomato(2*cookSpeedMultiplier, 3));</span>
+<span class="nc" id="L243">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L244">                                break;</span>
+                            case &quot;Sprites.PizzaSauceStation&quot;:
+<span class="nc" id="L246">                                controlledChef.setInHandsIng(new PizzaSauce(0, 0));</span>
+<span class="nc" id="L247">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L248">                                break;</span>
+                            case &quot;Sprites.PotatoStation&quot;:
+<span class="nc" id="L250">                                controlledChef.setInHandsIng(new Potato(0, 3*cookSpeedMultiplier));</span>
+<span class="nc" id="L251">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L252">                                break;</span>
+                            case &quot;Sprites.PizzaDoughStation&quot;:
+<span class="nc" id="L254">                                controlledChef.setInHandsIng(new PizzaDough(0, 0));</span>
+<span class="nc" id="L255">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L256">                                break;</span>
+                            case &quot;Sprites.CheeseStation&quot;:
+<span class="nc" id="L258">                                controlledChef.setInHandsIng(new Cheese(2*cookSpeedMultiplier,0));</span>
+<span class="nc" id="L259">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L260">                                break;</span>
+                            case &quot;Sprites.BunsStation&quot;:
+<span class="nc" id="L262">                                controlledChef.setInHandsIng(new Bun(0,3*cookSpeedMultiplier));</span>
+<span class="nc" id="L263">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L264">                                break;</span>
+                            case &quot;Sprites.OnionStation&quot;:
+<span class="nc" id="L266">                                controlledChef.setInHandsIng(new Onion(2*cookSpeedMultiplier,0));</span>
+<span class="nc" id="L267">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L268">                                break;</span>
+                            case &quot;Sprites.SteakStation&quot;:
+<span class="nc" id="L270">                                controlledChef.setInHandsIng(new Steak(2*cookSpeedMultiplier,3*cookSpeedMultiplier));</span>
+<span class="nc" id="L271">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L272">                                break;</span>
+                            case &quot;Sprites.LettuceStation&quot;:
+<span class="nc" id="L274">                                controlledChef.setInHandsIng(new Lettuce(2*cookSpeedMultiplier, 0));</span>
+<span class="nc" id="L275">                                controlledChef.setChefSkin(controlledChef.getInHandsIng());</span>
+<span class="nc" id="L276">                                break;</span>
+                            case &quot;Sprites.PlateStation&quot;:
+<span class="nc bnc" id="L278" title="All 4 branches missed.">                                if(plateStation.getPlate().size() &gt; 0 || plateStation.getCompletedRecipe() != null){</span>
+<span class="nc" id="L279">                                    controlledChef.pickUpItemFrom(tile);</span>
+
+                                }
+
+<span class="nc" id="L283">                        }</span>
+                    } else {
+<span class="nc" id="L285">                        controlledChef.setFailState();</span>
+<span class="nc bnc" id="L286" title="All 7 branches missed.">                        switch (tileName) {</span>
+                            case &quot;Sprites.Bin&quot;:
+<span class="nc" id="L288">                                controlledChef.setInHandsRecipe(null);</span>
+<span class="nc" id="L289">                                controlledChef.setInHandsIng(null);</span>
+<span class="nc" id="L290">                                controlledChef.setChefSkin(null);</span>
+<span class="nc" id="L291">                                break;</span>
+
+                            case &quot;Sprites.ChoppingBoard&quot;:
+<span class="nc bnc" id="L294" title="All 2 branches missed.">                                if(controlledChef.getInHandsIng() != null){</span>
+<span class="nc" id="L295">                                    ChoppingBoard choppingBoard = (ChoppingBoard) tile;</span>
+<span class="nc bnc" id="L296" title="All 4 branches missed.">                                    if((controlledChef.getInHandsIng().prepareTime &gt; 0)&amp;&amp;(!choppingBoard.isLocked())){</span>
+<span class="nc" id="L297">                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,6*cookSpeedMultiplier, false);</span>
+<span class="nc" id="L298">                                        controlledChef.setUserControlChef(false);</span>
+<span class="nc" id="L299">                                        Chef temp = controlledChef;</span>
+<span class="nc" id="L300">                                        controlledChef = lastChef;</span>
+<span class="nc" id="L301">                                        lastChef = temp;</span>
+                                    }
+<span class="nc" id="L303">                                }</span>
+                               break;
+                            case &quot;Sprites.PlateStation&quot;:
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                                if (controlledChef.getInHandsRecipe() == null){</span>
+<span class="nc" id="L307">                                controlledChef.dropItemOn(tile, controlledChef.getInHandsIng());</span>
+<span class="nc" id="L308">                                controlledChef.setChefSkin(null);</span>
+                            }
+                                break;
+                            case &quot;Sprites.Pan&quot;:
+<span class="nc bnc" id="L312" title="All 4 branches missed.">                                if((controlledChef.getInHandsIng() != null)&amp;&amp;(controlledChef.getInHandsIng().getClass().getName() != &quot;Ingredients.Potato&quot;)) {</span>
+<span class="nc" id="L313">                                    Pan pan = (Pan) tile;</span>
+<span class="nc bnc" id="L314" title="All 6 branches missed.">                                    if (controlledChef.getInHandsIng().isPrepared() &amp;&amp; controlledChef.getInHandsIng().cookTime &gt; 0 &amp;&amp; !pan.isLocked()){</span>
+<span class="nc" id="L315">                                        hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier, false);</span>
+<span class="nc" id="L316">                                        controlledChef.setUserControlChef(false);</span>
+<span class="nc" id="L317">                                        Chef temp = controlledChef;</span>
+<span class="nc" id="L318">                                        controlledChef = lastChef;</span>
+<span class="nc" id="L319">                                        lastChef = temp;</span>
+                                    }
+<span class="nc" id="L321">                                }</span>
+                                break;
+                            case &quot;Sprites.Oven&quot;:
+<span class="nc bnc" id="L324" title="All 4 branches missed.">                            if((controlledChef.getInHandsIng() != null)&amp;&amp;(controlledChef.getInHandsIng().getClass().getName() != &quot;Ingredients.Steak&quot;)) {</span>
+<span class="nc" id="L325">                                Oven oven = (Oven) tile;</span>
+<span class="nc bnc" id="L326" title="All 6 branches missed.">                                if (controlledChef.getInHandsIng().isPrepared() &amp;&amp; controlledChef.getInHandsIng().cookTime &gt; 0 &amp;&amp; !oven.isLocked()){</span>
+<span class="nc" id="L327">                                    hud.createProgressBar(Math.round(controlledChef.b2body.getPosition().x*MainGame.PPM)-14,Math.round(controlledChef.b2body.getPosition().y*MainGame.PPM)+12, controlledChef,9*cookSpeedMultiplier, false);</span>
+<span class="nc" id="L328">                                    controlledChef.setUserControlChef(false);</span>
+<span class="nc" id="L329">                                    Chef temp = controlledChef;</span>
+<span class="nc" id="L330">                                    controlledChef = lastChef;</span>
+<span class="nc" id="L331">                                    lastChef = temp;</span>
+                                }
+<span class="nc" id="L333">                                }</span>
+                                break;
+                            case &quot;Sprites.CompletedDishStation&quot;:
+<span class="nc bnc" id="L336" title="All 6 branches missed.">                                if((controlledChef.getInHandsIng() != null)&amp;&amp;(controlledChef.getInHandsIng() instanceof UnbakedPizza)&amp;&amp;(controlledChef.getInHandsIng().cookTime &lt;= 0)){</span>
+<span class="nc" id="L337">                                    controlledChef.setInHandsIng(null);</span>
+<span class="nc" id="L338">                                    controlledChef.setInHandsRecipe(new PizzaRecipe());</span>
+                                }
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                                if (controlledChef.getInHandsRecipe() != null){</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">                                    if(ordersArray.get(0).completeDish(controlledChef.getInHandsRecipe())){</span>
+<span class="nc" id="L342">                                        controlledChef.dropItemOn(tile);</span>
+<span class="nc" id="L343">                                        controlledChef.setChefSkin(null);</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">                                        if(ordersArray.get(0).isComplete()){</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                                            if(((currentOrderNum)%2) == 0){</span>
+<span class="nc" id="L346">                                                hud.generatePowerUp();</span>
+<span class="nc" id="L347">                                                activatePowerUp();</span>
+                                            }
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                                            if(ordersArray.size()==1){</span>
+<span class="nc" id="L350">                                                scenarioComplete = Boolean.TRUE;</span>
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+<span class="nc" id="L360">        }</span>
+
+    /**
+     * The update method updates the game elements, such as camera and characters,
+     * based on a specified time interval &quot;dt&quot;.
+     * @param dt time interval for the update
+    */
+    public void update(float dt){
+<span class="nc" id="L368">        handleInput(dt);</span>
+
+<span class="nc" id="L370">        gamecam.update();</span>
+<span class="nc" id="L371">        renderer.setView(gamecam);</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">        for(int i = 0; i&lt;chefs.size();i++){</span>
+<span class="nc" id="L373">            chefs.get(i).update(dt);</span>
+        }
+<span class="nc" id="L375">        world.step(1/60f, 6, 2);</span>
+
+<span class="nc bnc" id="L377" title="All 2 branches missed.">        if(hud.repPoints == 0){</span>
+<span class="nc" id="L378">            scenarioComplete = true;</span>
+        }
+
+<span class="nc" id="L381">    }</span>
+
+    public void createResumedOrder(){
+<span class="nc" id="L384">        ordersArray.add(new Order(saving.getString(&quot;currentOrderDish1&quot;, &quot;none&quot;),saving.getString(&quot;currentOrderDish2&quot;, &quot;none&quot;),saving.getString(&quot;currentOrderDish3&quot;, &quot;none&quot;)));</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">        if(Math.floor(currentOrderNum/3)&gt;=3){</span>
+<span class="nc" id="L386">            this.dishAmount = 3;</span>
+        } else {
+<span class="nc" id="L388">            this.dishAmount+=Math.floor(currentOrderNum/3);</span>
+        }
+<span class="nc" id="L390">        createOrder();</span>
+<span class="nc" id="L391">    }</span>
+
+    /**
+     * Creates the orders randomly and adds to an array, updates the HUD.
+     */
+    public void createOrder() {
+        Order order;
+<span class="nc bnc" id="L398" title="All 2 branches missed.">        for(int i = 1; i&lt;orderCount+1; i++){</span>
+<span class="nc" id="L399">            order = new Order(dishAmount);</span>
+            //every three orders increase the amount of dishes per order
+<span class="nc bnc" id="L401" title="All 2 branches missed.">            if(i%3 == 0){</span>
+<span class="nc" id="L402">                dishAmount++;</span>
+                //no more than 3 dishes per order
+<span class="nc bnc" id="L404" title="All 2 branches missed.">                if(dishAmount&gt;3){</span>
+<span class="nc" id="L405">                    dishAmount = 3;</span>
+                }
+            }
+<span class="nc" id="L408">            ordersArray.add(order);</span>
+        }
+<span class="nc" id="L410">        hud.updateOrder(Boolean.FALSE, currentOrderNum);</span>
+<span class="nc" id="L411">    }</span>
+
+    /**
+     * Updates the orders as they are completed, or if the game scenario has been completed.
+     */
+    public void updateOrder(){
+<span class="nc bnc" id="L417" title="All 2 branches missed.">        if(scenarioComplete==Boolean.TRUE) {</span>
+<span class="nc" id="L418">            hud.updateScore(Boolean.TRUE, orderTime, moneyMultiplier,ordersArray.get(0));</span>
+<span class="nc" id="L419">            hud.updateOrder(Boolean.TRUE, 0);</span>
+<span class="nc" id="L420">            return;</span>
+        }
+<span class="nc bnc" id="L422" title="All 2 branches missed.">        if(ordersArray.size() != 0) {</span>
+<span class="nc bnc" id="L423" title="All 4 branches missed.">            if ((ordersArray.get(0).isComplete()) || (ordersArray.get(0).orderTime == 0)) {</span>
+<span class="nc" id="L424">                hud.updateScore(Boolean.FALSE, orderTime , moneyMultiplier,ordersArray.get(0));</span>
+<span class="nc" id="L425">                ordersArray.remove(0);</span>
+<span class="nc" id="L426">                currentOrderNum +=1;</span>
+<span class="nc" id="L427">                hud.updateOrder(Boolean.FALSE, currentOrderNum);</span>
+<span class="nc" id="L428">                return;</span>
+            }
+<span class="nc bnc" id="L430" title="All 2 branches missed.">            if(!hud.isPaused()){</span>
+<span class="nc" id="L431">                ordersArray.get(0).create(trayX, trayY, game.batch);</span>
+            }
+        }
+<span class="nc" id="L434">    }</span>
+
+    /**
+
+     The render method updates the screen by calling the update method with the given delta time, and rendering the graphics of the game.
+
+     It updates the HUD time, clears the screen, and renders the renderer and the hud.
+
+     Additionally, it checks the state of the game and draws the ingredients, completed recipes, and notifications on the screen.
+
+     @param delta The time in seconds since the last frame.
+     */
+    @Override
+    public void render(float delta){
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        if(!hud.isPaused()){</span>
+<span class="nc" id="L449">            update(delta);</span>
+        }
+
+        //Execute handleEvent each 1 second
+<span class="nc" id="L453">        timeSeconds +=Gdx.graphics.getDeltaTime();</span>
+<span class="nc" id="L454">        timeSecondsCount += Gdx.graphics.getDeltaTime();</span>
+
+<span class="nc bnc" id="L456" title="All 4 branches missed.">        if(resume &amp;&amp; !createdOrder){</span>
+<span class="nc" id="L457">            createResumedOrder();</span>
+<span class="nc" id="L458">            createdOrder = Boolean.TRUE;</span>
+<span class="nc bnc" id="L459" title="All 2 branches missed.">        } else if (!createdOrder){</span>
+<span class="nc bnc" id="L460" title="All 2 branches missed.">            if(Math.round(timeSecondsCount) == 5){</span>
+<span class="nc" id="L461">                createdOrder = Boolean.TRUE;</span>
+<span class="nc" id="L462">                createOrder();</span>
+            }
+        }
+<span class="nc" id="L465">        float period = 1f;</span>
+<span class="nc bnc" id="L466" title="All 2 branches missed.">        if(timeSeconds &gt; period) {</span>
+<span class="nc" id="L467">            timeSeconds -= period;</span>
+<span class="nc bnc" id="L468" title="All 2 branches missed.">            if(ordersArray.size()&gt;0){</span>
+<span class="nc" id="L469">                hud.updateTime(scenarioComplete,ordersArray.get(0));</span>
+<span class="nc" id="L470">            } else {hud.updateTime(scenarioComplete,null);}</span>
+        }
+
+<span class="nc" id="L473">        Gdx.gl.glClear(1);</span>
+<span class="nc" id="L474">        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);</span>
+
+<span class="nc" id="L476">        renderer.render();</span>
+        //game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+<span class="nc" id="L478">        hud.stage.draw();</span>
+<span class="nc" id="L479">        game.batch.setProjectionMatrix(gamecam.combined);</span>
+<span class="nc" id="L480">        game.batch.begin();</span>
+<span class="nc" id="L481">        updateOrder();</span>
+<span class="nc" id="L482">        disablePowerUps();</span>
+<span class="nc" id="L483">        hud.updateProgressBars();</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">        if(!hud.isPaused()){</span>
+<span class="nc bnc" id="L485" title="All 2 branches missed.">            for(int i = 0; i&lt;chefs.size();i++){</span>
+<span class="nc" id="L486">                chefs.get(i).draw(game.batch);</span>
+            }
+<span class="nc" id="L488">            controlledChef.drawNotification(game.batch);</span>
+        }
+<span class="nc" id="L490">        hud.handleButtons();</span>
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        if (plateStation.getPlate().size() &gt; 0){</span>
+<span class="nc bnc" id="L492" title="All 2 branches missed.">            for(Object ing : plateStation.getPlate()){</span>
+<span class="nc" id="L493">                Ingredient ingNew = (Ingredient) ing;</span>
+<span class="nc" id="L494">                ingNew.create(plateStation.getX(), plateStation.getY(),game.batch);</span>
+<span class="nc" id="L495">            }</span>
+<span class="nc bnc" id="L496" title="All 2 branches missed.">        } else if (plateStation.getCompletedRecipe() != null){</span>
+<span class="nc" id="L497">            Recipe recipeNew = plateStation.getCompletedRecipe();</span>
+<span class="nc" id="L498">            recipeNew.create(plateStation.getX(), plateStation.getY(), game.batch);</span>
+        }
+<span class="nc bnc" id="L500" title="All 2 branches missed.">        for(int i = 0; i&lt;chefs.size();i++){</span>
+<span class="nc bnc" id="L501" title="All 2 branches missed.">            if (!chefs.get(i).getUserControlChef()) {</span>
+<span class="nc bnc" id="L502" title="All 4 branches missed.">                if (chefs.get(i).getTouchingTile() != null &amp;&amp; chefs.get(i).getInHandsIng() != null){</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                    if (chefs.get(i).getTouchingTile().getUserData() instanceof InteractiveTileObject){</span>
+<span class="nc" id="L504">                        chefs.get(i).displayIngStatic(game.batch);</span>
+                    }
+                }
+            }
+<span class="nc bnc" id="L508" title="All 2 branches missed.">            if (chefs.get(i).previousInHandRecipe != null){</span>
+<span class="nc" id="L509">                chefs.get(i).displayIngDynamic(game.batch);</span>
+            }
+        }
+<span class="nc bnc" id="L512" title="All 2 branches missed.">        for(ChoppingBoard board : boards){</span>
+<span class="nc" id="L513">            board.draw(hud);</span>
+<span class="nc" id="L514">        }</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        for(Pan pan : pans){</span>
+<span class="nc" id="L516">            pan.draw(hud);</span>
+<span class="nc" id="L517">        }</span>
+<span class="nc bnc" id="L518" title="All 2 branches missed.">        for(Oven oven : ovens){</span>
+<span class="nc" id="L519">            oven.draw(hud);</span>
+<span class="nc" id="L520">        }</span>
+<span class="nc" id="L521">        game.batch.end();</span>
+<span class="nc bnc" id="L522" title="All 2 branches missed.">        if(Gdx.input.isKeyPressed(Input.Keys.T)){</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">            if(!chefs.contains(chef3)){</span>
+<span class="nc" id="L524">                chef3.defineChef();</span>
+<span class="nc" id="L525">                chefs.add(chef3);</span>
+            }
+        }
+<span class="nc bnc" id="L528" title="All 2 branches missed.">        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){</span>
+<span class="nc" id="L529">            hud.unPause();</span>
+<span class="nc" id="L530">            hud.hideShop();</span>
+        }
+        //if in endless mode and orders are done generate new ones
+<span class="nc bnc" id="L533" title="All 4 branches missed.">        if((ordersArray.size()==1)&amp;&amp;(endless)){</span>
+<span class="nc" id="L534">                createOrder();</span>
+        }
+<span class="nc" id="L536">    }</span>
+
+    public void activatePowerUp() {
+<span class="nc bnc" id="L539" title="All 2 branches missed.">        if(hud.getPowerUp() ==  &quot;2X SPEED&quot;){</span>
+<span class="nc" id="L540">            chefSpeedMultiplier = 1.75f;</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">        } else if (hud.getPowerUp() ==  &quot;2X MONEY&quot;){</span>
+<span class="nc" id="L542">            moneyMultiplier = 2;</span>
+<span class="nc bnc" id="L543" title="All 2 branches missed.">        } else if(hud.getPowerUp() ==  &quot;FREEZE&quot;){</span>
+<span class="nc" id="L544">            hud.freezeTime();</span>
+<span class="nc bnc" id="L545" title="All 2 branches missed.">        }else if(hud.getPowerUp() ==  &quot;SPEEDY&quot;){</span>
+<span class="nc" id="L546">            cookSpeedMultiplier = 0.5f;</span>
+        }
+<span class="nc" id="L548">    }</span>
+
+    public void disablePowerUps(){
+<span class="nc bnc" id="L551" title="All 2 branches missed.">        if(hud.getPowerUp() == &quot;&quot;){</span>
+<span class="nc" id="L552">            chefSpeedMultiplier = 1f;</span>
+<span class="nc" id="L553">            moneyMultiplier = 1;</span>
+<span class="nc" id="L554">            hud.unfreezeTime();</span>
+<span class="nc" id="L555">            cookSpeedMultiplier = 1f;</span>
+        }
+<span class="nc" id="L557">    }</span>
+
+    public HUD getHUD(){
+<span class="nc" id="L560">        return hud;</span>
+    }
+
+    @Override
+    public void resize(int width, int height){
+<span class="nc" id="L565">        gameport.update(width, height);</span>
+<span class="nc" id="L566">    }</span>
+
+    @Override
+    public void pause(){
+
+<span class="nc" id="L571">    }</span>
+
+    @Override
+    public void resume(){
+        
+<span class="nc" id="L576">    }</span>
+
+    @Override
+    public void hide(){
+
+<span class="nc" id="L581">    }</span>
+
+    @Override
+    public void dispose(){
+<span class="nc" id="L585">        map.dispose();</span>
+<span class="nc" id="L586">        renderer.dispose();</span>
+<span class="nc" id="L587">        world.dispose();</span>
+<span class="nc" id="L588">        hud.dispose();</span>
+<span class="nc" id="L589">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
